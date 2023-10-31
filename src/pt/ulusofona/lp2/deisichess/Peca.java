@@ -5,6 +5,8 @@ public class Peca {
     String tipoDePeca ;
     String equipa ;
     String alcunha ;
+    String estado;
+
 
     public Peca(String identificador, String tipoDePeca, String equipa, String alcunha) {
         this.identificador = identificador;

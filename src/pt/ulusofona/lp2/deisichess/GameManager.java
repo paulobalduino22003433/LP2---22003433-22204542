@@ -1,70 +1,97 @@
 package pt.ulusofona.lp2.deisichess;
 
-import javax.swing.*;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Objects;
 
 public class GameManager {
-
-    int tamanhoTabuleiro;
+    int tamanhoTabuleiro = 0;
     int numeroPecas;
-
     ArrayList<Peca> pecas = new ArrayList<>();
-    HashMap<ArrayList<Integer>,ArrayList<Peca>> pecasMap = new HashMap<>();
-    int currentTeam;
-
-
+    ArrayList<String> cordenadasPecas;
+    String[][] cordenadasPecasArray;
+    HashMap<Integer,String> pecasMap;
     boolean loadGame(File file) {
-        boolean isFirstLine = true;
-        boolean isSecondLine=false;
-        int pecasRestantes =0;
-        try (BufferedReader gameReader = new BufferedReader(new FileReader(file))) {
+        pecasMap = new HashMap<>();
+        cordenadasPecas = new ArrayList<>();
+        cordenadasPecasArray = new String[124][124]; // Initialize cordenadasPecasArray
+
+        if (!file.exists()) {
+            return false;
+        }
+
+        try {
+            BufferedReader fileReader = new BufferedReader(new FileReader(file));
             String linha;
-            while ((linha = gameReader.readLine()) != null) {
-                if(isSecondLine){
-                    numeroPecas= Integer.getInteger(linha.trim());
-                    isSecondLine=false;
-                    continue;
-                }
-                if(isFirstLine){
-                    tamanhoTabuleiro = Integer.getInteger(linha.trim());
-                    isSecondLine=true;
-                    isFirstLine=false;
+            boolean isFirstLine = true;
+            boolean isSecondLine = false;
+            int pecasRestantes = 0;
+
+            while ((linha = fileReader.readLine()) != null) {
+                if (isSecondLine) {
+                    numeroPecas = Integer.parseInt(linha.trim());
+                    isSecondLine = false;
                     continue;
                 }
 
-                if(!isFirstLine && !isSecondLine && pecasRestantes<numeroPecas){
+                if (isFirstLine) {
+                    tamanhoTabuleiro = Integer.parseInt(linha.trim());
+                    isSecondLine = true;
+                    isFirstLine = false;
+                    continue;
+                }
+
+                if (!isFirstLine && !isSecondLine && pecasRestantes < numeroPecas) {
                     String[] partes = linha.split(":");
-                    String identificador = partes[0].trim();
-                    String tipoDePeca = partes[1].trim();
-                    String equipa = partes[2].trim();
-                    String alcunha = partes[3].trim();
-                    Peca peca = new Peca(identificador,tipoDePeca,equipa,alcunha);
-                    pecas.add(peca);
+                    int id = Integer.parseInt(partes[0].trim());
+                    pecasMap.put(id, linha);
                     pecasRestantes++;
+                    continue;
                 }
 
-                if(!isFirstLine && !isSecondLine && pecasRestantes == numeroPecas){
-                    return true;
+                if (!isFirstLine && !isSecondLine && pecasRestantes == numeroPecas) {
+                    cordenadasPecas.add(linha);
                 }
 
             }
 
+            fileReader.close();
 
+            // Convert posicoesPeca into cordenadasPecasArray
+            int linhas = cordenadasPecas.size();
+            int colunas = tamanhoTabuleiro; // Assuming columns are based on the board size
+            cordenadasPecasArray = new String[linhas][colunas];
+
+            for (int i = 0; i < linhas; i++) {
+                String[] parts = cordenadasPecas.get(i).split(":");
+                for (int j = 0; j < colunas; j++) {
+                    cordenadasPecasArray[i][j] = parts[j];
+                }
+            }
+
+            System.out.println(Arrays.deepToString(cordenadasPecasArray));
+            return true;
         } catch (IOException e) {
             e.printStackTrace();
+            return false;
         }
-        return true;
     }
 
 
 
+
+
+
+
+
+
     int getBoardSize(){
-        return tamanhoTabuleiro;
+        return cordenadasPecas.size();
     }
 
 
