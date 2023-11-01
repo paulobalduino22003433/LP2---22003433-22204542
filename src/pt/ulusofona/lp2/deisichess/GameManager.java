@@ -11,16 +11,26 @@ import java.util.HashMap;
 import java.util.Objects;
 
 public class GameManager {
+
+
     int tamanhoTabuleiro = 0;
     int numeroPecas;
-    ArrayList<Peca> pecas = new ArrayList<>();
+    ArrayList<Peca> pecas;
+    HashMap<Integer,Peca> pecasMap;
     ArrayList<String> cordenadasPecas;
     String[][] cordenadasPecasArray;
-    HashMap<Integer,String> pecasMap;
+    ArrayList<Peca> blackTeam;
+    ArrayList<Peca> whiteTeam;
+    Tabuleiro tabuleiro;
+
+
    public boolean loadGame(File file) {
         pecasMap = new HashMap<>();
-        cordenadasPecas = new ArrayList<>();
-        cordenadasPecasArray = new String[124][124];
+         pecas = new ArrayList<>();
+         cordenadasPecas = new ArrayList<>();
+         cordenadasPecasArray = new String[124][124];
+         blackTeam = new ArrayList<>();
+         whiteTeam = new ArrayList<>();
 
         if (!file.exists()) {
             return false;
@@ -56,7 +66,7 @@ public class GameManager {
                     String estado ="em jogo";
                     Peca peca = new Peca(partes[0].trim(),tipoDePeca,equipa,alcunha,estado);
                     pecas.add(peca);
-                    pecasMap.put(id, linha);
+                    pecasMap.put(id,peca);
                     pecasRestantes++;
                     continue;
                 }
@@ -81,8 +91,17 @@ public class GameManager {
                 }
             }
 
+            for(Peca peca : pecas){
+                if(peca.equipa.equals("0")){
+                    blackTeam.add(peca);
+                }
+                if(peca.equipa.equals("1")){
+                    whiteTeam.add(peca);
+                }
+                tabuleiro = new Tabuleiro(whiteTeam,blackTeam);
+            }
 
-
+            /*/System.out.println("cordenadasPecasArray[3][1]: " + cordenadasPecasArray[3][1]);/*/
             return true;
         } catch (IOException e) {
             e.printStackTrace();
@@ -97,38 +116,57 @@ public class GameManager {
 
 
     public String[] getSquareInfo(int x, int y) {
-        if (x < 0 || y < 0 || x >= cordenadasPecasArray.length || y >= cordenadasPecasArray[x].length) {
-            return null;
-        }
+       if(x<0 || y<0 || x>tamanhoTabuleiro-1 || y>tamanhoTabuleiro-1){
+           return null;
+       }
+        String[] squareInfo = new String[4];
         String id = cordenadasPecasArray[x][y];
         for (Peca peca : pecas) {
             if (peca.getIdentificador().equals(id)) {
-                String[] squareInfo = new String[4];
                 squareInfo[0] = peca.getIdentificador();
                 squareInfo[1] = peca.getTipoDePeca();
                 squareInfo[2] = peca.getEquipa();
                 squareInfo[3] = peca.getAlcunha();
-                return squareInfo;
             }
         }
 
-        return null;
+        return squareInfo;
     }
 
 
-    public String [] getPieceInfo(int ID){
-        String[] peca = new String[5];
-        for(Peca peca1: pecas){
-            if (peca1.identificador.equals(Integer.toString(ID))){
+    public String[] getPieceInfo(int ID) {
+        String[] peca = new String[7];
+        int x = -1;
+        int y = -1;
+
+        for (int i = 0; i < cordenadasPecasArray.length; i++) {
+            for (int j = 0; j < cordenadasPecasArray[i].length; j++) {
+                if (cordenadasPecasArray[i][j].equals(Integer.toString(ID))) {
+                    x = i;
+                    y = j;
+                    break;
+                }
+            }
+            if (x != -1 && y != -1) {
+                break;
+            }
+        }
+
+        for (Peca peca1 : pecas) {
+            if (peca1.identificador.equals(Integer.toString(ID))) {
                 peca[0] = peca1.identificador;
                 peca[1] = peca1.tipoDePeca;
                 peca[2] = peca1.equipa;
                 peca[3] = peca1.alcunha;
+                peca[4] = peca1.estado;
+                peca[5] = Integer.toString(x);
+                peca[6] = Integer.toString(y);
             }
-
         }
+
         return peca;
     }
+
 
 
 
@@ -161,12 +199,79 @@ public class GameManager {
         return pecaInfo;
     }
 
+
+    boolean isBlack = true; // black is 0 in .txt
+    boolean isWhite=false; // white is 1 in .txt
     public boolean move(int x0, int y0, int x1, int y1){
+
+       if(cordenadasPecasArray[x0][y0] == null){
+           return false;
+       }
+       if(x1>x0+1 || y1>y0+1 ||x0>tamanhoTabuleiro-1 ||y0>tamanhoTabuleiro-1|| x1>tamanhoTabuleiro-1 || y1>tamanhoTabuleiro-1){
+           return false;
+       }
+       if(x0<0 ||y1<0 ||x1<0 || y1<0){
+           return false;
+       }
+       if(x0==x1 && y0==y1){
+           return false;
+       }
+       if(isBlack){
+           String blackPiece = cordenadasPecasArray[x0][y0];
+           for(Peca peca : whiteTeam){
+               if (peca.identificador.equals(blackPiece)){
+                   return false;
+               }
+           }
+
+               String space = cordenadasPecasArray[x1][y1];
+               for(Peca peca : whiteTeam){
+                   if (peca.identificador.equals(space)){
+                       peca.estado="capturado";
+                       whiteTeam.remove(peca);
+                       break;
+                   }
+               }
+               cordenadasPecasArray[x0][y0] = null;
+               cordenadasPecasArray[x1][y1] = blackPiece;
+           isWhite=true;
+           isBlack=false;
+           return true;
+       }
+
+       if(isWhite){
+           String whitePiece = cordenadasPecasArray[x0][y0];
+           for(Peca peca : blackTeam){
+               if (peca.identificador.equals(whitePiece)){
+                   return false;
+               }
+           }
+
+           String space = cordenadasPecasArray[x1][y1];
+           for(Peca peca : blackTeam){
+               if (peca.identificador.equals(space)){
+                   peca.estado="capturado";
+                   blackTeam.remove(peca);
+                   break;
+               }
+           }
+             cordenadasPecasArray[x0][y0] = null;
+             cordenadasPecasArray[x1][y1] = whitePiece;
+           isBlack=true;
+           isWhite=false;
+       }
+
        return true;
     }
 
     public int getCurrentTeamID(){
+       if(isBlack){
+           return 0;
+       }
+       if(isWhite){
        return 1;
+       }
+       return 0;
     }
 
 
