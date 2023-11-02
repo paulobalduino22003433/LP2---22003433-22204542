@@ -7,8 +7,8 @@ public class Peca {
     String alcunha;
     String png;
     String estado;
-    int x = -1;
-    int y = -1;
+    Integer x = -1;
+    Integer y = -1;
 
     public Peca(String identificador, String tipoDePeca, String equipa, String alcunha, String estado) {
         this.identificador = identificador;

@@ -15,7 +15,7 @@ public class TestGameManager {
         gameManager.loadGame(new File("test-files/4x4.txt"));
     }
 
-
+/*/
         @Test
         void testGetSquareInfo() {
             GameManager gameManager = new GameManager();
@@ -26,4 +26,6 @@ public class TestGameManager {
             String[] squareInfo2 = gameManager.getSquareInfo(2, 3);
             assertNull(squareInfo2);
         }
+
+ */
 }

@@ -6,9 +6,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.Objects;
 
 public class GameManager {
     int tamanhoTabuleiro = 0;
@@ -20,8 +18,8 @@ public class GameManager {
     ArrayList<Peca> blackTeam;
     ArrayList<Peca> whiteTeam;
     Tabuleiro tabuleiro;
-    final String EM_JOGO = "em jogo";
-    final String CAPTURADO = "capturado";
+    final String em_Jogo = "em jogo";
+    final String capturado = "capturado";
     boolean isBlack = true; // black is 0 in .txt
     boolean isWhite = false; // white is 1 in .txt
 
@@ -68,7 +66,7 @@ public class GameManager {
 
                     int id = Integer.parseInt(partes[0].trim());
 
-                    Peca peca = new Peca(partes[0].trim(), partes[1].trim(), partes[2].trim(), partes[3].trim(), EM_JOGO);
+                    Peca peca = new Peca(partes[0].trim(), partes[1].trim(), partes[2].trim(), partes[3].trim(), em_Jogo);
                     peca.setPng();
                     pecas.add(peca);
                     pecasMap.put(id,peca);
@@ -220,15 +218,15 @@ public class GameManager {
 
            for (Peca pecaBranca : whiteTeam) {
                if (pecaBranca.getIdentificador().equals(movimentoParaPeca)) {
-                   pecaBranca.setEstado(CAPTURADO);
-                   pecaBranca.setX(-1);
-                   pecaBranca.setY(-1);
+                   pecaBranca.setEstado(capturado);
+                   pecaBranca.x = null;
+                   pecaBranca.y = null;
                    whiteTeam.remove(pecaBranca);
                    break;
                }
            }
 
-           cordenadasPecasArray[y0][x0] = "0";
+           cordenadasPecasArray[y0][x0] = null;
            cordenadasPecasArray[y1][x1] = pecaAtual;
 
            for (Peca pecaTemporaria : pecas) {
@@ -253,15 +251,15 @@ public class GameManager {
 
            for (Peca pecaPreta : blackTeam) {
                if (pecaPreta.identificador.equals(movimentoParaPeca)) {
-                   pecaPreta.setEstado(CAPTURADO);
-                   pecaPreta.setX(-1);
-                   pecaPreta.setY(-1);
+                   pecaPreta.setEstado(capturado);
+                   pecaPreta.x = null;
+                   pecaPreta.y = null;
                    blackTeam.remove(pecaPreta);
                    break;
                }
            }
 
-           cordenadasPecasArray[y0][x0] = "0";
+           cordenadasPecasArray[y0][x0] = null;
            cordenadasPecasArray[y1][x1] = pecaAtual;
 
            for (Peca pecaTemporaria : pecas) {
