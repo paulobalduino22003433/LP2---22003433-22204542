@@ -23,6 +23,9 @@ public class GameManager {
     boolean isBlackTurn = true; // black is 0 in .txt
     boolean isWhiteTurn = false; // white is 1 in .txt
 
+    boolean algumaPecaMorreu=false;
+    int jogadasSemCaptura =0;
+
 
     public boolean loadGame(File file) {
          pecasMap = new HashMap<>();
@@ -183,6 +186,7 @@ public class GameManager {
     }
 
 
+
     public boolean move(int x0, int y0, int x1, int y1) {
        if (x1>x0+1 || y1>y0+1) {
            return false;
@@ -221,12 +225,16 @@ public class GameManager {
                    pecaBranca.x = "";
                    pecaBranca.y = "";
                    whiteTeam.remove(pecaBranca);
+                   algumaPecaMorreu=true;
                    break;
+               }else if(algumaPecaMorreu){
+                   jogadasSemCaptura++;
                }
            }
 
            cordenadasPecasArray[y0][x0] = null;
            cordenadasPecasArray[y1][x1] = pecaAtual;
+
 
            for (Peca pecaTemporaria : pecas) {
                if (pecaTemporaria.getIdentificador().equals(pecaAtual)) {
@@ -254,7 +262,10 @@ public class GameManager {
                    pecaPreta.x = "";
                    pecaPreta.y = "";
                    blackTeam.remove(pecaPreta);
+                   algumaPecaMorreu=true;
                    break;
+               }else if(algumaPecaMorreu){
+                   jogadasSemCaptura++;
                }
            }
 
@@ -286,6 +297,10 @@ public class GameManager {
             return true;
         }
         if(whiteTeam.isEmpty() || blackTeam.isEmpty()){
+            return true;
+        }
+
+        if(jogadasSemCaptura>=10 && algumaPecaMorreu){
             return true;
         }
         return false;
