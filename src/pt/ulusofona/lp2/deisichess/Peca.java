@@ -7,8 +7,8 @@ public class Peca {
     String alcunha;
     String png;
     String estado;
-    Integer x = -1;
-    Integer y = -1;
+    String x = "";
+    String y = "";
 
     public Peca(String identificador, String tipoDePeca, String equipa, String alcunha, String estado) {
         this.identificador = identificador;
@@ -43,11 +43,11 @@ public class Peca {
         return estado;
     }
 
-    public int getX() {
+    public String getX() {
         return x;
     }
 
-    public int getY() {
+    public String getY() {
         return y;
     }
 
@@ -55,11 +55,11 @@ public class Peca {
         return png;
     }
 
-    public void setX(int x) {
+    public void setX(String x) {
         this.x = x;
     }
 
-    public void setY(int y) {
+    public void setY(String y) {
         this.y = y;
     }
 

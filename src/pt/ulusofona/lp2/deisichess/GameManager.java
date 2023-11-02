@@ -18,7 +18,7 @@ public class GameManager {
     ArrayList<Peca> blackTeam;
     ArrayList<Peca> whiteTeam;
     Tabuleiro tabuleiro;
-    final String em_Jogo = "em jogo";
+    final String emJogo = "em jogo";
     final String capturado = "capturado";
     boolean isBlack = true; // black is 0 in .txt
     boolean isWhite = false; // white is 1 in .txt
@@ -66,7 +66,7 @@ public class GameManager {
 
                     int id = Integer.parseInt(partes[0].trim());
 
-                    Peca peca = new Peca(partes[0].trim(), partes[1].trim(), partes[2].trim(), partes[3].trim(), em_Jogo);
+                    Peca peca = new Peca(partes[0].trim(), partes[1].trim(), partes[2].trim(), partes[3].trim(), emJogo);
                     peca.setPng();
                     pecas.add(peca);
                     pecasMap.put(id,peca);
@@ -121,8 +121,8 @@ public class GameManager {
             for (int x = 0; x < tamanhoTabuleiro; x++) {
                 for (int identificador = 0; identificador < numeroPecas; identificador++) {
                     if (pecas.get(identificador).getIdentificador().equals(cordenadasPecasArray[y][x])) {
-                        pecas.get(identificador).setX(x);
-                        pecas.get(identificador).setY(y);
+                        pecas.get(identificador).setX(Integer.toString(x));
+                        pecas.get(identificador).setY(Integer.toString(y));
                     }
                 }
             }
@@ -143,7 +143,7 @@ public class GameManager {
         }
 
        for (Peca peca : pecas) {
-           if (peca.getX() == x && peca.getY() == y) {
+           if (peca.getX().equals(Integer.toString(x)) && peca.getY().equals(Integer.toString(y))) {
                pecaInfo[0] = peca.getIdentificador();
                pecaInfo[1] = peca.getTipoDePeca();
                pecaInfo[2] = peca.getEquipa();
@@ -219,8 +219,8 @@ public class GameManager {
            for (Peca pecaBranca : whiteTeam) {
                if (pecaBranca.getIdentificador().equals(movimentoParaPeca)) {
                    pecaBranca.setEstado(capturado);
-                   pecaBranca.x = null;
-                   pecaBranca.y = null;
+                   pecaBranca.x = "";
+                   pecaBranca.y = "";
                    whiteTeam.remove(pecaBranca);
                    break;
                }
@@ -231,8 +231,8 @@ public class GameManager {
 
            for (Peca pecaTemporaria : pecas) {
                if (pecaTemporaria.getIdentificador().equals(pecaAtual)) {
-                   pecaTemporaria.setX(x1);
-                   pecaTemporaria.setY(y1);
+                   pecaTemporaria.setX(Integer.toString(x1));
+                   pecaTemporaria.setY(Integer.toString(y1));
                }
            }
 
@@ -252,8 +252,8 @@ public class GameManager {
            for (Peca pecaPreta : blackTeam) {
                if (pecaPreta.identificador.equals(movimentoParaPeca)) {
                    pecaPreta.setEstado(capturado);
-                   pecaPreta.x = null;
-                   pecaPreta.y = null;
+                   pecaPreta.x = "";
+                   pecaPreta.y = "";
                    blackTeam.remove(pecaPreta);
                    break;
                }
@@ -264,8 +264,8 @@ public class GameManager {
 
            for (Peca pecaTemporaria : pecas) {
                if (pecaTemporaria.getIdentificador().equals(pecaAtual)) {
-                   pecaTemporaria.setX(x1);
-                   pecaTemporaria.setY(y1);
+                   pecaTemporaria.setX(Integer.toString(x1));
+                   pecaTemporaria.setY(Integer.toString(y1));
                }
            }
 
