@@ -104,7 +104,6 @@ public class GameManager {
                 if (peca.getEquipa().equals("1")) {
                     whiteTeam.add(peca);
                 }
-                tabuleiro = new Tabuleiro(whiteTeam,blackTeam);
             }
 
             /*/System.out.println("cordenadasPecasArray[3][1]: " + cordenadasPecasArray[3][1]);/*/
@@ -170,8 +169,8 @@ public class GameManager {
                 peca[2] = pecaClone.getEquipa();
                 peca[3] = pecaClone.getAlcunha();
                 peca[4] = pecaClone.getEstado();
-                peca[5] = pecaClone.getX() + "";
-                peca[6] = pecaClone.getY() + "";
+                peca[5] = pecaClone.getX();
+                peca[6] = pecaClone.getY();
             }
         }
 
@@ -282,7 +281,11 @@ public class GameManager {
 
 
     public boolean gameOver() {
-        if(numeroPecas <=2) {
+        tabuleiro = new Tabuleiro(whiteTeam,blackTeam);
+        if(whiteTeam.size()==1 && blackTeam.size() ==1) {
+            return true;
+        }
+        if(whiteTeam.isEmpty() || blackTeam.isEmpty()){
             return true;
         }
         return false;
