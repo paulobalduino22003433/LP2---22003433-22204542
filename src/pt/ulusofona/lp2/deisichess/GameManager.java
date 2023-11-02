@@ -186,7 +186,7 @@ public class GameManager {
     }
 
 
-
+    boolean dontGo;
     public boolean move(int x0, int y0, int x1, int y1) {
        if (x1>x0+1 || y1>y0+1) {
            return false;
@@ -210,7 +210,7 @@ public class GameManager {
 
        String pecaAtual = cordenadasPecasArray[y0][x0];
        String movimentoParaPeca = cordenadasPecasArray[y1][x1];
-
+       dontGo=false;
 
        if (isBlackTurn) {
            for (Peca pecaBranca : whiteTeam) {
@@ -226,8 +226,10 @@ public class GameManager {
                    pecaBranca.y = "";
                    whiteTeam.remove(pecaBranca);
                    algumaPecaMorreu=true;
+                   dontGo=true;
                    break;
-               }else if(algumaPecaMorreu){
+               }
+               if(algumaPecaMorreu && !dontGo){
                    jogadasSemCaptura++;
                }
            }
@@ -263,8 +265,10 @@ public class GameManager {
                    pecaPreta.y = "";
                    blackTeam.remove(pecaPreta);
                    algumaPecaMorreu=true;
+                   dontGo=true;
                    break;
-               }else if(algumaPecaMorreu){
+               }
+               if(algumaPecaMorreu && !dontGo){
                    jogadasSemCaptura++;
                }
            }
