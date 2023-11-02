@@ -20,8 +20,8 @@ public class GameManager {
     Tabuleiro tabuleiro;
     final String emJogo = "em jogo";
     final String capturado = "capturado";
-    boolean isBlack = true; // black is 0 in .txt
-    boolean isWhite = false; // white is 1 in .txt
+    boolean isBlackTurn = true; // black is 0 in .txt
+    boolean isWhiteTurn = false; // white is 1 in .txt
 
 
     public boolean loadGame(File file) {
@@ -209,7 +209,7 @@ public class GameManager {
        String movimentoParaPeca = cordenadasPecasArray[y1][x1];
 
 
-       if (isBlack) {
+       if (isBlackTurn) {
            for (Peca pecaBranca : whiteTeam) {
                if (pecaBranca.getIdentificador().equals(pecaAtual)) {
                    return false;
@@ -219,8 +219,8 @@ public class GameManager {
            for (Peca pecaBranca : whiteTeam) {
                if (pecaBranca.getIdentificador().equals(movimentoParaPeca)) {
                    pecaBranca.setEstado(capturado);
-                   pecaBranca.x = "n";
-                   pecaBranca.y = "a";
+                   pecaBranca.x = "";
+                   pecaBranca.y = "";
                    whiteTeam.remove(pecaBranca);
                    break;
                }
@@ -236,13 +236,13 @@ public class GameManager {
                }
            }
 
-           isWhite = true;
-           isBlack = false;
+           isWhiteTurn = true;
+           isBlackTurn = false;
 
            return true;
        }
 
-       if (isWhite) {
+       if (isWhiteTurn) {
            for (Peca pecaPreta : blackTeam) {
                if (pecaPreta.getIdentificador().equals(pecaAtual)) {
                    return false;
@@ -252,8 +252,8 @@ public class GameManager {
            for (Peca pecaPreta : blackTeam) {
                if (pecaPreta.identificador.equals(movimentoParaPeca)) {
                    pecaPreta.setEstado(capturado);
-                   pecaPreta.x = "n";
-                   pecaPreta.y = "a";
+                   pecaPreta.x = "";
+                   pecaPreta.y = "";
                    blackTeam.remove(pecaPreta);
                    break;
                }
@@ -269,15 +269,15 @@ public class GameManager {
                }
            }
 
-           isBlack = true;
-           isWhite = false;
+           isBlackTurn = true;
+           isWhiteTurn = false;
        }
 
        return true;
     }
 
     public int getCurrentTeamID() {
-        return isBlack ? 0 : 1;
+        return isBlackTurn ? 0 : 1;
     }
 
 

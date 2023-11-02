@@ -21,7 +21,7 @@ public class Peca {
     @Override
     public String toString() {
         if(estado.equals("capturado")){
-            return identificador + " | " + tipoDePeca + " | " + equipa + " | " + alcunha + " @ (" + x + "/" + y + ")";
+            return identificador + " | " + tipoDePeca + " | " + equipa + " | " + alcunha + " @ (" + "n" + "/" + "a" + ")";
         }
         return identificador + " | " + tipoDePeca + " | " + equipa + " | " + alcunha + " @ (" + x + ", " + y + ")";
     }
