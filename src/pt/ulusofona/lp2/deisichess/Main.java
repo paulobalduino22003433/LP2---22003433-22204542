@@ -25,6 +25,7 @@ public class Main {
 
         System.out.println("\n" + Arrays.toString(gameManager.getPieceInfo(1)));
 
-        System.out.println(gameManager.getPieceInfoAsString(6));
+        System.out.println("\n\n" + Arrays.toString(gameManager.getSquareInfo(3,3)));
+
     }
 }

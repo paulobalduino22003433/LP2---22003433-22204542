@@ -5,17 +5,10 @@ public class Peca {
     String tipoDePeca;
     String equipa;
     String alcunha;
+    String png;
     String estado;
     int x = -1;
     int y = -1;
-
-
-    public Peca(String identificador, String tipoDePeca, String equipa, String alcunha) {
-        this.identificador = identificador;
-        this.tipoDePeca = tipoDePeca;
-        this.equipa = equipa;
-        this.alcunha = alcunha;
-    }
 
     public Peca(String identificador, String tipoDePeca, String equipa, String alcunha, String estado) {
         this.identificador = identificador;
@@ -27,7 +20,7 @@ public class Peca {
 
     @Override
     public String toString() {
-        return identificador + " | " + tipoDePeca + " | " + equipa + " | " + alcunha + " @(" + x + ", " + y + ")";
+        return identificador + " | " + tipoDePeca + " | " + equipa + " | " + alcunha + " @ (" + x + ", " + y + ")";
     }
 
     public String getIdentificador() {
@@ -58,6 +51,10 @@ public class Peca {
         return y;
     }
 
+    public String getPng() {
+        return png;
+    }
+
     public void setX(int x) {
         this.x = x;
     }
@@ -66,4 +63,11 @@ public class Peca {
         this.y = y;
     }
 
+    public void setPng() {
+        if (equipa.equals("0")) {
+            png = "crazy_emoji_black.png";
+        } else {
+            png = "crazy_emoji_white.png";
+        }
+    }
 }

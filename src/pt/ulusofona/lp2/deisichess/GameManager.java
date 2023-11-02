@@ -66,6 +66,7 @@ public class GameManager {
                     int id = Integer.parseInt(partes[0].trim());
 
                     Peca peca = new Peca(partes[0].trim(), partes[1].trim(), partes[2].trim(), partes[3].trim(), EM_JOGO);
+                    peca.setPng();
                     pecas.add(peca);
                     pecasMap.put(id,peca);
 
@@ -134,20 +135,24 @@ public class GameManager {
 
 
     public String[] getSquareInfo(int x, int y) {
-       if(x<0 || y<0 || x>tamanhoTabuleiro-1 || y>tamanhoTabuleiro-1) {
-           return null;
-       }
+        String[] pecaInfo = new String[5];
 
-       String[] pecaInfo = new String[4];
-       String id = cordenadasPecasArray[x][y];
+        if(x<0 || y<0 || x>tamanhoTabuleiro-1 || y>tamanhoTabuleiro-1) {
+           return null;
+        }
 
        for (Peca peca : pecas) {
-           if (peca.getIdentificador().equals(id)) {
+           if (peca.getX() == x && peca.getY() == y) {
                pecaInfo[0] = peca.getIdentificador();
                pecaInfo[1] = peca.getTipoDePeca();
                pecaInfo[2] = peca.getEquipa();
                pecaInfo[3] = peca.getAlcunha();
+               pecaInfo[4] = peca.getPng();
            }
+       }
+
+       if (pecaInfo[0] == null) {
+           return null;
        }
 
        return pecaInfo;
