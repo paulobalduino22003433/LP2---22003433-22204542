@@ -20,7 +20,7 @@ public class Peca {
 
     @Override
     public String toString() {
-        return identificador + " | " + tipoDePeca + " | " + equipa + " | " + alcunha + " @ (" + x + ", " + y + ")";
+        return identificador + " | " + tipoDePeca + " | " + equipa + " | " + alcunha + " @ (" + x + "/" + y + ")";
     }
 
     public String getIdentificador() {

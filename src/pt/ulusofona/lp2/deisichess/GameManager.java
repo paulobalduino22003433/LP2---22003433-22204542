@@ -219,8 +219,8 @@ public class GameManager {
            for (Peca pecaBranca : whiteTeam) {
                if (pecaBranca.getIdentificador().equals(movimentoParaPeca)) {
                    pecaBranca.setEstado(capturado);
-                   pecaBranca.x = "";
-                   pecaBranca.y = "";
+                   pecaBranca.x = "n";
+                   pecaBranca.y = "a";
                    whiteTeam.remove(pecaBranca);
                    break;
                }
@@ -252,8 +252,8 @@ public class GameManager {
            for (Peca pecaPreta : blackTeam) {
                if (pecaPreta.identificador.equals(movimentoParaPeca)) {
                    pecaPreta.setEstado(capturado);
-                   pecaPreta.x = "";
-                   pecaPreta.y = "";
+                   pecaPreta.x = "n";
+                   pecaPreta.y = "a";
                    blackTeam.remove(pecaPreta);
                    break;
                }
