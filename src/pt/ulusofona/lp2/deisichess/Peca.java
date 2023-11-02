@@ -2,10 +2,12 @@ package pt.ulusofona.lp2.deisichess;
 
 public class Peca {
     String identificador;
-    String tipoDePeca ;
-    String equipa ;
-    String alcunha ;
+    String tipoDePeca;
+    String equipa;
+    String alcunha;
     String estado;
+    int x = -1;
+    int y = -1;
 
 
     public Peca(String identificador, String tipoDePeca, String equipa, String alcunha) {
@@ -25,13 +27,7 @@ public class Peca {
 
     @Override
     public String toString() {
-        return "Peca{" +
-                "identificador='" + identificador + '\'' +
-                ", tipoDePeca='" + tipoDePeca + '\'' +
-                ", equipa='" + equipa + '\'' +
-                ", alcunha='" + alcunha + '\'' +
-                ", estado='" + estado + '\'' +
-                '}';
+        return identificador + " | " + tipoDePeca + " | " + equipa + " | " + alcunha + " @(" + x + ", " + y + ")";
     }
 
     public String getIdentificador() {
@@ -48,6 +44,26 @@ public class Peca {
 
     public String getAlcunha() {
         return alcunha;
+    }
+
+    public String getEstado() {
+        return estado;
+    }
+
+    public int getX() {
+        return x;
+    }
+
+    public int getY() {
+        return y;
+    }
+
+    public void setX(int x) {
+        this.x = x;
+    }
+
+    public void setY(int y) {
+        this.y = y;
     }
 
 }

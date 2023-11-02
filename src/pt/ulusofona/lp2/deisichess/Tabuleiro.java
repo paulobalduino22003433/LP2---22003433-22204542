@@ -9,5 +9,4 @@ public class Tabuleiro {
         this.whiteTeam = whiteTeam;
         this.blackTeam = blackTeam;
     }
-
 }
