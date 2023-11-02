@@ -19,13 +19,24 @@ public class Main {
 
         System.out.println(gameManager.cordenadasPecas);
 
+        /*
         for (int i = 0; i < 4; i++) {
             System.out.print((gameManager.cordenadasPecasArray[i][1]) + " ");
         }
-
         System.out.println("\n" + Arrays.toString(gameManager.getPieceInfo(1)));
-
         System.out.println("\n\n" + Arrays.toString(gameManager.getSquareInfo(3,3)));
+        */
+
+        for (int i = 0; i < 4; i++) {
+            System.out.print((gameManager.cordenadasPecasArray[i][i]) + " ");
+        }
+
+        System.out.println(gameManager.move(1,0,1,1));
+        System.out.println(gameManager.pecas.get(0));
+        for (int i = 0; i < 4; i++) {
+            System.out.print((gameManager.cordenadasPecasArray[i][i]) + " ");
+        }
+        System.out.println(gameManager.pecas.get(0));
 
     }
 }

@@ -21,6 +21,9 @@ public class GameManager {
     ArrayList<Peca> whiteTeam;
     Tabuleiro tabuleiro;
     final String EM_JOGO = "em jogo";
+    final String CAPTURADO = "capturado";
+    boolean isBlack = true; // black is 0 in .txt
+    boolean isWhite = false; // white is 1 in .txt
 
 
     public boolean loadGame(File file) {
@@ -152,7 +155,7 @@ public class GameManager {
        }
 
        if (pecaInfo[0] == null) {
-           return null;
+           return new String[0];
        }
 
        return pecaInfo;
@@ -183,65 +186,93 @@ public class GameManager {
     }
 
 
-    boolean isBlack = true; // black is 0 in .txt
-    boolean isWhite = false; // white is 1 in .txt
     public boolean move(int x0, int y0, int x1, int y1) {
+       if (x1>x0+1 || y1>y0+1) {
+           return false;
+       }
 
-       if(cordenadasPecasArray[x0][y0] == null){
+       if (x1<0 || y1<0) {
            return false;
        }
-       if(x1>x0+1 || y1>y0+1 ||x0>tamanhoTabuleiro-1 ||y0>tamanhoTabuleiro-1|| x1>tamanhoTabuleiro-1 || y1>tamanhoTabuleiro-1){
+
+       if (x1>tamanhoTabuleiro-1 || y1>tamanhoTabuleiro-1) {
            return false;
        }
-       if(x0<0 ||y1<0 ||x1<0 || y1<0){
+
+       if (x0==x1 && y0==y1) {
            return false;
        }
-       if(x0==x1 && y0==y1){
+
+       if (cordenadasPecasArray[y0][x0].equals("0")) {
            return false;
        }
-       if(isBlack){
-           String blackPiece = cordenadasPecasArray[x0][y0];
-           for(Peca peca : whiteTeam){
-               if (peca.identificador.equals(blackPiece)){
+
+       String pecaAtual = cordenadasPecasArray[y0][x0];
+       String movimentoParaPeca = cordenadasPecasArray[y1][x1];
+
+
+       if (isBlack) {
+           for (Peca pecaBranca : whiteTeam) {
+               if (pecaBranca.getIdentificador().equals(pecaAtual)) {
                    return false;
                }
            }
 
-               String space = cordenadasPecasArray[x1][y1];
-               for(Peca peca : whiteTeam){
-                   if (peca.identificador.equals(space)){
-                       peca.estado="capturado";
-                       whiteTeam.remove(peca);
-                       break;
-                   }
-               }
-               cordenadasPecasArray[x0][y0] = null;
-               cordenadasPecasArray[x1][y1] = blackPiece;
-           isWhite=true;
-           isBlack=false;
-           return true;
-       }
-
-       if(isWhite){
-           String whitePiece = cordenadasPecasArray[x0][y0];
-           for(Peca peca : blackTeam){
-               if (peca.identificador.equals(whitePiece)){
-                   return false;
-               }
-           }
-
-           String space = cordenadasPecasArray[x1][y1];
-           for(Peca peca : blackTeam){
-               if (peca.identificador.equals(space)){
-                   peca.estado="capturado";
-                   blackTeam.remove(peca);
+           for (Peca pecaBranca : whiteTeam) {
+               if (pecaBranca.getIdentificador().equals(movimentoParaPeca)) {
+                   pecaBranca.setEstado(CAPTURADO);
+                   pecaBranca.setX(-1);
+                   pecaBranca.setY(-1);
+                   whiteTeam.remove(pecaBranca);
                    break;
                }
            }
-             cordenadasPecasArray[x0][y0] = null;
-             cordenadasPecasArray[x1][y1] = whitePiece;
-           isBlack=true;
-           isWhite=false;
+
+           cordenadasPecasArray[y0][x0] = "0";
+           cordenadasPecasArray[y1][x1] = pecaAtual;
+
+           for (Peca pecaTemporaria : pecas) {
+               if (pecaTemporaria.getIdentificador().equals(pecaAtual)) {
+                   pecaTemporaria.setX(x1);
+                   pecaTemporaria.setY(y1);
+               }
+           }
+
+           isWhite = true;
+           isBlack = false;
+
+           return true;
+       }
+
+       if (isWhite) {
+           for (Peca pecaPreta : blackTeam) {
+               if (pecaPreta.getIdentificador().equals(pecaAtual)) {
+                   return false;
+               }
+           }
+
+           for (Peca pecaPreta : blackTeam) {
+               if (pecaPreta.identificador.equals(movimentoParaPeca)) {
+                   pecaPreta.setEstado(CAPTURADO);
+                   pecaPreta.setX(-1);
+                   pecaPreta.setY(-1);
+                   blackTeam.remove(pecaPreta);
+                   break;
+               }
+           }
+
+           cordenadasPecasArray[y0][x0] = "0";
+           cordenadasPecasArray[y1][x1] = pecaAtual;
+
+           for (Peca pecaTemporaria : pecas) {
+               if (pecaTemporaria.getIdentificador().equals(pecaAtual)) {
+                   pecaTemporaria.setX(x1);
+                   pecaTemporaria.setY(y1);
+               }
+           }
+
+           isBlack = true;
+           isWhite = false;
        }
 
        return true;

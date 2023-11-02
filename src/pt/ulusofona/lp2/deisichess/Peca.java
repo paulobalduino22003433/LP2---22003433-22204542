@@ -70,4 +70,8 @@ public class Peca {
             png = "crazy_emoji_white.png";
         }
     }
+
+    public void setEstado(String estado) {
+        this.estado = estado;
+    }
 }
