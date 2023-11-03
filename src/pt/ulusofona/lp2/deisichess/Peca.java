@@ -6,16 +6,15 @@ public class Peca {
     String equipa;
     String alcunha;
     String png;
-    String estado;
+    String estado = "em jogo";
     String x = "";
     String y = "";
 
-    public Peca(String identificador, String tipoDePeca, String equipa, String alcunha, String estado) {
+    public Peca(String identificador, String tipoDePeca, String equipa, String alcunha) {
         this.identificador = identificador;
         this.tipoDePeca = tipoDePeca;
         this.equipa = equipa;
         this.alcunha = alcunha;
-        this.estado = estado;
     }
 
     @Override
@@ -74,7 +73,7 @@ public class Peca {
         }
     }
 
-    public void setEstado(String estado) {
-        this.estado = estado;
+    public void pecaFoiCapturada() {
+        estado = "capturado";
     }
 }
