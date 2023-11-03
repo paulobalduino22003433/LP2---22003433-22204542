@@ -196,6 +196,7 @@ public class GameManager {
                    return false;
                }
            }
+           
 
            for (Peca pecaBranca : tabuleiro.getWhiteTeam()) {
                if (pecaBranca.getIdentificador().equals(movimentoParaPeca)) {
