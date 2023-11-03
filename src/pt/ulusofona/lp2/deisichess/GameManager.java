@@ -188,107 +188,84 @@ public class GameManager {
 
     boolean dontGo;
     public boolean move(int x0, int y0, int x1, int y1) {
-       if (x1>x0+1 || y1>y0+1) {
-           return false;
-       }
+        if (x1 > x0 + 1 || y1 > y0 + 1) {
+            return false;
+        }
 
-       if (x1<0 || y1<0) {
-           return false;
-       }
+        if (x1 < 0 || y1 < 0) {
+            return false;
+        }
 
-       if (x1>tamanhoTabuleiro-1 || y1>tamanhoTabuleiro-1) {
-           return false;
-       }
+        if (x1 > tamanhoTabuleiro - 1 || y1 > tamanhoTabuleiro - 1) {
+            return false;
+        }
 
-       if (x0==x1 && y0==y1) {
-           return false;
-       }
+        if (x0 == x1 && y0 == y1) {
+            return false;
+        }
 
-       if (cordenadasPecasArray[y0][x0].equals("0")) {
-           return false;
-       }
+        if (cordenadasPecasArray[y0][x0].equals("0")) {
+            return false;
+        }
 
-       String pecaAtual = cordenadasPecasArray[y0][x0];
-       String movimentoParaPeca = cordenadasPecasArray[y1][x1];
-       dontGo=false;
+        String pecaAtual = cordenadasPecasArray[y0][x0];
+        String movimentoParaPeca = cordenadasPecasArray[y1][x1];
 
-       if (isBlackTurn) {
-           for (Peca pecaBranca : whiteTeam) {
-               if (pecaBranca.getIdentificador().equals(pecaAtual)) {
-                   return false;
-               }
-           }
+        boolean pecaCapturada = false;
 
-           for (Peca pecaBranca : whiteTeam) {
-               if (pecaBranca.getIdentificador().equals(movimentoParaPeca)) {
-                   pecaBranca.setEstado(capturado);
-                   pecaBranca.x = "";
-                   pecaBranca.y = "";
-                   whiteTeam.remove(pecaBranca);
-                   algumaPecaMorreu=true;
-                   dontGo=true;
-                   break;
-               }
-               if(algumaPecaMorreu && !dontGo){
-                   jogadasSemCaptura++;
-               }
-           }
+        if (isBlackTurn) {
+            for (Peca pecaBranca : whiteTeam) {
+                if (pecaBranca.getIdentificador().equals(movimentoParaPeca)) {
+                    pecaBranca.setEstado(capturado);
+                    pecaBranca.x = "";
+                    pecaBranca.y = "";
+                    whiteTeam.remove(pecaBranca);
+                    pecaCapturada = true;
+                    break;
+                }
+            }
+        } else if (isWhiteTurn) {
+            for (Peca pecaPreta : blackTeam) {
+                if (pecaPreta.getIdentificador().equals(movimentoParaPeca)) {
+                    pecaPreta.setEstado(capturado);
+                    pecaPreta.x = "";
+                    pecaPreta.y = "";
+                    blackTeam.remove(pecaPreta);
+                    pecaCapturada = true;
+                    break;
+                }
+            }
+        }
 
-           cordenadasPecasArray[y0][x0] = null;
-           cordenadasPecasArray[y1][x1] = pecaAtual;
+        if (pecaCapturada) {
+            algumaPecaMorreu = true;
+        }
 
+        if (algumaPecaMorreu && !pecaCapturada) {
+            jogadasSemCaptura++;
+        }
 
-           for (Peca pecaTemporaria : pecas) {
-               if (pecaTemporaria.getIdentificador().equals(pecaAtual)) {
-                   pecaTemporaria.setX(Integer.toString(x1));
-                   pecaTemporaria.setY(Integer.toString(y1));
-               }
-           }
+        cordenadasPecasArray[y0][x0] = null;
+        cordenadasPecasArray[y1][x1] = pecaAtual;
 
-           isWhiteTurn = true;
-           isBlackTurn = false;
+        for (Peca pecaTemporaria : pecas) {
+            if (pecaTemporaria.getIdentificador().equals(pecaAtual)) {
+                pecaTemporaria.setX(Integer.toString(x1));
+                pecaTemporaria.setY(Integer.toString(y1));
+            }
+        }
 
-           return true;
-       }
+        if (isBlackTurn) {
+            isWhiteTurn = true;
+            isBlackTurn = false;
+        } else if (isWhiteTurn) {
+            isBlackTurn = true;
+            isWhiteTurn = false;
+        }
 
-       if (isWhiteTurn) {
-           for (Peca pecaPreta : blackTeam) {
-               if (pecaPreta.getIdentificador().equals(pecaAtual)) {
-                   return false;
-               }
-           }
-
-           for (Peca pecaPreta : blackTeam) {
-               if (pecaPreta.identificador.equals(movimentoParaPeca)) {
-                   pecaPreta.setEstado(capturado);
-                   pecaPreta.x = "";
-                   pecaPreta.y = "";
-                   blackTeam.remove(pecaPreta);
-                   algumaPecaMorreu=true;
-                   dontGo=true;
-                   break;
-               }
-               if(algumaPecaMorreu && !dontGo){
-                   jogadasSemCaptura++;
-               }
-           }
-
-           cordenadasPecasArray[y0][x0] = null;
-           cordenadasPecasArray[y1][x1] = pecaAtual;
-
-           for (Peca pecaTemporaria : pecas) {
-               if (pecaTemporaria.getIdentificador().equals(pecaAtual)) {
-                   pecaTemporaria.setX(Integer.toString(x1));
-                   pecaTemporaria.setY(Integer.toString(y1));
-               }
-           }
-
-           isBlackTurn = true;
-           isWhiteTurn = false;
-       }
-
-       return true;
+        return true;
     }
+
 
     public int getCurrentTeamID() {
         return isBlackTurn ? 0 : 1;
