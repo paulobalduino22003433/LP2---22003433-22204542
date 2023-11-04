@@ -350,18 +350,18 @@ public class GameManager {
 
     public ArrayList<String> getGameResults() {
         ArrayList<String> placar = new ArrayList<>();
-
+        GameResults gameResults = new GameResults(teamPretoNrCapturas,jogadasValidasPretas,jogadasInvalidasPretas,teamBrancoNrCapturas,jogadasValidasBrancas,jogadasInvalidasBrancas);
         placar.add("JOGO DE CRAZY CHESS");
         placar.add("Resultado: " + resultadoJogo);
         placar.add("---");
         placar.add("Equipa das pretas");
-        placar.add(Integer.toString(teamPretoNrCapturas));
-        placar.add(Integer.toString(jogadasValidasPretas));
-        placar.add(Integer.toString(jogadasInvalidasPretas));
+        placar.add(Integer.toString(gameResults.getBlackCaptures()));
+        placar.add(Integer.toString(gameResults.getBlackValidMoves()));
+        placar.add(Integer.toString(gameResults.getBlackInvalidMoves()));
         placar.add("Equipa das Brancas");
-        placar.add(Integer.toString(teamBrancoNrCapturas));
-        placar.add(Integer.toString(jogadasValidasBrancas));
-        placar.add(Integer.toString(jogadasInvalidasBrancas));
+        placar.add(Integer.toString(gameResults.getWhiteCaptures()));
+        placar.add(Integer.toString(gameResults.getWhiteValidMoves()));
+        placar.add(Integer.toString(gameResults.getWhiteInvalidMoves()));
         return placar;
     }
 
