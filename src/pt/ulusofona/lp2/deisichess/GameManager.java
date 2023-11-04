@@ -354,7 +354,7 @@ public class GameManager {
         placar.add("JOGO DE CRAZY CHESS");
         placar.add("Resultado: " + resultadoJogo);
         placar.add("---");
-        placar.add("Equipa das pretas");
+        placar.add("Equipa das Pretas");
         placar.add(Integer.toString(gameResults.getBlackCaptures()));
         placar.add(Integer.toString(gameResults.getBlackValidMoves()));
         placar.add(Integer.toString(gameResults.getBlackInvalidMoves()));
