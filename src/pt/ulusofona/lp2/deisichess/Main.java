@@ -11,7 +11,13 @@ public class Main {
         System.out.println("Tamanho do Tabuleiro: " + gameManager.tamanhoTabuleiro);
         System.out.println("Número de Peças: " + gameManager.numeroPecas);
         System.out.println("Cordenadas das Peças: " + gameManager.cordenadasPecas);
+        for (Peca peca : gameManager.pecasMap.values()) {
+            if(peca.identificador.equals("1")){
+                System.out.println(peca.identificador);
+            }
+        }
 
+        /*/
         for(Peca peca : gameManager.pecas){
             System.out.println(peca);
         }
@@ -19,13 +25,13 @@ public class Main {
 
         System.out.println(gameManager.cordenadasPecas);
 
-        /*
+
         for (int i = 0; i < 4; i++) {
             System.out.print((gameManager.cordenadasPecasArray[i][1]) + " ");
         }
         System.out.println("\n" + Arrays.toString(gameManager.getPieceInfo(1)));
         System.out.println("\n\n" + Arrays.toString(gameManager.getSquareInfo(3,3)));
-        */
+
 
         for (int i = 0; i < 4; i++) {
             System.out.print((gameManager.cordenadasPecasArray[i][i]) + " ");
@@ -37,6 +43,6 @@ public class Main {
             System.out.print((gameManager.cordenadasPecasArray[i][i]) + " ");
         }
         System.out.println(gameManager.pecas.get(0));
-
+        /*/
     }
 }

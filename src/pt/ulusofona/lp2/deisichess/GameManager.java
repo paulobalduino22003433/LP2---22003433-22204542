@@ -110,7 +110,7 @@ public class GameManager {
             }
 
             setCoordinatesPieces();
-            removeCapturedPieces();
+
 
             for (Peca peca : pecas) {
                 if (peca.getEquipa().equals("0")) {
@@ -120,6 +120,8 @@ public class GameManager {
                     whiteTeam.add(peca);
                 }
             }
+
+            removeCapturedPieces();
 
             /*/System.out.println("cordenadasPecasArray[3][1]: " + cordenadasPecasArray[3][1]);/*/
             return true;
@@ -149,7 +151,8 @@ public class GameManager {
             Peca peca = iterator.next();
             if (peca.getX().isEmpty() || peca.getY().isEmpty()) {
                 peca.setEstado(capturado);
-                iterator.remove();
+                whiteTeam.remove(peca);
+                blackTeam.remove(peca);
             }
         }
     }
