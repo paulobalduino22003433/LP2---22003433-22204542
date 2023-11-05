@@ -141,7 +141,13 @@ public class GameManager {
         }
     }
 
-
+    public void removeCapturedPieces() {
+        for(Peca peca : pecas){
+            if(peca.x.isEmpty() || peca.y.isEmpty()){
+                peca.setEstado(capturado);
+            }
+        }
+    }
     public int getBoardSize() {
         return tamanhoTabuleiro;
     }
