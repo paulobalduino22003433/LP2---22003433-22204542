@@ -7,6 +7,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 
 public class GameManager {
     int tamanhoTabuleiro = 0;
@@ -143,13 +144,16 @@ public class GameManager {
     }
 
     public void removeCapturedPieces() {
-        for(Peca peca : pecas){
-            if(peca.x.isEmpty() || peca.y.isEmpty()){
+        Iterator<Peca> iterator = pecas.iterator();
+        while (iterator.hasNext()) {
+            Peca peca = iterator.next();
+            if (peca.getX().isEmpty() || peca.getY().isEmpty()) {
                 peca.setEstado(capturado);
-                pecas.remove(peca);
+                iterator.remove();
             }
         }
     }
+
     public int getBoardSize() {
         return tamanhoTabuleiro;
     }
