@@ -146,6 +146,7 @@ public class GameManager {
         for(Peca peca : pecas){
             if(peca.x.isEmpty() || peca.y.isEmpty()){
                 peca.setEstado(capturado);
+                pecas.remove(peca);
             }
         }
     }
