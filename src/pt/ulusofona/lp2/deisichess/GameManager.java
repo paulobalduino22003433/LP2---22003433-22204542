@@ -109,6 +109,7 @@ public class GameManager {
             }
 
             setCoordinatesPieces();
+            removeCapturedPieces();
 
             for (Peca peca : pecas) {
                 if (peca.getEquipa().equals("0")) {
