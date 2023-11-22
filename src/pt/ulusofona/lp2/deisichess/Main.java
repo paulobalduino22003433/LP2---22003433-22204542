@@ -8,14 +8,11 @@ public class Main {
     public static void main(String[] args) {
         GameManager gameManager = new GameManager();
         gameManager.loadGame(new File("test-files/4x4.txt"));
-        System.out.println("Tamanho do Tabuleiro: " + gameManager.tamanhoTabuleiro);
-        System.out.println("Número de Peças: " + gameManager.numeroPecas);
+
+        System.out.println("Tamanho do Tabuleiro: " + gameManager.tabuleiro.getTamanhoTabuleiro());
+        System.out.println("Número de Peças: " + gameManager.tabuleiro.getNumPecaTotal());
         System.out.println("Cordenadas das Peças: " + gameManager.cordenadasPecas);
-        for (Peca peca : gameManager.pecasMap.values()) {
-            if(peca.identificador.equals("1")){
-                System.out.println(peca.identificador);
-            }
-        }
+
 
         /*/
         for(Peca peca : gameManager.pecas){
