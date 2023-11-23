@@ -8,25 +8,44 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 
 public class GameManager {
-    ArrayList<Peca> pecas = new ArrayList<>();
-    ArrayList<String> cordenadasPecas = new ArrayList<>();
-    String[][] cordenadasPecasArray = new String[124][124];;
-    ArrayList<Peca> blackTeam = new ArrayList<>();
-    ArrayList<Peca> whiteTeam = new ArrayList<>();
-    Tabuleiro tabuleiro = new Tabuleiro(whiteTeam, blackTeam);
-    final String EM_JOGO = "em jogo";
-    final String CAPTURADO = "capturado";
-    StatsPeca GRPreta = new StatsPeca();
-    StatsPeca GRBranca = new StatsPeca();
-    GameResults gameResults = new GameResults();
+    int tamanhoTabuleiro = 0;
+    int numeroPecas;
+    ArrayList<Peca> pecas;
+    HashMap<Integer,Peca> pecasMap;
+    ArrayList<String> cordenadasPecas;
+    String[][] cordenadasPecasArray;
+    ArrayList<Peca> blackTeam;
+    ArrayList<Peca> whiteTeam;
+    Tabuleiro tabuleiro;
+    final String emJogo = "em jogo";
+    final String capturado = "capturado";
+    boolean isBlackTurn = true; // black is 10 in .txt
+    boolean isWhiteTurn = false; // white is 20 in .txt
+
+    boolean algumaPecaMorreu=false;
+    int jogadasSemCaptura =0;
+    String resultadoJogo = "";
+
+    int teamPretoNrCapturas=0;
+    int teamBrancoNrCapturas=0;
+
+    int jogadasInvalidasPretas;
+    int jogadasInvalidasBrancas;
+
+    int jogadasValidasPretas;
+    int jogadasValidasBrancas;
 
 
-    public boolean loadGame(File file) {
-        if (!file.exists()) {
-            return false;
-        }
+    void loadGame(File file) throws IOException, InvalidGameInputException {
+         pecasMap = new HashMap<>();
+         pecas = new ArrayList<>();
+         cordenadasPecas = new ArrayList<>();
+         cordenadasPecasArray = new String[124][124];
+         blackTeam = new ArrayList<>();
+         whiteTeam = new ArrayList<>();
 
         try {
             BufferedReader fileReader = new BufferedReader(new FileReader(file));
@@ -37,19 +56,19 @@ public class GameManager {
 
             while ((linha = fileReader.readLine()) != null) {
                 if (isSecondLine) {
-                    tabuleiro.setNumPecaTotal(Integer.parseInt(linha.trim()));
+                    numeroPecas = Integer.parseInt(linha.trim());
                     isSecondLine = false;
                     continue;
                 }
 
                 if (isFirstLine) {
-                    tabuleiro.setTamanhoTabuleiro(Integer.parseInt(linha.trim()));
+                    tamanhoTabuleiro = Integer.parseInt(linha.trim());
                     isSecondLine = true;
                     isFirstLine = false;
                     continue;
                 }
 
-                if (pecasRestantes < tabuleiro.getNumPecaTotal()) {
+                if (pecasRestantes < numeroPecas) { //NOTA: tirei o "!isFirstLine && !isSecondLine" pq sempre seria verdade, por conta das linhas 53 e 46.
                     String[] partes = linha.split(":");
                     //partes[0].trim() -> id
                     //partes[1].trim() -> tipoDePeca
@@ -58,23 +77,25 @@ public class GameManager {
 
                     int id = Integer.parseInt(partes[0].trim());
 
-                    Peca peca = new Peca(partes[0].trim(), partes[1].trim(), partes[2].trim(), partes[3].trim(), EM_JOGO);
+                    Peca peca = new Peca(partes[0].trim(), partes[1].trim(), partes[2].trim(), partes[3].trim(), emJogo);
                     peca.setPng();
                     pecas.add(peca);
+                    pecasMap.put(id,peca);
 
                     pecasRestantes++;
                     continue;
                 }
 
-                if (pecasRestantes == tabuleiro.getNumPecaTotal()) {
+                if (pecasRestantes == numeroPecas) { //NOTA: tirei o "!isFirstLine && !isSecondLine" pq sempre seria verdade, por conta das linhas 53 e 46.
                     cordenadasPecas.add(linha);
                 }
             }
 
             fileReader.close();
 
+
             int linhas = cordenadasPecas.size();
-            int colunas = tabuleiro.getTamanhoTabuleiro();
+            int colunas = tamanhoTabuleiro;
             cordenadasPecasArray = new String[linhas][colunas];
 
             for (int i = 0; i < linhas; i++) {
@@ -89,10 +110,10 @@ public class GameManager {
 
 
             for (Peca peca : pecas) {
-                if (peca.getEquipa().equals("0")) {
+                if (peca.getEquipa().equals("10")) {
                     blackTeam.add(peca);
                 }
-                if (peca.getEquipa().equals("1")) {
+                if (peca.getEquipa().equals("20")) {
                     whiteTeam.add(peca);
                 }
             }
@@ -100,18 +121,17 @@ public class GameManager {
             removeCapturedPieces();
 
             /*/System.out.println("cordenadasPecasArray[3][1]: " + cordenadasPecasArray[3][1]);/*/
-            return true;
 
         } catch (IOException e) {
             e.printStackTrace();
-            return false;
+
         }
     }
 
     public void setCoordinatesPieces() {
-        for (int y = 0; y < tabuleiro.getTamanhoTabuleiro(); y++) {
-            for (int x = 0; x < tabuleiro.getTamanhoTabuleiro(); x++) {
-                for (int identificador = 0; identificador < tabuleiro.getNumPecaTotal(); identificador++) {
+        for (int y = 0; y < tamanhoTabuleiro; y++) {
+            for (int x = 0; x < tamanhoTabuleiro; x++) {
+                for (int identificador = 0; identificador < numeroPecas; identificador++) {
                     if (pecas.get(identificador).getIdentificador().equals(cordenadasPecasArray[y][x])) {
                         pecas.get(identificador).setX(Integer.toString(x));
                         pecas.get(identificador).setY(Integer.toString(y));
@@ -123,11 +143,10 @@ public class GameManager {
 
     public void removeCapturedPieces() {
         Iterator<Peca> iterator = pecas.iterator();
-
         while (iterator.hasNext()) {
             Peca peca = iterator.next();
             if (peca.getX().isEmpty() || peca.getY().isEmpty()) {
-                peca.setEstado(CAPTURADO);
+                peca.setEstado(capturado);
                 whiteTeam.remove(peca);
                 blackTeam.remove(peca);
             }
@@ -135,14 +154,14 @@ public class GameManager {
     }
 
     public int getBoardSize() {
-        return tabuleiro.getTamanhoTabuleiro();
+        return tamanhoTabuleiro;
     }
 
 
     public String[] getSquareInfo(int x, int y) {
         String[] pecaInfo = new String[5];
 
-        if(x<0 || y<0 || x>tabuleiro.getTamanhoTabuleiro() -1 || y>tabuleiro.getTamanhoTabuleiro() -1) {
+        if(x<0 || y<0 || x>tamanhoTabuleiro-1 || y>tamanhoTabuleiro-1) {
            return null;
         }
 
@@ -187,49 +206,53 @@ public class GameManager {
         return pecas.get(ID - 1).toString();
     }
 
+
+
+
+
     public boolean move(int x0, int y0, int x1, int y1) {
         if (x1 > x0 + 1 || y1 > y0 + 1) {
-            if(tabuleiro.getIsBlackTurn()){
-                GRPreta.incInvalidMoves();
+            if(isBlackTurn){
+                jogadasInvalidasPretas++;
                 return false;
             }
-            GRBranca.incInvalidMoves();
+            jogadasInvalidasBrancas++;
             return false;
         }
 
         if (x1 < 0 || y1 < 0) {
-            if(tabuleiro.getIsBlackTurn()){
-                GRPreta.incInvalidMoves();
+            if(isBlackTurn){
+                jogadasInvalidasPretas++;
                 return false;
             }
-            GRBranca.incInvalidMoves();
+            jogadasInvalidasBrancas++;
             return false;
         }
 
-        if (x1 > tabuleiro.getTamanhoTabuleiro() - 1 || y1 > tabuleiro.getTamanhoTabuleiro() - 1) {
-            if(tabuleiro.getIsBlackTurn()){
-                GRPreta.incInvalidMoves();
+        if (x1 > tamanhoTabuleiro - 1 || y1 > tamanhoTabuleiro - 1) {
+            if(isBlackTurn){
+                jogadasInvalidasPretas++;
                 return false;
             }
-            GRBranca.incInvalidMoves();
+            jogadasInvalidasBrancas++;
             return false;
         }
 
         if (x0 == x1 && y0 == y1) {
-            if(tabuleiro.getIsBlackTurn()){
-                GRPreta.incInvalidMoves();
+            if(isBlackTurn){
+                jogadasInvalidasPretas++;
                 return false;
             }
-            GRBranca.incInvalidMoves();
+            jogadasInvalidasBrancas++;
             return false;
         }
 
         if (cordenadasPecasArray[y0][x0].equals("0")) {
-            if(tabuleiro.getIsBlackTurn()){
-                GRPreta.incInvalidMoves();
+            if(isBlackTurn){
+                jogadasInvalidasPretas++;
                 return false;
             }
-            GRBranca.incInvalidMoves();
+            jogadasInvalidasBrancas++;
             return false;
         }
 
@@ -238,53 +261,54 @@ public class GameManager {
 
         boolean pecaCapturada = false;
 
-        if (tabuleiro.getIsBlackTurn()) {
+        if (isBlackTurn) {
+
             for (Peca pecaBranca : whiteTeam) {
                 if (pecaBranca.getIdentificador().equals(pecaAtual)) {
-                    GRPreta.incInvalidMoves();
+                    jogadasInvalidasPretas++;
                     return false;
                 }
             }
 
             for (Peca pecaBranca : whiteTeam) {
                 if (pecaBranca.getIdentificador().equals(movimentoParaPeca)) {
-                    pecaBranca.setEstado(CAPTURADO);
+                    pecaBranca.setEstado(capturado);
                     pecaBranca.x = "";
                     pecaBranca.y = "";
                     whiteTeam.remove(pecaBranca);
                     pecaCapturada = true;
-                    GRPreta.incCaptures();
+                    teamPretoNrCapturas++;
                     break;
                 }
             }
-            GRPreta.incValidMoves();
-        } else if (tabuleiro.getIsWhiteTurn()) {
+            jogadasValidasPretas++;
+        } else if (isWhiteTurn) {
             for (Peca pecaPreta : blackTeam) {
                 if (pecaPreta.getIdentificador().equals(pecaAtual)) {
-                    GRBranca.incInvalidMoves();
+                    jogadasInvalidasBrancas++;
                     return false;
                 }
             }
             for (Peca pecaPreta : blackTeam) {
                 if (pecaPreta.getIdentificador().equals(movimentoParaPeca)) {
-                    pecaPreta.setEstado(CAPTURADO);
+                    pecaPreta.setEstado(capturado);
                     pecaPreta.x = "";
                     pecaPreta.y = "";
                     blackTeam.remove(pecaPreta);
                     pecaCapturada = true;
-                    GRBranca.incCaptures();
+                    teamBrancoNrCapturas++;
                     break;
                 }
             }
-            GRBranca.incValidMoves();
+            jogadasValidasBrancas++;
         }
 
         if (pecaCapturada) {
-            tabuleiro.algumaPecaMorreu();
+            algumaPecaMorreu = true;
         }
 
-        if (tabuleiro.getPecaMorta() && !pecaCapturada) {
-            gameResults.incJogadasSemCaptura();
+        if (algumaPecaMorreu && !pecaCapturada) {
+            jogadasSemCaptura++;
         }
 
         cordenadasPecasArray[y0][x0] = null;
@@ -297,54 +321,116 @@ public class GameManager {
             }
         }
 
-        tabuleiro.changeTurnInGame();
+        if (isBlackTurn) {
+            isWhiteTurn = true;
+            isBlackTurn = false;
+        } else if (isWhiteTurn) {
+            isBlackTurn = true;
+            isWhiteTurn = false;
+        }
 
         return true;
     }
 
 
     public int getCurrentTeamID() {
-        return tabuleiro.getIsBlackTurn() ? 0 : 1;
+        return isBlackTurn ? 0 : 1;
     }
 
 
     public boolean gameOver() {
-        if ((whiteTeam.size()==1 && blackTeam.size()==1) || (gameResults.getJogadasSemCaptura()>=10 && tabuleiro.getPecaMorta())) {
-            gameResults.setResultadoJogo("EMPATE");
+        tabuleiro = new Tabuleiro(whiteTeam,blackTeam);
+        if ((whiteTeam.size()==1 && blackTeam.size()==1) || (jogadasSemCaptura>=10 && algumaPecaMorreu)) {
+            resultadoJogo = "EMPATE";
             return true;
         }
 
         if (whiteTeam.isEmpty()) {
-            gameResults.setResultadoJogo("VENCERAM AS PRETAS");
+            resultadoJogo = "VENCERAM AS PRETAS";
             return true;
         }
 
         if (blackTeam.isEmpty()) {
-            gameResults.setResultadoJogo("VENCERAM AS BRANCAS");
+            resultadoJogo = "VENCERAM AS BRANCAS";
             return true;
         }
+
 
         return false;
     }
 
     public ArrayList<String> getGameResults() {
         ArrayList<String> placar = new ArrayList<>();
-
+        GameResults gameResults = new GameResults(teamPretoNrCapturas,jogadasValidasPretas,jogadasInvalidasPretas,teamBrancoNrCapturas,jogadasValidasBrancas,jogadasInvalidasBrancas);
         placar.add("JOGO DE CRAZY CHESS");
-        placar.add("Resultado: " + gameResults.getResultadoJogo());
+        placar.add("Resultado: " + resultadoJogo);
         placar.add("---");
         placar.add("Equipa das Pretas");
-        placar.add(Integer.toString(GRPreta.getCaptures()));
-        placar.add(Integer.toString(GRPreta.getValidMoves()));
-        placar.add(Integer.toString(GRPreta.getInvalidMoves()));
+        placar.add(Integer.toString(gameResults.getBlackCaptures()));
+        placar.add(Integer.toString(gameResults.getBlackValidMoves()));
+        placar.add(Integer.toString(gameResults.getBlackInvalidMoves()));
         placar.add("Equipa das Brancas");
-        placar.add(Integer.toString(GRBranca.getCaptures()));
-        placar.add(Integer.toString(GRBranca.getValidMoves()));
-        placar.add(Integer.toString(GRBranca.getInvalidMoves()));
+        placar.add(Integer.toString(gameResults.getWhiteCaptures()));
+        placar.add(Integer.toString(gameResults.getWhiteValidMoves()));
+        placar.add(Integer.toString(gameResults.getWhiteInvalidMoves()));
         return placar;
+    }
+
+    void saveGame(File file) throws IOException{
+
+    }
+
+    void undo(){
+
+    }
+
+    List<Comparable> getHints(int x, int y){
+        return null;
     }
 
     public JPanel getAuthorsPanel() {
         return null;
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 }
