@@ -18,14 +18,6 @@ public class Peca {
         this.estado = estado;
     }
 
-    @Override
-    public String toString() {
-        if(estado.equals("capturado")){
-            return identificador + " | " + tipoDePeca + " | " + equipa + " | " + alcunha + " @ (" + "n" + "/" + "a" + ")";
-        }
-        return identificador + " | " + tipoDePeca + " | " + equipa + " | " + alcunha + " @ (" + x + ", " + y + ")";
-    }
-
     public String getIdentificador() {
         return identificador;
     }
@@ -76,5 +68,13 @@ public class Peca {
 
     public void setEstado(String estado) {
         this.estado = estado;
+    }
+
+    @Override
+    public String toString() {
+        if(estado.equals("capturado")){
+            return identificador + " | " + tipoDePeca + " | " + equipa + " | " + alcunha + " @ (" + "n" + "/" + "a" + ")";
+        }
+        return identificador + " | " + tipoDePeca + " | " + equipa + " | " + alcunha + " @ (" + x + ", " + y + ")";
     }
 }
