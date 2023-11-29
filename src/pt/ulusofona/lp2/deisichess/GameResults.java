@@ -10,15 +10,23 @@ public class GameResults {
         jogadasSemCaptura++;
     }
 
-    public void setResultadoJogo(String resultadoJogo) {
-        this.resultadoJogo = resultadoJogo;
-    }
-
     public int getJogadasSemCaptura() {
         return jogadasSemCaptura;
     }
 
     public String getResultadoJogo() {
         return resultadoJogo;
+    }
+
+    public void jogoEmpatado() {
+        resultadoJogo = "EMPATE";
+    }
+
+    public void pretasGanham() {
+        resultadoJogo = "VENCERAM AS PRETAS";
+    }
+
+    public void brancasGanham() {
+        resultadoJogo = "VENCERAM AS BRANCAS";
     }
 }

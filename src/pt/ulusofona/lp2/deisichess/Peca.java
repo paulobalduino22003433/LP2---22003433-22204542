@@ -1,21 +1,22 @@
 package pt.ulusofona.lp2.deisichess;
 
 public class Peca {
-    String identificador;
-    String tipoDePeca;
-    String equipa;
-    String alcunha;
-    String png;
-    String estado;
-    String x = "";
-    String y = "";
+    protected String identificador;
+    protected String tipoDePeca;
+    protected String equipa;
+    protected String alcunha;
+    protected String png;
+    protected String estado;
+    protected String x = "";
+    protected String y = "";
 
-    public Peca(String identificador, String tipoDePeca, String equipa, String alcunha, String estado) {
+    public Peca(String identificador, String tipoDePeca, String equipa, String alcunha) {
         this.identificador = identificador;
         this.tipoDePeca = tipoDePeca;
         this.equipa = equipa;
         this.alcunha = alcunha;
-        this.estado = estado;
+        this.estado = "em jogo";
+        setPng();
     }
 
     public String getIdentificador() {
@@ -60,14 +61,14 @@ public class Peca {
 
     public void setPng() {
         if (equipa.equals("10")) {
-            png = "crazy_emoji_black.png";
+            png = "king_black.png";
         } else {
-            png = "crazy_emoji_white.png";
+            png = "king_white.png";
         }
     }
 
-    public void setEstado(String estado) {
-        this.estado = estado;
+    public void estadoPecaCapturado() {
+        estado = "capturado";
     }
 
     @Override

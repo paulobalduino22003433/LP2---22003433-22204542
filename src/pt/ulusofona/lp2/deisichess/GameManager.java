@@ -15,10 +15,8 @@ public class GameManager {
     ArrayList<Peca> blackTeam = new ArrayList<>();
     ArrayList<Peca> whiteTeam = new ArrayList<>();
     Tabuleiro tabuleiro = new Tabuleiro(whiteTeam, blackTeam);
-    final String EM_JOGO = "em jogo";
-    final String CAPTURADO = "capturado";
-    StatsPeca GRPreta = new StatsPeca();
-    StatsPeca GRBranca = new StatsPeca();
+    StatsPeca statusPreta = new StatsPeca();
+    StatsPeca statusBranca = new StatsPeca();
     GameResults gameResults = new GameResults();
 
 
@@ -43,8 +41,7 @@ public class GameManager {
                 if (pecasRestantes < tabuleiro.getNumPecaTotal()) {
                     String[] partes = linha.split(":");
 
-                    Peca peca = new Peca(partes[0].trim(), partes[1].trim(), partes[2].trim(), partes[3].trim(), EM_JOGO);
-                    peca.setPng();
+                    Peca peca = new Peca(partes[0].trim(), partes[1].trim(), partes[2].trim(), partes[3].trim());
                     pecas.add(peca);
 
                     pecasRestantes++;
@@ -107,7 +104,7 @@ public class GameManager {
         while (iterator.hasNext()) {
             Peca peca = iterator.next();
             if (peca.getX().isEmpty() || peca.getY().isEmpty()) {
-                peca.setEstado(CAPTURADO);
+                peca.estadoPecaCapturado();
                 whiteTeam.remove(peca);
                 blackTeam.remove(peca);
             }
@@ -170,46 +167,46 @@ public class GameManager {
     public boolean move(int x0, int y0, int x1, int y1) {
         if (x1 > x0 + 1 || y1 > y0 + 1) {
             if(tabuleiro.getIsBlackTurn()){
-                GRPreta.incInvalidMoves();
+                statusPreta.incInvalidMoves();
                 return false;
             }
-            GRBranca.incInvalidMoves();
+            statusBranca.incInvalidMoves();
             return false;
         }
 
         if (x1 < 0 || y1 < 0) {
             if(tabuleiro.getIsBlackTurn()){
-                GRPreta.incInvalidMoves();
+                statusPreta.incInvalidMoves();
                 return false;
             }
-            GRBranca.incInvalidMoves();
+            statusBranca.incInvalidMoves();
             return false;
         }
 
         if (x1 > tabuleiro.getTamanhoTabuleiro() - 1 || y1 > tabuleiro.getTamanhoTabuleiro() - 1) {
             if(tabuleiro.getIsBlackTurn()){
-                GRPreta.incInvalidMoves();
+                statusPreta.incInvalidMoves();
                 return false;
             }
-            GRBranca.incInvalidMoves();
+            statusBranca.incInvalidMoves();
             return false;
         }
 
         if (x0 == x1 && y0 == y1) {
             if(tabuleiro.getIsBlackTurn()){
-                GRPreta.incInvalidMoves();
+                statusPreta.incInvalidMoves();
                 return false;
             }
-            GRBranca.incInvalidMoves();
+            statusBranca.incInvalidMoves();
             return false;
         }
 
         if (cordenadasPecasArray[y0][x0].equals("0")) {
             if(tabuleiro.getIsBlackTurn()){
-                GRPreta.incInvalidMoves();
+                statusPreta.incInvalidMoves();
                 return false;
             }
-            GRBranca.incInvalidMoves();
+            statusBranca.incInvalidMoves();
             return false;
         }
 
@@ -221,42 +218,42 @@ public class GameManager {
         if (tabuleiro.getIsBlackTurn()) {
             for (Peca pecaBranca : whiteTeam) {
                 if (pecaBranca.getIdentificador().equals(pecaAtual)) {
-                    GRPreta.incInvalidMoves();
+                    statusPreta.incInvalidMoves();
                     return false;
                 }
             }
 
             for (Peca pecaBranca : whiteTeam) {
                 if (pecaBranca.getIdentificador().equals(movimentoParaPeca)) {
-                    pecaBranca.setEstado(CAPTURADO);
+                    pecaBranca.estadoPecaCapturado();
                     pecaBranca.x = "";
                     pecaBranca.y = "";
                     whiteTeam.remove(pecaBranca);
                     pecaCapturada = true;
-                    GRPreta.incCaptures();
+                    statusPreta.incCaptures();
                     break;
                 }
             }
-            GRPreta.incValidMoves();
+            statusPreta.incValidMoves();
         } else if (tabuleiro.getIsWhiteTurn()) {
             for (Peca pecaPreta : blackTeam) {
                 if (pecaPreta.getIdentificador().equals(pecaAtual)) {
-                    GRBranca.incInvalidMoves();
+                    statusBranca.incInvalidMoves();
                     return false;
                 }
             }
             for (Peca pecaPreta : blackTeam) {
                 if (pecaPreta.getIdentificador().equals(movimentoParaPeca)) {
-                    pecaPreta.setEstado(CAPTURADO);
+                    pecaPreta.estadoPecaCapturado();
                     pecaPreta.x = "";
                     pecaPreta.y = "";
                     blackTeam.remove(pecaPreta);
                     pecaCapturada = true;
-                    GRBranca.incCaptures();
+                    statusBranca.incCaptures();
                     break;
                 }
             }
-            GRBranca.incValidMoves();
+            statusBranca.incValidMoves();
         }
 
         if (pecaCapturada) {
@@ -290,17 +287,17 @@ public class GameManager {
 
     public boolean gameOver() {
         if ((whiteTeam.size()==1 && blackTeam.size()==1) || (gameResults.getJogadasSemCaptura()>=10 && tabuleiro.getPecaMorta())) {
-            gameResults.setResultadoJogo("EMPATE");
+            gameResults.jogoEmpatado();
             return true;
         }
 
         if (whiteTeam.isEmpty()) {
-            gameResults.setResultadoJogo("VENCERAM AS PRETAS");
+            gameResults.pretasGanham();
             return true;
         }
 
         if (blackTeam.isEmpty()) {
-            gameResults.setResultadoJogo("VENCERAM AS BRANCAS");
+            gameResults.brancasGanham();
             return true;
         }
 
@@ -314,13 +311,13 @@ public class GameManager {
         placar.add("Resultado: " + gameResults.getResultadoJogo());
         placar.add("---");
         placar.add("Equipa das Pretas");
-        placar.add(Integer.toString(GRPreta.getCaptures()));
-        placar.add(Integer.toString(GRPreta.getValidMoves()));
-        placar.add(Integer.toString(GRPreta.getInvalidMoves()));
+        placar.add(Integer.toString(statusPreta.getCaptures()));
+        placar.add(Integer.toString(statusPreta.getValidMoves()));
+        placar.add(Integer.toString(statusPreta.getInvalidMoves()));
         placar.add("Equipa das Brancas");
-        placar.add(Integer.toString(GRBranca.getCaptures()));
-        placar.add(Integer.toString(GRBranca.getValidMoves()));
-        placar.add(Integer.toString(GRBranca.getInvalidMoves()));
+        placar.add(Integer.toString(statusBranca.getCaptures()));
+        placar.add(Integer.toString(statusBranca.getValidMoves()));
+        placar.add(Integer.toString(statusBranca.getInvalidMoves()));
         return placar;
     }
 
