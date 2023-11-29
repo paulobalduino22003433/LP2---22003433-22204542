@@ -281,7 +281,7 @@ public class GameManager {
 
 
     public int getCurrentTeamID() {
-        return tabuleiro.getIsBlackTurn() ? 0 : 1;
+        return tabuleiro.getIsBlackTurn() ? 10 : 20;
     }
 
 
