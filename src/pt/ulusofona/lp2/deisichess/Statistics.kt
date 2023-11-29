@@ -1,6 +1,6 @@
 package pt.ulusofona.lp2.deisichess
 
-import pt.ulusofona.lp2.deisichess.EnumStatType.StatType
+import pt.ulusofona.lp2.deisichess.StatType
 
 class Statistics {
 
