@@ -74,7 +74,13 @@ public class Peca {
     @Override
     public String toString() {
         if(estado.equals("capturado")){
+            if (tipoDePeca.equals("0")){
+                return identificador + " | " + "Rei" + " | " + "(infinito) | " + equipa + " | " + alcunha + " @ (" + "n" + "/" + "a" + ")";
+            }
             return identificador + " | " + tipoDePeca + " | " + equipa + " | " + alcunha + " @ (" + "n" + "/" + "a" + ")";
+        }
+        if (tipoDePeca.equals("0")){
+            return identificador + " | " + "Rei" + " | " + "(infinito) | " + equipa + " | " + alcunha + " @ (" + x + ", " + y + ")";
         }
         return identificador + " | " + tipoDePeca + " | " + equipa + " | " + alcunha + " @ (" + x + ", " + y + ")";
     }
