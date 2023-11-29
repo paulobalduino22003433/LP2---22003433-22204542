@@ -78,14 +78,35 @@ public class Peca {
                 case "0":
                     return identificador + " | " + "Rei" + " | " + "(infinito) | " + equipa + " | " + alcunha + " @ (" + "n" + "/" + "a" + ")";
                 case "1":
-                    return identificador + " | " + "Rainha" + " | " + "(infinito) | " + equipa + " | " + alcunha + " @ (" + "n" + "/" + "a" + ")";
+                    return identificador + " | " + "Rainha" + " | " + "8 | " + equipa + " | " + alcunha + " @ (" + "n" + "/" + "a" + ")";
+                case "2":
+                    return identificador + " | " + "Ponei Mágico" + " | " + "5 | " + equipa + " | " + alcunha + " @ (" + "n" + "/" + "a" + ")";
+                case "3":
+                    return identificador + " | " + "Padre da Vila" + " | " + "3 | " + equipa + " | " + alcunha + " @ (" + "n" + "/" + "a" + ")";
+                case "4":
+                    return identificador + " | " + "TorreHor" + " | " + "3 | " + equipa + " | " + alcunha + " @ (" + "n" + "/" + "a" + ")";
+                case "5":
+                    return identificador + " | " + "TorreVert" + " | " + "3 | " + equipa + " | " + alcunha + " @ (" + "n" + "/" + "a" + ")";
+                case "6":
+                    return identificador + " | " + "Homer Simpson" + " | " + "2 | " + equipa + " | " + alcunha + " @ (" + "n" + "/" + "a" + ")";
             }
         }
         switch (tipoDePeca){
             case "0":
                 return identificador + " | " + "Rei" + " | " + "(infinito) | " + equipa + " | " + alcunha + " @ (" + x + ", " + y + ")";
             case "1":
-                return identificador + " | " + "Rainha" + " | " + "(infinito) | " + equipa + " | " + alcunha + " @ (" + x + ", " + y + ")";
+                return identificador + " | " + "Rainha" + " | " + "8 | " + equipa + " | " + alcunha + " @ (" + x + ", " + y + ")";
+            case "2":
+                return identificador + " | " + "Ponei Mágico" + " | " + "5 | " + equipa + " | " + alcunha + " @ (" + x + ", " + y + ")";
+            case "3":
+                return identificador + " | " + "Padre da Vila" + " | " + "3 | " + equipa + " | " + alcunha + " @ (" + x + ", " + y + ")";
+            case "4":
+                return identificador + " | " + "TorreHor" + " | " + "3 | " + equipa + " | " + alcunha + " @ (" + x + ", " + y + ")";
+            case "5":
+                return identificador + " | " + "TorreVert" + " | " + "3 | " + equipa + " | " + alcunha + " @ (" + x + ", " + y + ")";
+            case "6":
+                return identificador + " | " + "Homer Simpson" + " | " + "2 | " + equipa + " | " + alcunha + " @ (" + x + ", " + y + ")";
+
         }
         return "";
     }
