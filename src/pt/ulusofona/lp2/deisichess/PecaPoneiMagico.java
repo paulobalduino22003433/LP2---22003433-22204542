@@ -14,4 +14,13 @@ public class PecaPoneiMagico extends Peca {
             png = "ponei_magico_white.png";
         }
     }
+
+    @Override
+    public String toString() {
+        if(estado.equals("capturado")) {
+            return identificador + " | Ponei Mágico | 5 | " + equipa + " | " + alcunha + " @ (n/a)";
+        }
+
+        return identificador + " | Ponei Mágico | 5 | " + equipa + " | " + alcunha + " @ (" + x + ", " + y + ")";
+    }
 }

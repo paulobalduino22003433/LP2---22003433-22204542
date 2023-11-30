@@ -28,6 +28,7 @@ public class GameManager {
             int pecasRestantes = 0;
 
             while ((linha = fileReader.readLine()) != null) {
+
                 if (tabuleiro.getTamanhoTabuleiro() == -1) {
                     tabuleiro.setTamanhoTabuleiro(Integer.parseInt(linha.trim()));
                     continue;
@@ -38,10 +39,12 @@ public class GameManager {
                     continue;
                 }
 
+
                 if (pecasRestantes < tabuleiro.getNumPecaTotal()) {
                     String[] partes = linha.split(":");
 
-                    Peca peca = new Peca(partes[0].trim(), partes[1].trim(), partes[2].trim(), partes[3].trim());
+                    Peca peca = colocarTipoDePeca(partes[0].trim(), partes[1].trim(), partes[2].trim(), partes[3].trim());
+
                     pecas.add(peca);
 
                     pecasRestantes++;
@@ -72,6 +75,22 @@ public class GameManager {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public Peca colocarTipoDePeca(String identificador, String tipoDePeca, String equipa, String alcunha) {
+        Peca pecaDeRetorno = switch (tipoDePeca) {
+            case "0" -> new PecaRei(identificador, tipoDePeca, equipa, alcunha);
+            case "1" -> new PecaRainha(identificador, tipoDePeca, equipa, alcunha);
+            case "2" -> new PecaPoneiMagico(identificador, tipoDePeca, equipa, alcunha);
+            case "3" -> new PecaPadreVila(identificador, tipoDePeca, equipa, alcunha);
+            case "4" -> new PecaTorreH(identificador, tipoDePeca, equipa, alcunha);
+            case "5" -> new PecaTorreV(identificador, tipoDePeca, equipa, alcunha);
+            case "6" -> new PecaHomer(identificador, tipoDePeca, equipa, alcunha);
+            case "7" -> new PecaJoker(identificador, tipoDePeca, equipa, alcunha);
+            default -> null;
+        };
+
+        return pecaDeRetorno;
     }
 
     public void setCoordinatesPieces() {
@@ -164,9 +183,8 @@ public class GameManager {
         return pecas.get(ID - 1).toString();
     }
 
-
-
-   /*/ public boolean isMoveValid(Peca peca,int x0,int y0, int x1, int y1){
+    /*/
+public boolean isMoveValid(Peca peca1,int x0,int y0, int x1, int y1){
         boolean isItvalid = false;
         switch (peca.tipoDePeca){
             case "0":
@@ -216,59 +234,19 @@ public class GameManager {
                 }
         }
         return isItvalid;
-    }/*/
+    }
+
+     */
     public boolean move(int x0, int y0, int x1, int y1) {
-       Peca pecaParaMover = null;
-       for (Peca peca:blackTeam){
-           if (peca.getIdentificador().equals(cordenadasPecasArray[y0][x0])){
-               pecaParaMover = peca;
-           }
-       }
-        for (Peca peca:whiteTeam){
-            if (peca.getIdentificador().equals(cordenadasPecasArray[y0][x0])){
-                pecaParaMover = peca;
+        if (x1 > x0 + 1 || y1 > y0 + 1) {
+            if(tabuleiro.getIsBlackTurn()){
+                statusPreta.incInvalidMoves();
+                return false;
             }
+            statusBranca.incInvalidMoves();
+            return false;
         }
-       if (pecaParaMover!=null){
-           switch (pecaParaMover.tipoDePeca) {
-               case "0":
-                   if (x1 > x0 + 1 || y1 > y0 + 1) {
-                       if (tabuleiro.getIsBlackTurn()) {
-                           statusPreta.incInvalidMoves();
-                           return false;
-                       }
-                       statusBranca.incInvalidMoves();
-                       return false;
-                   }
-               case "1":
-                   if (x1 > x0 + 5 || y1 > y0 + 5) {
-                       if (tabuleiro.getIsBlackTurn()) {
-                           statusPreta.incInvalidMoves();
-                           return false;
-                       }
-                       statusBranca.incInvalidMoves();
-                       return false;
-                   }
-               case "4":
-                   if (y1 != y0) {
-                       if (tabuleiro.getIsBlackTurn()) {
-                           statusPreta.incInvalidMoves();
-                           return false;
-                       }
-                       statusBranca.incInvalidMoves();
-                       return false;
-                   }
-               case "5":
-                   if (x1 != x0) {
-                       if (tabuleiro.getIsBlackTurn()) {
-                           statusPreta.incInvalidMoves();
-                           return false;
-                       }
-                       statusBranca.incInvalidMoves();
-                       return false;
-                   }
-           }
-       }
+
         if (x1 < 0 || y1 < 0) {
             if(tabuleiro.getIsBlackTurn()){
                 statusPreta.incInvalidMoves();
@@ -308,31 +286,9 @@ public class GameManager {
         String pecaAtual = cordenadasPecasArray[y0][x0];
         String movimentoParaPeca = cordenadasPecasArray[y1][x1];
 
-        for(Peca peca:pecas){
-            if(peca.getTipoDePeca().equals("1") && peca.getIdentificador().equals(pecaAtual)){
-                for (Peca peca1:pecas){
-                    if (peca1.getTipoDePeca().equals("1") && peca1.getIdentificador().equals(movimentoParaPeca)){
-                        if(tabuleiro.getIsBlackTurn()){
-                            statusPreta.incInvalidMoves();
-                            return false;
-                        }
-                        statusBranca.incInvalidMoves();
-                        return false;
-                    }
-                }
-            }
-
-        }
-
         boolean pecaCapturada = false;
 
         if (tabuleiro.getIsBlackTurn()) {
-            for(Peca peca: blackTeam){
-                if (peca.getIdentificador().equals(movimentoParaPeca)){
-                    statusPreta.incInvalidMoves();
-                    return false;
-                }
-            }
             for (Peca pecaBranca : whiteTeam) {
                 if (pecaBranca.getIdentificador().equals(pecaAtual)) {
                     statusPreta.incInvalidMoves();
@@ -353,12 +309,6 @@ public class GameManager {
             }
             statusPreta.incValidMoves();
         } else if (tabuleiro.getIsWhiteTurn()) {
-            for (Peca peca: whiteTeam){
-                if (peca.getIdentificador().equals(movimentoParaPeca)){
-                    statusBranca.incInvalidMoves();
-                    return false;
-                }
-            }
             for (Peca pecaPreta : blackTeam) {
                 if (pecaPreta.getIdentificador().equals(pecaAtual)) {
                     statusBranca.incInvalidMoves();
