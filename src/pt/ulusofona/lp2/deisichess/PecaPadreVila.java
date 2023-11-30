@@ -14,13 +14,4 @@ public class PecaPadreVila extends Peca {
             png = "padre_vila_white.png";
         }
     }
-
-    @Override
-    public String toString() {
-        if(estado.equals("capturado")) {
-            return identificador + " | Padre da Vila | 3 | " + equipa + " | " + alcunha + " @ (n/a)";
-        }
-
-        return identificador + " | Padre da Vila | 3 | " + equipa + " | " + alcunha + " @ (" + x + ", " + y + ")";
-    }
 }

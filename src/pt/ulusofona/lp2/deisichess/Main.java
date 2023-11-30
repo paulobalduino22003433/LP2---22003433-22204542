@@ -8,15 +8,11 @@ public class Main {
 
     public static void main(String[] args) throws IOException, InvalidGameInputException {
         GameManager gameManager = new GameManager();
-        gameManager.loadGame(new File("test-files/8x8.txt"));
+        gameManager.loadGame(new File("test-files/4x4.txt"));
 
         System.out.println("Tamanho do Tabuleiro: " + gameManager.tabuleiro.getTamanhoTabuleiro());
         System.out.println("Número de Peças: " + gameManager.tabuleiro.getNumPecaTotal());
         System.out.println("Cordenadas das Peças: " + gameManager);
-
-        for (int i = 0; i < 16; i++) {
-            System.out.println(gameManager.pecas.get(i).toString());
-        }
 
 
         /*/

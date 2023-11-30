@@ -13,13 +13,4 @@ public class PecaTorreV extends Peca {
             png = "torre_v_white.png";
         }
     }
-
-    @Override
-    public String toString() {
-        if(estado.equals("capturado")) {
-            return identificador + " | TorreVert | 3 | " + equipa + " | " + alcunha + " @ (n/a)";
-        }
-
-        return identificador + " | TorreVert | 3 | " + equipa + " | " + alcunha + " @ (" + x + ", " + y + ")";
-    }
 }

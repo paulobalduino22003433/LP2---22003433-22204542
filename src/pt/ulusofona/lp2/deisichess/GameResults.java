@@ -1,8 +1,8 @@
 package pt.ulusofona.lp2.deisichess;
 
 public class GameResults {
-    private int jogadasSemCaptura;
-    private String resultadoJogo = "";
+    int jogadasSemCaptura;
+    String resultadoJogo = "";
 
     public GameResults() {}
 
