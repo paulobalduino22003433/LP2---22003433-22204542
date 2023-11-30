@@ -26,19 +26,8 @@ public class GameManager {
             BufferedReader fileReader = new BufferedReader(new FileReader(file));
             String linha;
             int pecasRestantes = 0;
-            int quantDeDoisPontos;
 
             while ((linha = fileReader.readLine()) != null) {
-                quantDeDoisPontos = 3;
-
-                for (int i = 0; i < linha.length(); i++) {
-                    if (linha.charAt(i) == ':') {
-                        quantDeDoisPontos--;
-                    }
-                    if (quantDeDoisPontos < 0) {
-                        throw new IOException();
-                    }
-                }
 
                 if (tabuleiro.getTamanhoTabuleiro() == -1) {
                     tabuleiro.setTamanhoTabuleiro(Integer.parseInt(linha.trim()));
