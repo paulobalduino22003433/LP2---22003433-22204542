@@ -26,8 +26,20 @@ public class GameManager {
             BufferedReader fileReader = new BufferedReader(new FileReader(file));
             String linha;
             int pecasRestantes = 0;
+            int quantDeDoisPontos;
 
             while ((linha = fileReader.readLine()) != null) {
+                quantDeDoisPontos = 3;
+
+                for (int i = 0; i < linha.length(); i++) {
+                    if (linha.charAt(i) == ':') {
+                        quantDeDoisPontos--;
+                    }
+                    if (quantDeDoisPontos < 0) {
+                        throw new IOException();
+                    }
+                }
+
                 if (tabuleiro.getTamanhoTabuleiro() == -1) {
                     tabuleiro.setTamanhoTabuleiro(Integer.parseInt(linha.trim()));
                     continue;
@@ -38,10 +50,12 @@ public class GameManager {
                     continue;
                 }
 
+
                 if (pecasRestantes < tabuleiro.getNumPecaTotal()) {
                     String[] partes = linha.split(":");
 
-                    Peca peca = new Peca(partes[0].trim(), partes[1].trim(), partes[2].trim(), partes[3].trim());
+                    Peca peca = colocarTipoDePeca(partes[0].trim(), partes[1].trim(), partes[2].trim(), partes[3].trim());
+
                     pecas.add(peca);
 
                     pecasRestantes++;
@@ -72,6 +86,22 @@ public class GameManager {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public Peca colocarTipoDePeca(String identificador, String tipoDePeca, String equipa, String alcunha) {
+        Peca pecaDeRetorno = switch (tipoDePeca) {
+            case "0" -> new PecaRei(identificador, tipoDePeca, equipa, alcunha);
+            case "1" -> new PecaRainha(identificador, tipoDePeca, equipa, alcunha);
+            case "2" -> new PecaPoneiMagico(identificador, tipoDePeca, equipa, alcunha);
+            case "3" -> new PecaPadreVila(identificador, tipoDePeca, equipa, alcunha);
+            case "4" -> new PecaTorreH(identificador, tipoDePeca, equipa, alcunha);
+            case "5" -> new PecaTorreV(identificador, tipoDePeca, equipa, alcunha);
+            case "6" -> new PecaHomer(identificador, tipoDePeca, equipa, alcunha);
+            case "7" -> new PecaJoker(identificador, tipoDePeca, equipa, alcunha);
+            default -> null;
+        };
+
+        return pecaDeRetorno;
     }
 
     public void setCoordinatesPieces() {

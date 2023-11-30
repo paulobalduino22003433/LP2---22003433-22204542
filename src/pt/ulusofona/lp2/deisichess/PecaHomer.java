@@ -14,4 +14,13 @@ public class PecaHomer extends Peca {
             png = "homer_white.png";
         }
     }
+
+    @Override
+    public String toString() {
+        if(estado.equals("capturado")) {
+            return identificador + " | Homer Simpson | 2 | " + equipa + " | " + alcunha + " @ (n/a)";
+        }
+
+        return identificador + " | Homer Simpson | " + "2 | " + equipa + " | " + alcunha + " @ (" + x + ", " + y + ")";
+    }
 }

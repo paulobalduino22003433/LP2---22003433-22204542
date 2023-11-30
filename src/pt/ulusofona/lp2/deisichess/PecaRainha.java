@@ -14,4 +14,13 @@ public class PecaRainha extends Peca {
             png = "rainha_white.png";
         }
     }
+
+    @Override
+    public String toString() {
+        if(estado.equals("capturado")) {
+            return identificador + " | Rainha | 8 | " + equipa + " | " + alcunha + " @ (n/a)";
+        }
+
+        return identificador + " | Rainha | 8 | " + equipa + " | " + alcunha + " @ (" + x + ", " + y + ")";
+    }
 }
