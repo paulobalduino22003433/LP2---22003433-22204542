@@ -184,7 +184,7 @@ public class GameManager {
     }
 
 
-  public boolean isMoveValid(Peca peca,int x0,int y0, int x1, int y1){
+  /*/public boolean isMoveValid(Peca peca,int x0,int y0, int x1, int y1){
         boolean isItvalid = false;
         switch (peca.tipoDePeca){
             case "0":
@@ -234,28 +234,16 @@ public class GameManager {
                 }
         }
         return isItvalid;
-    }
-
+    }/*/
 
     public boolean move(int x0, int y0, int x1, int y1) {
-        boolean wasMoveValid=false;
-        Peca pecaParaMover = null;
-        for (Peca peca :whiteTeam){
-            if (peca.getIdentificador().equals(cordenadasPecasArray[y0][x0])){
-                pecaParaMover = peca;
-            }
-        }
 
-        for (Peca peca :blackTeam){
-            if (peca.getIdentificador().equals(cordenadasPecasArray[y0][x0])){
-                pecaParaMover = peca;
+        if (x1 > x0 + 1 || y1 > y0 + 1) {
+            if(tabuleiro.getIsBlackTurn()){
+                statusPreta.incInvalidMoves();
+                return false;
             }
-        }
-
-        if(pecaParaMover!=null){
-           wasMoveValid = isMoveValid(pecaParaMover,x0,y0,x1,y1);
-        }
-        if (!wasMoveValid){
+            statusBranca.incInvalidMoves();
             return false;
         }
 
