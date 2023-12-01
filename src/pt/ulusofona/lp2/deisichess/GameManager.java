@@ -259,15 +259,6 @@ public class GameManager {
             return false;
         }
 
-        if (x1 > x0 + 1 || y1 > y0 + 1) {
-            if(tabuleiro.getIsBlackTurn()){
-                statusPreta.incInvalidMoves();
-                return false;
-            }
-            statusBranca.incInvalidMoves();
-            return false;
-        }
-
         if (x1 < 0 || y1 < 0) {
             if(tabuleiro.getIsBlackTurn()){
                 statusPreta.incInvalidMoves();
