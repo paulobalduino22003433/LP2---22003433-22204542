@@ -1,10 +1,7 @@
 package pt.ulusofona.lp2.deisichess;
 
 import javax.swing.*;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -39,7 +36,6 @@ public class GameManager {
                     continue;
                 }
 
-
                 if (pecasRestantes < tabuleiro.getNumPecaTotal()) {
                     String[] partes = linha.split(":");
 
@@ -73,7 +69,7 @@ public class GameManager {
 
             fileReader.close();
         } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println(e.getMessage());
         }
     }
 
@@ -395,6 +391,18 @@ public class GameManager {
     }
 
     void saveGame(File file) throws IOException {
+        try(BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
+            writer.write(tabuleiro.getTamanhoTabuleiro() + "\n");
+            writer.write(tabuleiro.getNumPecaTotal() + "");
+
+            for (int i = 0; i < tabuleiro.getNumPecaTotal(); i++) {
+                writer.newLine();
+                writer.write(pecas.get(i).getIdentificador() + ":");
+                writer.write( pecas.get(i).getTipoDePeca() + ":");
+                writer.write( pecas.get(i).getEquipa() + ":");
+                writer.write(pecas.get(i).getAlcunha());
+            }
+        }
     }
 
     void undo() {

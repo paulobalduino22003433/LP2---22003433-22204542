@@ -14,4 +14,16 @@ public class PecaJoker extends Peca {
             png = "joker_white.png";
         }
     }
+
+    @Override
+    public String toString() {
+        String pecaAtual = "/";
+
+        if(estado.equals("capturado")) {
+            return identificador + " | Joker" + pecaAtual + " | 4 | " + equipa + " | " + alcunha + " @ (n/a)";
+        }
+
+        return identificador + " | Joker" + pecaAtual + " | 4 | " + equipa + " | " + alcunha + " @ (" + x + ", " + y + ")";
+
+    }
 }

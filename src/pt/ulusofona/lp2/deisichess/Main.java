@@ -18,6 +18,8 @@ public class Main {
             System.out.println(gameManager.pecas.get(i).toString());
         }
 
+        gameManager.saveGame(new File("src/aaa.txt"));
+
 
         /*/
         for(Peca peca : gameManager.pecas){
