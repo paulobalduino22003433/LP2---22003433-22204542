@@ -391,6 +391,10 @@ public class GameManager {
     }
 
     void saveGame(File file) throws IOException {
+        int x = 0;
+        int y = 0;
+        boolean achou;
+
         try(BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
             writer.write(tabuleiro.getTamanhoTabuleiro() + "\n");
             writer.write(tabuleiro.getNumPecaTotal() + "");
@@ -401,6 +405,44 @@ public class GameManager {
                 writer.write( pecas.get(i).getTipoDePeca() + ":");
                 writer.write( pecas.get(i).getEquipa() + ":");
                 writer.write(pecas.get(i).getAlcunha());
+            }
+
+            while (y < 8) {
+                writer.newLine();
+
+                while (x < 8) {
+                    achou = false;
+
+                    for (int idPeca = 0; idPeca < tabuleiro.getNumPecaTotal(); idPeca++) {
+                        if (!pecas.get(idPeca).getEstado().equals("em jogo")) {
+                            continue;
+                        }
+
+                        if (pecas.get(idPeca).getY().equals(y + "")) {
+                            if (pecas.get(idPeca).getX().equals(x + "")) {
+                                writer.write(pecas.get(idPeca).getIdentificador());
+                                x++;
+
+                                if (x < tabuleiro.getTamanhoTabuleiro()) {
+                                    writer.write(":");
+                                }
+                                achou = true;
+                                break;
+                            }
+                        }
+                    }
+
+                    if (!achou) {
+                        writer.write("0");
+                        x++;
+
+                        if (x < tabuleiro.getTamanhoTabuleiro()) {
+                            writer.write(":");
+                        }
+                    }
+                }
+                y++;
+                x = 0;
             }
         }
     }
