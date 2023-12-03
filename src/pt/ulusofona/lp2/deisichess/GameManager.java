@@ -407,10 +407,10 @@ public class GameManager {
                 writer.write(pecas.get(i).getAlcunha());
             }
 
-            while (y < 8) {
+            while (y < tabuleiro.getTamanhoTabuleiro()) {
                 writer.newLine();
 
-                while (x < 8) {
+                while (x < tabuleiro.getTamanhoTabuleiro()) {
                     achou = false;
 
                     for (int idPeca = 0; idPeca < tabuleiro.getNumPecaTotal(); idPeca++) {
