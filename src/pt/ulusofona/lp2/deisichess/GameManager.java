@@ -17,14 +17,16 @@ public class GameManager {
     GameResults gameResults = new GameResults();
 
 
-    void loadGame(File file) throws IOException, InvalidGameInputException {
+    void loadGame(File file) throws InvalidGameInputException, IOException {
         try {
             ArrayList<String> cordenadasPecas = new ArrayList<>();
             BufferedReader fileReader = new BufferedReader(new FileReader(file));
             String linha;
             int pecasRestantes = 0;
+            int numLine = 0;
 
             while ((linha = fileReader.readLine()) != null) {
+                numLine++;
 
                 if (tabuleiro.getTamanhoTabuleiro() == -1) {
                     tabuleiro.setTamanhoTabuleiro(Integer.parseInt(linha.trim()));
@@ -38,6 +40,10 @@ public class GameManager {
 
                 if (pecasRestantes < tabuleiro.getNumPecaTotal()) {
                     String[] partes = linha.split(":");
+
+                    if (partes.length != 4) {
+                        throw new InvalidGameInputException(partes.length, numLine);
+                    }
 
                     Peca peca = colocarTipoDePeca(partes[0].trim(), partes[1].trim(), partes[2].trim(), partes[3].trim());
 
@@ -68,8 +74,11 @@ public class GameManager {
             removeCapturedPieces();
 
             fileReader.close();
+
+        } catch (InvalidGameInputException e) {
+            System.out.println("Ocorreu um erro ao ler o ficheiro, na linha " + e.getLineWithError() + " com o seguinte problema: " + e.getProblemDescription());
         } catch (IOException e) {
-            System.out.println(e.getMessage());
+            System.out.println("Exception: Ficheiro não existente");
         }
     }
 
@@ -180,9 +189,10 @@ public class GameManager {
     }
 
 
-  /*/public boolean isMoveValid(Peca peca,int x0,int y0, int x1, int y1){
+  /*/public boolean isMoveValid(Peca peca,int x0,int y0, int x1, int y1) {
         boolean isItvalid = false;
-        switch (peca.tipoDePeca){
+
+        switch (peca.tipoDePeca) {
             case "0":
                 if (x1 > x0 + 1 || y1 > y0 + 1) {
                     if(tabuleiro.getIsBlackTurn()){
@@ -232,10 +242,179 @@ public class GameManager {
         return isItvalid;
     }/*/
 
+    public String possibilidadesDeMovimentos(int IDPeca, int tamanhoTabuleiro, int turnoAtual, int x0, int y0) {
+        String output = "";
+        int limiteDoTabuleiro = (tamanhoTabuleiro - 1);
+
+        if (x0 >= tamanhoTabuleiro || y0 >= tamanhoTabuleiro) {
+            return "";
+        } else if (x0 < 0 || y0 < 0) {
+            return "";
+        }
+
+        switch (IDPeca) {
+            case 0 -> { //Rei
+                if (x0 < limiteDoTabuleiro) {
+                    output += "(" + (x0 + 1) + "," + y0 + ")";
+                    if (x0 != 0) {
+                        output += "(" + (x0 - 1) + "," + y0 + ")";
+                    }
+                }
+
+                if (y0 < limiteDoTabuleiro) {
+                    output += "(" + x0 + "," + (y0 + 1) + ")";
+                    if (y0 != 0) {
+                        output += "(" + x0 + "," + (y0 - 1) + ")";
+                    }
+                }
+
+                if (x0 < limiteDoTabuleiro && y0 < limiteDoTabuleiro) {
+                    output += "(" + (x0 + 1) + "," + (y0 + 1) + ")";
+                    if (x0 != 0 && y0 != 0) {
+                        output += "(" + (x0 - 1) + "," + (y0 - 1) + ")";
+                    }
+                    if (y0 != 0) {
+                        output += "(" + (x0 + 1) + "," + (y0 - 1) + ")";
+                    }
+                    if (x0 != 0) {
+                        output += "(" + (x0 - 1) + "," + (y0 + 1) + ")";
+                    }
+                }
+            }
+            case 1 -> { //Rainha
+                output += possibilidadesDeMovimentos(3, tamanhoTabuleiro, -1, x0, y0);
+                output += possibilidadesDeMovimentos(4, tamanhoTabuleiro, -1, x0, y0);
+                output += possibilidadesDeMovimentos(5, tamanhoTabuleiro, -1, x0, y0);
+            }
+            case 2 -> { //Ponei Mágico
+                if ((x0 + 1) < limiteDoTabuleiro) {
+                    if ((y0 + 1) < limiteDoTabuleiro) {
+                        output += "(" + (x0 + 2) + "," + (y0 + 2) + ")";
+                    }
+                    if ((y0 - 1) > 0 && (y0 - 1) < limiteDoTabuleiro) {
+                        output += "(" + (x0 + 2) + "," + (y0 - 2) + ")";
+                    }
+                }
+
+                if ((x0 - 1) > 0 && (x0 - 1) < limiteDoTabuleiro) {
+                    if ((y0 + 1) < limiteDoTabuleiro) {
+                        output += "(" + (x0 - 2) + "," + (y0 + 2) + ")";
+                    }
+                    if ((y0 - 1) > 0 && (y0 - 1) < limiteDoTabuleiro) {
+                        output += "(" + (x0 - 2) + "," + (y0 - 2) + ")";
+                    }
+                }
+            }
+            case 3 -> { //Padre da Vila
+                int limiteDeCasas = 3;
+
+                if (turnoAtual == -1) {
+                    limiteDeCasas = 5;
+                }
+
+                for (int i = 0; i < limiteDeCasas; i++) {
+                    if ((x0 + i) < limiteDoTabuleiro && (y0 + i) < limiteDoTabuleiro) {
+                        output += "(" + (x0 + i + 1) + "," + (y0 + i + 1) + ")";
+                    }
+                }
+                for (int i = 0; i < limiteDeCasas; i++) {
+                    if ((x0 - i) > 0 && (y0 - i) > 0) {
+                        output += "(" + (x0 - i - 1) + "," + (y0 - i - 1) + ")";
+                    }
+                }
+
+                for (int i = 0; i < limiteDeCasas; i++) {
+                    if ((y0 - i) <= 0) {
+                        break;
+                    }
+                    if ((x0 + i) < limiteDoTabuleiro && (y0 - i) <= limiteDoTabuleiro) {
+                        output += "(" + (x0 + i + 1) + "," + (y0 - i - 1) + ")";
+                    }
+                }
+                for (int i = 0; i < limiteDeCasas; i++) {
+                    if ((x0 - i) <= 0) {
+                        break;
+                    }
+                    if ((x0 - i) <= limiteDoTabuleiro && (y0 + i) < limiteDoTabuleiro) {
+                        output += "(" + (x0 - i - 1) + "," + (y0 + i + 1) + ")";
+                    }
+                }
+            }
+            case 4 -> { //Torre Horizontal
+                int limiteDeCasas = limiteDoTabuleiro;
+
+                if (turnoAtual == -1) {
+                    limiteDeCasas = 5;
+                }
+
+                for (int i = 0; i < limiteDeCasas; i++) {
+                    if ((x0 + i) < limiteDoTabuleiro) {
+                        output += "(" + (x0 + i + 1) + "," + y0 + ")";
+                    }
+                }
+
+                for (int i = 0; i < limiteDeCasas; i++) {
+                    if ((x0 - i) <= 0) {
+                        break;
+                    }
+                    if ((x0 - i) <= limiteDoTabuleiro) {
+                        output += "(" + (x0 - i - 1) + "," + y0 + ")";
+                    }
+                }
+            }
+            case 5 -> { //Torre Vertical
+                int limiteDeCasas = limiteDoTabuleiro;
+
+                if (turnoAtual == -1) {
+                    limiteDeCasas = 5;
+                }
+
+                for (int i = 0; i < limiteDeCasas; i++) {
+                    if ((y0 + i) < limiteDoTabuleiro) {
+                        output += "(" + x0 + "," + (y0 + i + 1) + ")";
+                    }
+                }
+                for (int i = 0; i < limiteDeCasas; i++) {
+                    if ((y0 - i) <= 0) {
+                        break;
+                    }
+                    if ((y0 - i) <= limiteDoTabuleiro) {
+                        output += "(" + x0 + "," + (y0 - i - 1) + ")";
+                    }
+                }
+            }
+            case 6 -> { //Homer
+                if (turnoAtual % 3 == 0) {
+                    return "";
+                }
+
+                if (x0 < limiteDoTabuleiro && y0 < limiteDoTabuleiro) {
+                    output += "(" + (x0 + 1) + "," + (y0 + 1) + ")";
+                }
+                if (x0 > 0 && y0 > 0) {
+                    output += "(" + (x0 - 1) + "," + (y0 - 1) + ")";
+                }
+
+                if (x0 < limiteDoTabuleiro && y0 <= limiteDoTabuleiro && (y0 - 1) >= 0) {
+                    output += "(" + (x0 + 1) + "," + (y0 - 1) + ")";
+                }
+                if (x0 <= limiteDoTabuleiro && y0 < limiteDoTabuleiro && (x0 - 1) >= 0) {
+                    output += "(" + (x0 - 1) + "," + (y0 + 1) + ")";
+                }
+            }
+            case 7 -> { //Joker
+                //output += possibilidadesDeMovimentos();
+            }
+        }
+
+        System.out.println(output);
+        return "";
+    }
+
     public boolean move(int x0, int y0, int x1, int y1) {
-
+        //movimento do rei
         if (x1 > x0 + 1 || y1 > y0 + 1) {
-            if(tabuleiro.getIsBlackTurn()){
+            if(tabuleiro.isBlackTurn()){
                 statusPreta.incInvalidMoves();
                 return false;
             }
@@ -243,8 +422,9 @@ public class GameManager {
             return false;
         }
 
+        //movimento invalido (para qualquer peca)
         if (x1 < 0 || y1 < 0) {
-            if(tabuleiro.getIsBlackTurn()){
+            if(tabuleiro.isBlackTurn()){
                 statusPreta.incInvalidMoves();
                 return false;
             }
@@ -252,8 +432,9 @@ public class GameManager {
             return false;
         }
 
+        //movimento invalido (para qualquer peca)
         if (x1 > tabuleiro.getTamanhoTabuleiro() - 1 || y1 > tabuleiro.getTamanhoTabuleiro() - 1) {
-            if(tabuleiro.getIsBlackTurn()){
+            if(tabuleiro.isBlackTurn()){
                 statusPreta.incInvalidMoves();
                 return false;
             }
@@ -261,8 +442,9 @@ public class GameManager {
             return false;
         }
 
+        //movimento invalido (para qualquer peca)
         if (x0 == x1 && y0 == y1) {
-            if(tabuleiro.getIsBlackTurn()){
+            if(tabuleiro.isBlackTurn()){
                 statusPreta.incInvalidMoves();
                 return false;
             }
@@ -271,7 +453,7 @@ public class GameManager {
         }
 
         if (cordenadasPecasArray[y0][x0].equals("0")) {
-            if(tabuleiro.getIsBlackTurn()){
+            if(tabuleiro.isBlackTurn()){
                 statusPreta.incInvalidMoves();
                 return false;
             }
@@ -281,10 +463,10 @@ public class GameManager {
 
         String pecaAtual = cordenadasPecasArray[y0][x0];
         String movimentoParaPeca = cordenadasPecasArray[y1][x1];
-
         boolean pecaCapturada = false;
 
-        if (tabuleiro.getIsBlackTurn()) {
+        if (tabuleiro.isBlackTurn()) {
+            //movimento invalido (para qualquer peca)
             for (Peca pecaBranca : whiteTeam) {
                 if (pecaBranca.getIdentificador().equals(pecaAtual)) {
                     statusPreta.incInvalidMoves();
@@ -292,6 +474,7 @@ public class GameManager {
                 }
             }
 
+            //captura peca
             for (Peca pecaBranca : whiteTeam) {
                 if (pecaBranca.getIdentificador().equals(movimentoParaPeca)) {
                     pecaBranca.estadoPecaCapturado();
@@ -304,13 +487,16 @@ public class GameManager {
                 }
             }
             statusPreta.incValidMoves();
-        } else if (tabuleiro.getIsWhiteTurn()) {
+        } else if (tabuleiro.isWhiteTurn()) {
+            //movimento invalido (para qualquer peca)
             for (Peca pecaPreta : blackTeam) {
                 if (pecaPreta.getIdentificador().equals(pecaAtual)) {
                     statusBranca.incInvalidMoves();
                     return false;
                 }
             }
+
+            //captura peca
             for (Peca pecaPreta : blackTeam) {
                 if (pecaPreta.getIdentificador().equals(movimentoParaPeca)) {
                     pecaPreta.estadoPecaCapturado();
@@ -350,7 +536,7 @@ public class GameManager {
 
 
     public int getCurrentTeamID() {
-        return tabuleiro.getIsBlackTurn() ? 10 : 20;
+        return tabuleiro.isBlackTurn() ? 10 : 20;
     }
 
 

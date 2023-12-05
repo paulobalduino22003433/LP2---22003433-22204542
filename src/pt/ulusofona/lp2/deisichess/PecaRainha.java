@@ -1,9 +1,9 @@
 package pt.ulusofona.lp2.deisichess;
 
 public class PecaRainha extends Peca {
-
     public PecaRainha(String identificador, String tipoDePeca, String equipa, String alcunha) {
         super(identificador, tipoDePeca, equipa, alcunha);
+        this.pontoDeCadaPeca = 8;
     }
 
     @Override

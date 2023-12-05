@@ -2,23 +2,31 @@ package pt.ulusofona.lp2.deisichess;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Arrays;
 
 public class Main {
 
     public static void main(String[] args) throws IOException, InvalidGameInputException {
         GameManager gameManager = new GameManager();
-        gameManager.loadGame(new File("test-files/8x8.txt"));
+
+
+        gameManager.loadGame(new File("test-files/4x4.txt"));
+
+        gameManager.possibilidadesDeMovimentos(5, 8, 0, 1,0);
 
         System.out.println("Tamanho do Tabuleiro: " + gameManager.tabuleiro.getTamanhoTabuleiro());
         System.out.println("Número de Peças: " + gameManager.tabuleiro.getNumPecaTotal());
         System.out.println("Cordenadas das Peças: " + gameManager);
+        System.out.println("movi:" + gameManager.move(0,0,1,0));
 
+        //gameManager.saveGame(new File("src/aaa.txt"));
+
+        /*
         for (int i = 0; i < 16; i++) {
             System.out.println(gameManager.pecas.get(i).toString());
         }
 
-        gameManager.saveGame(new File("src/aaa.txt"));
+         */
+
 
 
         /*/
