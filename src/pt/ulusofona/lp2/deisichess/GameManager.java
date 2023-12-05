@@ -1,7 +1,10 @@
 package pt.ulusofona.lp2.deisichess;
 
 import javax.swing.*;
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -36,6 +39,7 @@ public class GameManager {
                     continue;
                 }
 
+
                 if (pecasRestantes < tabuleiro.getNumPecaTotal()) {
                     String[] partes = linha.split(":");
 
@@ -69,7 +73,7 @@ public class GameManager {
 
             fileReader.close();
         } catch (IOException e) {
-            System.out.println(e.getMessage());
+            e.printStackTrace();
         }
     }
 
@@ -180,7 +184,7 @@ public class GameManager {
     }
 
 
-  /*/public boolean isMoveValid(Peca peca,int x0,int y0, int x1, int y1){
+  public boolean isMoveValid(Peca peca,int x0,int y0, int x1, int y1){
         boolean isItvalid = false;
         switch (peca.tipoDePeca){
             case "0":
@@ -230,16 +234,31 @@ public class GameManager {
                 }
         }
         return isItvalid;
-    }/*/
+    }
 
     public boolean move(int x0, int y0, int x1, int y1) {
 
-        if (x1 > x0 + 1 || y1 > y0 + 1) {
-            if(tabuleiro.getIsBlackTurn()){
-                statusPreta.incInvalidMoves();
-                return false;
+        boolean wasMoveValid=false;
+        Peca pecaParaMover = null;
+        for (Peca peca :whiteTeam){
+            if (peca.getIdentificador().equals(cordenadasPecasArray[y0][x0])){
+                pecaParaMover = peca;
             }
-            statusBranca.incInvalidMoves();
+        }
+
+        for (Peca peca :blackTeam){
+            if (peca.getIdentificador().equals(cordenadasPecasArray[y0][x0])){
+                pecaParaMover = peca;
+            }
+        }
+        if (pecaParaMover!=null){
+            if(isMoveValid(pecaParaMover, x0, y0, x1, y1)){
+                wasMoveValid=true;
+            }
+        }
+
+
+        if (!wasMoveValid){
             return false;
         }
 
@@ -391,60 +410,6 @@ public class GameManager {
     }
 
     void saveGame(File file) throws IOException {
-        int x = 0;
-        int y = 0;
-        boolean achou;
-
-        try(BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
-            writer.write(tabuleiro.getTamanhoTabuleiro() + "\n");
-            writer.write(tabuleiro.getNumPecaTotal() + "");
-
-            for (int i = 0; i < tabuleiro.getNumPecaTotal(); i++) {
-                writer.newLine();
-                writer.write(pecas.get(i).getIdentificador() + ":");
-                writer.write( pecas.get(i).getTipoDePeca() + ":");
-                writer.write( pecas.get(i).getEquipa() + ":");
-                writer.write(pecas.get(i).getAlcunha());
-            }
-
-            while (y < tabuleiro.getTamanhoTabuleiro()) {
-                writer.newLine();
-
-                while (x < tabuleiro.getTamanhoTabuleiro()) {
-                    achou = false;
-
-                    for (int idPeca = 0; idPeca < tabuleiro.getNumPecaTotal(); idPeca++) {
-                        if (!pecas.get(idPeca).getEstado().equals("em jogo")) {
-                            continue;
-                        }
-
-                        if (pecas.get(idPeca).getY().equals(y + "")) {
-                            if (pecas.get(idPeca).getX().equals(x + "")) {
-                                writer.write(pecas.get(idPeca).getIdentificador());
-                                x++;
-
-                                if (x < tabuleiro.getTamanhoTabuleiro()) {
-                                    writer.write(":");
-                                }
-                                achou = true;
-                                break;
-                            }
-                        }
-                    }
-
-                    if (!achou) {
-                        writer.write("0");
-                        x++;
-
-                        if (x < tabuleiro.getTamanhoTabuleiro()) {
-                            writer.write(":");
-                        }
-                    }
-                }
-                y++;
-                x = 0;
-            }
-        }
     }
 
     void undo() {
