@@ -189,11 +189,6 @@ public class GameManager {
         switch (peca.tipoDePeca){
             case "0":
                 if (x1 > x0 + 1 || y1 > y0 + 1) {
-                    if(tabuleiro.getIsBlackTurn()){
-                        statusPreta.incInvalidMoves();
-                        isItvalid= false;
-                    }
-                    statusBranca.incInvalidMoves();
                     isItvalid= false;
                 }else{
                     isItvalid= true;
@@ -201,11 +196,6 @@ public class GameManager {
                 break;
             case "1":
                 if(x1>x0+5 || y1>y0+5){
-                    if(tabuleiro.getIsBlackTurn()){
-                        statusPreta.incInvalidMoves();
-                        isItvalid= false;
-                    }
-                    statusBranca.incInvalidMoves();
                     isItvalid= false;
                 }else{
                     isItvalid = true;
@@ -214,11 +204,6 @@ public class GameManager {
 
             case "4":
                 if(y1!=y0){
-                    if(tabuleiro.getIsBlackTurn()){
-                        statusPreta.incInvalidMoves();
-                        isItvalid= false;
-                    }
-                    statusBranca.incInvalidMoves();
                     isItvalid= false;
                 }else{
                     isItvalid=true;
@@ -226,11 +211,6 @@ public class GameManager {
                 break;
             case "5":
                 if(x1!=x0){
-                    if(tabuleiro.getIsBlackTurn()){
-                        statusPreta.incInvalidMoves();
-                        isItvalid = false;
-                    }
-                    statusBranca.incInvalidMoves();
                     isItvalid = false;
                 }else{
                     isItvalid = true;
@@ -270,8 +250,14 @@ public class GameManager {
         }
 
         if (!wasMoveValid){
+            if(tabuleiro.getIsBlackTurn()){
+                statusPreta.incInvalidMoves();
+                return false;
+            }
+            statusBranca.incInvalidMoves();
             return false;
         }
+
 
         if (x1 < 0 || y1 < 0) {
             if(tabuleiro.getIsBlackTurn()){
@@ -309,12 +295,26 @@ public class GameManager {
             return false;
         }
 
+        for (int x = Math.min(x0, x1) + 1; x < Math.max(x0, x1); x++) {
+            for (int y = Math.min(y0, y1) + 1; y < Math.max(y0, y1); y++) {
+                if (cordenadasPecasArray[y][x] != null) {
+                    return false;
+                }
+            }
+        }
+
         String pecaAtual = cordenadasPecasArray[y0][x0];
         String movimentoParaPeca = cordenadasPecasArray[y1][x1];
 
         boolean pecaCapturada = false;
 
         if (tabuleiro.getIsBlackTurn()) {
+            for(Peca peca: blackTeam){
+                if (peca.getIdentificador().equals(movimentoParaPeca)){
+                    statusPreta.incInvalidMoves();
+                    return false;
+                }
+            }
             for (Peca pecaBranca : whiteTeam) {
                 if (pecaBranca.getIdentificador().equals(pecaAtual)) {
                     statusPreta.incInvalidMoves();
@@ -335,6 +335,12 @@ public class GameManager {
             }
             statusPreta.incValidMoves();
         } else if (tabuleiro.getIsWhiteTurn()) {
+            for(Peca peca:whiteTeam){
+                if(peca.getIdentificador().equals(movimentoParaPeca)){
+                    statusBranca.incInvalidMoves();
+                    return false;
+                }
+            }
             for (Peca pecaPreta : blackTeam) {
                 if (pecaPreta.getIdentificador().equals(pecaAtual)) {
                     statusBranca.incInvalidMoves();
