@@ -198,6 +198,7 @@ public class GameManager {
                 }else{
                     isItvalid= true;
                 }
+                break;
             case "1":
                 if(x1>x0+5 || y1>y0+5){
                     if(tabuleiro.getIsBlackTurn()){
@@ -209,6 +210,7 @@ public class GameManager {
                 }else{
                     isItvalid = true;
                 }
+                break;
 
             case "4":
                 if(y1!=y0){
@@ -221,6 +223,7 @@ public class GameManager {
                 }else{
                     isItvalid=true;
                 }
+                break;
             case "5":
                 if(x1!=x0){
                     if(tabuleiro.getIsBlackTurn()){
@@ -232,31 +235,39 @@ public class GameManager {
                 }else{
                     isItvalid = true;
                 }
+                break;
         }
         return isItvalid;
     }
 
     public boolean move(int x0, int y0, int x1, int y1) {
 
-        boolean wasMoveValid=false;
+        boolean wasMoveValid = false;
         Peca pecaParaMover = null;
-        for (Peca peca :whiteTeam){
-            if (peca.getIdentificador().equals(cordenadasPecasArray[y0][x0])){
-                pecaParaMover = peca;
+
+        if (tabuleiro.getIsWhiteTurn()) {
+            for (Peca peca : whiteTeam) {
+                if (peca.getIdentificador().equals(cordenadasPecasArray[y0][x0])) {
+                    pecaParaMover = peca;
+                    break;
+                }
             }
         }
 
-        for (Peca peca :blackTeam){
-            if (peca.getIdentificador().equals(cordenadasPecasArray[y0][x0])){
-                pecaParaMover = peca;
+        if (tabuleiro.getIsBlackTurn()) {
+            for (Peca peca : blackTeam) {
+                if (peca.getIdentificador().equals(cordenadasPecasArray[y0][x0])) {
+                    pecaParaMover = peca;
+                    break;
+                }
             }
         }
+
         if (pecaParaMover!=null){
             if(isMoveValid(pecaParaMover, x0, y0, x1, y1)){
                 wasMoveValid=true;
             }
         }
-
 
         if (!wasMoveValid){
             return false;
