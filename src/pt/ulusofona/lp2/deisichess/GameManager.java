@@ -186,6 +186,16 @@ public class GameManager {
 
   public boolean isMoveValid(Peca peca,int x0,int y0, int x1, int y1){
         boolean isItvalid = false;
+      int deltaX = Integer.compare(x1, x0);
+      int deltaY = Integer.compare(y1, y0);
+
+      for (int x = x0 + deltaX, y = y0 + deltaY; x != x1 || y != y1; x += deltaX, y += deltaY) {
+          if (x >= 0 && x < tabuleiro.getTamanhoTabuleiro() && y >= 0 && y < tabuleiro.getTamanhoTabuleiro()) {
+              if (cordenadasPecasArray[y][x] != null) {
+                  return false; 
+              }
+          }
+      }
         switch (peca.tipoDePeca){
             case "0":
                 if (x1 > x0 + 1 || y1 > y0 + 1) {
@@ -295,13 +305,6 @@ public class GameManager {
             return false;
         }
 
-        for (int x = Math.min(x0, x1) + 1; x < Math.max(x0, x1); x++) {
-            for (int y = Math.min(y0, y1) + 1; y < Math.max(y0, y1); y++) {
-                if (cordenadasPecasArray[y][x] != null) {
-                    return false;
-                }
-            }
-        }
 
         String pecaAtual = cordenadasPecasArray[y0][x0];
         String movimentoParaPeca = cordenadasPecasArray[y1][x1];
