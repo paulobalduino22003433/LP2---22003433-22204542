@@ -186,13 +186,36 @@ public class GameManager {
 
   public boolean isMoveValid(Peca peca,int x0,int y0, int x1, int y1){
         boolean isItvalid = false;
-      int deltaX = Integer.compare(x1, x0);
-      int deltaY = Integer.compare(y1, y0);
+      int deltaX = x1 - x0;
+      int deltaY = y1 - y0;
 
-      for (int x = x0 + deltaX, y = y0 + deltaY; x != x1 || y != y1; x += deltaX, y += deltaY) {
-          if (x >= 0 && x < tabuleiro.getTamanhoTabuleiro() && y >= 0 && y < tabuleiro.getTamanhoTabuleiro()) {
-              if (cordenadasPecasArray[y][x] != null) {
-                  return false; 
+      if (deltaX == 0) {
+          // Movimento Vertical
+          int minY = Math.min(y0, y1);
+          int maxY = Math.max(y0, y1);
+          for (int y = minY + 1; y < maxY; y++) {
+              if (cordenadasPecasArray[y][x0] != null) {
+                  return false;
+              }
+          }
+      } else if (deltaY == 0) {
+          // Movimento Horizontal
+          int minX = Math.min(x0, x1);
+          int maxX = Math.max(x0, x1);
+          for (int x = minX + 1; x < maxX; x++) {
+              if (cordenadasPecasArray[y0][x] != null) {
+                  return false;
+              }
+          }
+      } else if (Math.abs(deltaX) == Math.abs(deltaY)) {
+          // Movimento Diagonal
+          int minX = Math.min(x0, x1);
+          int minY = Math.min(y0, y1);
+          int maxX = Math.max(x0, x1);
+          int maxY = Math.max(y0, y1);
+          for (int i = 1; i < Math.abs(deltaX); i++) {
+              if (cordenadasPecasArray[minY + i][minX + i] != null) {
+                  return false;
               }
           }
       }
