@@ -3,7 +3,6 @@ package pt.ulusofona.lp2.deisichess;
 import javax.swing.*;
 import java.io.*;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
@@ -898,7 +897,7 @@ public class GameManager {
                 }
             }
         }
-        
+
         throw new StatsPecaException("INVALID"); //A peça não se pode movimentar para a casa x1 e y1
     }
 

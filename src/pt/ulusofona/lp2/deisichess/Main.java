@@ -2,6 +2,7 @@ package pt.ulusofona.lp2.deisichess;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
 
 public class Main {
 
@@ -12,6 +13,7 @@ public class Main {
         peca.setY("0");
 
         gameManager.loadGame(new File("test-files/8x8.txt"));
+        int x0 =0, y0 = 3, x1 = 3, y1 = 3;
 
         //gameManager.possibilidadesDeMovimentos(0, 8, 0, 0,0);
         try {
@@ -39,33 +41,17 @@ public class Main {
 
 
 
+        Peca pecaToMove = new Peca("5", "4", "10", "Artolas");
+        pecaToMove.x = String.valueOf(x0);
+        pecaToMove.y = String.valueOf(y0);
+        //System.out.println(gameManager.isMoveValid(pecaToMove,x0,y0,x1,y1));
+        System.out.println("Before move: " + pecaToMove.x + "," + pecaToMove.y);
 
-        /*/
-        for(Peca peca : gameManager.pecas){
-            System.out.println(peca);
-        }
+        boolean moveResult = gameManager.move( x0, y0, x1, y1);
 
+        System.out.println("After move:"+ pecaToMove.x + "," + pecaToMove.y);
 
-        System.out.println(gameManager.cordenadasPecas);
+        System.out.println("Move result: " + moveResult);
 
-
-        for (int i = 0; i < 4; i++) {
-            System.out.print((gameManager.cordenadasPecasArray[i][1]) + " ");
-        }
-        System.out.println("\n" + Arrays.toString(gameManager.getPieceInfo(1)));
-        System.out.println("\n\n" + Arrays.toString(gameManager.getSquareInfo(3,3)));
-
-
-        for (int i = 0; i < 4; i++) {
-            System.out.print((gameManager.cordenadasPecasArray[i][i]) + " ");
-        }
-
-        System.out.println(gameManager.move(1,0,1,1));
-        System.out.println(gameManager.pecas.get(0));
-        for (int i = 0; i < 4; i++) {
-            System.out.print((gameManager.cordenadasPecasArray[i][i]) + " ");
-        }
-        System.out.println(gameManager.pecas.get(0));
-        /*/
     }
 }
