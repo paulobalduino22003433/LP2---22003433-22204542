@@ -4,7 +4,6 @@ public class PecaHomer extends Peca {
 
     public PecaHomer(String identificador, String tipoDePeca, String equipa, String alcunha) {
         super(identificador, tipoDePeca, equipa, alcunha);
-        this.pontoDeCadaPeca = 2;
     }
 
     @Override

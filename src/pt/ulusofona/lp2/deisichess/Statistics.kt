@@ -1,5 +1,6 @@
 package pt.ulusofona.lp2.deisichess
 
+
     fun getStatsCalculator(statType: StatType): (GameManager) -> List<String> {
         return when (statType) {
             StatType.TOP_5_CAPTURAS -> { gameManager -> calculateTop5Capturas(gameManager) }

@@ -1,7 +1,10 @@
 package pt.ulusofona.lp2.deisichess;
 
 import javax.swing.*;
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -17,16 +20,14 @@ public class GameManager {
     GameResults gameResults = new GameResults();
 
 
-    void loadGame(File file) throws InvalidGameInputException, IOException {
+    void loadGame(File file) throws IOException, InvalidGameInputException {
         try {
             ArrayList<String> cordenadasPecas = new ArrayList<>();
             BufferedReader fileReader = new BufferedReader(new FileReader(file));
             String linha;
             int pecasRestantes = 0;
-            int numLine = 0;
 
             while ((linha = fileReader.readLine()) != null) {
-                numLine++;
 
                 if (tabuleiro.getTamanhoTabuleiro() == -1) {
                     tabuleiro.setTamanhoTabuleiro(Integer.parseInt(linha.trim()));
@@ -38,12 +39,9 @@ public class GameManager {
                     continue;
                 }
 
+
                 if (pecasRestantes < tabuleiro.getNumPecaTotal()) {
                     String[] partes = linha.split(":");
-
-                    if (partes.length != 4) {
-                        throw new InvalidGameInputException(partes.length, numLine);
-                    }
 
                     Peca peca = colocarTipoDePeca(partes[0].trim(), partes[1].trim(), partes[2].trim(), partes[3].trim());
 
@@ -74,11 +72,8 @@ public class GameManager {
             removeCapturedPieces();
 
             fileReader.close();
-
-        } catch (InvalidGameInputException e) {
-            System.out.println("Ocorreu um erro ao ler o ficheiro, na linha " + e.getLineWithError() + " com o seguinte problema: " + e.getProblemDescription());
         } catch (IOException e) {
-            System.out.println("Exception: Ficheiro não existente");
+            e.printStackTrace();
         }
     }
 
@@ -189,740 +184,106 @@ public class GameManager {
     }
 
 
-  /*/public boolean isMoveValid(Peca peca,int x0,int y0, int x1, int y1) {
+  public boolean isMoveValid(Peca peca,int x0,int y0, int x1, int y1){
         boolean isItvalid = false;
+      int deltaX = x1 - x0;
+      int deltaY = y1 - y0;
 
-        switch (peca.tipoDePeca) {
+      if (deltaX == 0) {
+          // Movimento Vertical
+          int minY = Math.min(y0, y1);
+          int maxY = Math.max(y0, y1);
+          for (int y = minY + 1; y < maxY; y++) {
+              if (cordenadasPecasArray[y][x0] != null) {
+                  return false;
+              }
+          }
+      } else if (deltaY == 0) {
+          // Movimento Horizontal
+          int minX = Math.min(x0, x1);
+          int maxX = Math.max(x0, x1);
+          for (int x = minX + 1; x < maxX; x++) {
+              if (cordenadasPecasArray[y0][x] != null) {
+                  return false;
+              }
+          }
+      } else if (Math.abs(deltaX) == Math.abs(deltaY)) {
+          // Movimento Diagonal
+          int minX = Math.min(x0, x1);
+          int minY = Math.min(y0, y1);
+          int maxX = Math.max(x0, x1);
+          int maxY = Math.max(y0, y1);
+          for (int i = 1; i < Math.abs(deltaX); i++) {
+              if (cordenadasPecasArray[minY + i][minX + i] != null) {
+                  return false;
+              }
+          }
+      }
+        switch (peca.tipoDePeca){
             case "0":
                 if (x1 > x0 + 1 || y1 > y0 + 1) {
-                    if(tabuleiro.getIsBlackTurn()){
-                        statusPreta.incInvalidMoves();
-                        isItvalid= false;
-                    }
-                    statusBranca.incInvalidMoves();
                     isItvalid= false;
                 }else{
                     isItvalid= true;
                 }
+                break;
             case "1":
                 if(x1>x0+5 || y1>y0+5){
-                    if(tabuleiro.getIsBlackTurn()){
-                        statusPreta.incInvalidMoves();
-                        isItvalid= false;
-                    }
-                    statusBranca.incInvalidMoves();
                     isItvalid= false;
                 }else{
                     isItvalid = true;
                 }
+                break;
 
             case "4":
                 if(y1!=y0){
-                    if(tabuleiro.getIsBlackTurn()){
-                        statusPreta.incInvalidMoves();
-                        isItvalid= false;
-                    }
-                    statusBranca.incInvalidMoves();
                     isItvalid= false;
                 }else{
                     isItvalid=true;
                 }
+                break;
             case "5":
                 if(x1!=x0){
-                    if(tabuleiro.getIsBlackTurn()){
-                        statusPreta.incInvalidMoves();
-                        isItvalid = false;
-                    }
-                    statusBranca.incInvalidMoves();
                     isItvalid = false;
                 }else{
                     isItvalid = true;
                 }
+                break;
         }
         return isItvalid;
-    }/*/
-
-    public ArrayList<String> possibilidadesDeMovimentos(int tipoPeca, int tamanhoTabuleiro, int turnoAtual, int x0, int y0) {
-        ArrayList<String> output = new ArrayList<>();
-        int limiteDoTabuleiro = (tamanhoTabuleiro - 1);
-
-        if (x0 >= tamanhoTabuleiro || y0 >= tamanhoTabuleiro) {
-            return null;
-        } else if (x0 < 0 || y0 < 0) {
-            return null;
-        }
-
-        switch (tipoPeca) {
-            case 0 -> { //Rei
-                if (x0 < limiteDoTabuleiro) {
-                    output.add((x0 + 1) + "/" + y0);
-                }
-                if (x0 != 0) {
-                    output.add((x0 - 1) + "/" + y0);
-                }
-
-                if (y0 < limiteDoTabuleiro) {
-                    output.add(x0 + "/" + (y0 + 1));
-                }
-                if (y0 != 0) {
-                    output.add(x0 + "/" + (y0 - 1));
-                }
-
-                if (x0 < limiteDoTabuleiro && y0 < limiteDoTabuleiro) {
-                    output.add((x0 + 1) + "/" + (y0 + 1));
-                }
-                if (x0 < limiteDoTabuleiro && y0 != 0) {
-                    output.add((x0 + 1) + "/" + (y0 - 1));
-                }
-                if (x0 != 0 && y0 < limiteDoTabuleiro) {
-                    output.add((x0 - 1) + "/" + (y0 + 1));
-                }
-                if (x0 != 0 && y0 != 0) {
-                    output.add((x0 - 1) + "/" + (y0 - 1));
-                }
-            }
-            case 1 -> { //Rainha
-                output.add(possibilidadesDeMovimentos(3, tamanhoTabuleiro, -1, x0, y0) + "");
-                output.add(possibilidadesDeMovimentos(4, tamanhoTabuleiro, -1, x0, y0) + "");
-                output.add(possibilidadesDeMovimentos(5, tamanhoTabuleiro, -1, x0, y0) + "");
-            }
-            case 2 -> { //Ponei Mágico
-                if ((x0 + 1) < limiteDoTabuleiro) {
-                    if ((y0 + 1) < limiteDoTabuleiro) {
-                        output.add((x0 + 2) + "/" + (y0 + 2));
-                    }
-                    if ((y0 - 1) > 0 && (y0 - 1) < limiteDoTabuleiro) {
-                        output.add((x0 + 2) + "/" + (y0 - 2));
-                    }
-                }
-
-                if ((x0 - 1) > 0 && (x0 - 1) < limiteDoTabuleiro) {
-                    if ((y0 + 1) < limiteDoTabuleiro) {
-                        output.add((x0 - 2) + "/" + (y0 + 2));
-                    }
-                    if ((y0 - 1) > 0 && (y0 - 1) < limiteDoTabuleiro) {
-                        output.add((x0 - 2) + "/" + (y0 - 2));
-                    }
-                }
-            }
-            case 3 -> { //Padre da Vila
-                int limiteDeCasas = 3;
-
-                if (turnoAtual == -1) {
-                    limiteDeCasas = 5;
-                }
-
-                for (int i = 0; i < limiteDeCasas; i++) {
-                    if ((x0 + i) < limiteDoTabuleiro && (y0 + i) < limiteDoTabuleiro) {
-                        output.add((x0 + i + 1) + "/" + (y0 + i + 1));
-                    }
-                }
-                for (int i = 0; i < limiteDeCasas; i++) {
-                    if ((x0 - i) > 0 && (y0 - i) > 0) {
-                        output.add((x0 - i - 1) + "/" + (y0 - i - 1));
-                    }
-                }
-
-                for (int i = 0; i < limiteDeCasas; i++) {
-                    if ((y0 - i) <= 0) {
-                        break;
-                    }
-                    if ((x0 + i) < limiteDoTabuleiro && (y0 - i) <= limiteDoTabuleiro) {
-                        output.add((x0 + i + 1) + "/" + (y0 - i - 1));
-                    }
-                }
-                for (int i = 0; i < limiteDeCasas; i++) {
-                    if ((x0 - i) <= 0) {
-                        break;
-                    }
-                    if ((x0 - i) <= limiteDoTabuleiro && (y0 + i) < limiteDoTabuleiro) {
-                        output.add((x0 - i - 1) + "/" + (y0 + i + 1));
-                    }
-                }
-            }
-            case 4 -> { //Torre Horizontal
-                int limiteDeCasas = limiteDoTabuleiro;
-
-                if (turnoAtual == -1) {
-                    limiteDeCasas = 5;
-                }
-
-                for (int i = 0; i < limiteDeCasas; i++) {
-                    if ((x0 + i) < limiteDoTabuleiro) {
-                        output.add((x0 + i + 1) + "/" + y0);
-                    }
-                }
-
-                for (int i = 0; i < limiteDeCasas; i++) {
-                    if ((x0 - i) <= 0) {
-                        break;
-                    }
-                    if ((x0 - i) <= limiteDoTabuleiro) {
-                        output.add((x0 - i - 1) + "/" + y0);
-                    }
-                }
-            }
-            case 5 -> { //Torre Vertical
-                int limiteDeCasas = limiteDoTabuleiro;
-
-                if (turnoAtual == -1) {
-                    limiteDeCasas = 5;
-                }
-
-                for (int i = 0; i < limiteDeCasas; i++) {
-                    if ((y0 + i) < limiteDoTabuleiro) {
-                        output.add(x0 + "/" + (y0 + i + 1));
-                    }
-                }
-                for (int i = 0; i < limiteDeCasas; i++) {
-                    if ((y0 - i) <= 0) {
-                        break;
-                    }
-                    if ((y0 - i) <= limiteDoTabuleiro) {
-                        output.add(x0 + "/" + (y0 - i - 1));
-                    }
-                }
-            }
-            case 6 -> { //Homer
-                if (turnoAtual % 3 == 0) {
-                    return null;
-                }
-
-                if (x0 < limiteDoTabuleiro && y0 < limiteDoTabuleiro) {
-                    output.add((x0 + 1) + "/" + (y0 + 1));
-                }
-                if (x0 > 0 && y0 > 0) {
-                    output.add((x0 - 1) + "/" + (y0 - 1));
-                }
-
-                if (x0 < limiteDoTabuleiro && y0 <= limiteDoTabuleiro && (y0 - 1) >= 0) {
-                    output.add((x0 + 1) + "/" + (y0 - 1));
-                }
-                if (x0 <= limiteDoTabuleiro && y0 < limiteDoTabuleiro && (x0 - 1) >= 0) {
-                    output.add((x0 - 1) + "/" + (y0 + 1));
-                }
-            }
-            case 7 -> { //Joker
-                int pecaAtual = turnoAtual + 1;
-
-                while (pecaAtual > 6) {
-                    pecaAtual -= 6;
-                }
-
-                if (pecaAtual == 1) {
-                    output.add(possibilidadesDeMovimentos(pecaAtual, tamanhoTabuleiro, -1, x0, y0) + "");
-                } else {
-                    output.add(possibilidadesDeMovimentos(pecaAtual, tamanhoTabuleiro, turnoAtual, x0, y0) + "");
-                }
-            }
-        }
-
-        System.out.println("->" + output);
-        return output;
-    }
-
-    public void veSePodeSeMovimentar(int x0, int y0, int x1, int y1) throws StatsPecaException {
-        int turnoAtual = statusBranca.getValidMoves() + statusPreta.getValidMoves();
-        int pecaAtualJoker = turnoAtual + 1;
-        int tipoPeca = -1;
-        String[] partes;
-        ArrayList<String> movimentosParaPeca;
-        Peca pecaAtual = null;
-
-        for (Peca pecaPreta : blackTeam) {
-            if (pecaPreta.getX().equals(x0 + "") && pecaPreta.getY().equals(y0 + "")) {
-                tipoPeca = Integer.parseInt(pecaPreta.getTipoDePeca().trim());
-                pecaAtual = pecaPreta;
-            }
-        }
-        if (tipoPeca == -1) {
-            for (Peca pecaBranca : whiteTeam) {
-                if (pecaBranca.getX().equals(x0 + "") && pecaBranca.getY().equals(y0 + "")) {
-                    tipoPeca = Integer.parseInt(pecaBranca.getTipoDePeca().trim());
-                    pecaAtual = pecaBranca;
-                }
-            }
-        }
-
-        turnoAtual = 1;
-
-        movimentosParaPeca = possibilidadesDeMovimentos(tipoPeca, tabuleiro.getTamanhoTabuleiro(), turnoAtual, x0, y0);
-
-        if (x0 == x1 && y0 == y1) {
-            throw new StatsPecaException("INVALID");
-        }
-        if (pecaAtual == null || movimentosParaPeca == null) { //A coordenas x0 e y0 indicam um quadrado sem peças
-            throw new StatsPecaException("INVALID");
-        }
-        if (tabuleiro.isBlackTurn() && pecaAtual.getEquipa().equals("20")) { //Quando está jogando com uma peça que não é da sua equipe
-            throw new StatsPecaException("INVALID");
-        } else if (tabuleiro.isWhiteTurn() && pecaAtual.getEquipa().equals("10")) {
-            throw new StatsPecaException("INVALID");
-        }
-        if (pecaAtual.getEquipa().equals("10")) { //Quando a casa que você quer avançar com a peça já está ocupada por uma outra peça da sua equipe
-            for (Peca pecaPreta : blackTeam) {
-                if (pecaPreta.getX().equals(x1 + "") && pecaPreta.getY().equals(y1 + "")) {
-                    throw new StatsPecaException("INVALID");
-                }
-            }
-        } else if (pecaAtual.getEquipa().equals("20")) {
-            for (Peca pecaBranca : whiteTeam) {
-                if (pecaBranca.getX().equals(x1 + "") && pecaBranca.getY().equals(y1 + "")) {
-                    throw new StatsPecaException("INVALID");
-                }
-            }
-        }
-
-        System.out.println(tipoPeca);
-
-        switch (tipoPeca) {
-            case 0 -> {
-                for (String s : movimentosParaPeca) {
-                    partes = s.split("/");
-
-                    if (partes[0].equals(x1 + "") && partes[1].equals(y1 + "")) {
-                        throw new StatsPecaException("VALID");
-                    }
-                }
-            }
-
-            case 1 -> {
-                String[] separadorDeCoordenadas;
-                int x;
-                int y;
-
-                for (String s : movimentosParaPeca) {
-                    separadorDeCoordenadas = s.substring(1, s.length() -1).split(", ");
-
-                    for (String s2 : separadorDeCoordenadas) {
-                        partes = s2.split("/");
-                        x = Integer.parseInt(partes[0].trim());
-                        y = Integer.parseInt(partes[1].trim());
-
-                        for (Peca pecaPreta : blackTeam) {
-                            //Parte do Padre
-                            if (pecaPreta.getX().equals(partes[0]) && pecaPreta.getY().equals(partes[1])) { //Tem uma outra peca do mesmo time na possível casa que esta peça pode estar
-                                if (x1 > x0 && y1 > y0) {
-                                    if (x > x0 && y > y0) {
-                                        throw new StatsPecaException("INVALID");
-                                    }
-                                } else if (x1 > x0 && y1 < y0) {
-                                    if (x > x0 && y < y0) {
-                                        throw new StatsPecaException("INVALID");
-                                    }
-                                } else if (x1 < x0 && y1 > y0) {
-                                    if (x < x0 && y > y0) {
-                                        throw new StatsPecaException("INVALID");
-                                    }
-                                } else if (x1 < x0 && y1 < y0) {
-                                    if (x < x0 && y < y0) {
-                                        throw new StatsPecaException("INVALID");
-                                    }
-                                }
-
-                                //Parte da Torre Horizontal
-                                if (pecaPreta.getX().equals(partes[0]) && pecaPreta.getY().equals(partes[1])) {
-                                    if (x1 > x0) {
-                                        if (x > x0 && y == y0) {
-                                            throw new StatsPecaException("INVALID");
-                                        }
-                                    } else if (x1 < x0) {
-                                        if (x < x0 && y == y0) {
-                                            System.out.println("a");
-                                            throw new StatsPecaException("INVALID");
-                                        }
-                                    }
-                                }
-
-                                //Parte da Torre Horizontal
-                                if (pecaPreta.getX().equals(partes[0]) && pecaPreta.getY().equals(partes[1])) {
-                                    if (y1 > y0) {
-                                        if (y > y0 && x == x0) {
-                                            throw new StatsPecaException("INVALID");
-                                        }
-                                    } else if (y1 < y0) {
-                                        if (y < y0 && x == x0) {
-                                            throw new StatsPecaException("INVALID");
-                                        }
-                                    }
-                                }
-                            }
-                        }
-
-                        for (Peca pecaBranca : whiteTeam) {
-                            //Parte do Padre
-                            if (pecaBranca.getX().equals(partes[0]) && pecaBranca.getY().equals(partes[1])) { //Tem uma outra peca do mesmo time na possível casa que esta peça pode estar
-                                if (x1 > x0 && y1 > y0) {
-                                    if (x > x0 && y > y0) {
-                                        throw new StatsPecaException("INVALID");
-                                    }
-                                } else if (x1 > x0 && y1 < y0) {
-                                    if (x > x0 && y < y0) {
-                                        throw new StatsPecaException("INVALID");
-                                    }
-                                } else if (x1 < x0 && y1 > y0) {
-                                    if (x < x0 && y > y0) {
-                                        throw new StatsPecaException("INVALID");
-                                    }
-                                } else if (x1 < x0 && y1 < y0) {
-                                    if (x < x0 && y < y0) {
-                                        throw new StatsPecaException("INVALID");
-                                    }
-                                }
-
-                                //Parte da Torre Horizontal
-                                if (pecaBranca.getX().equals(partes[0]) && pecaBranca.getY().equals(partes[1])) {
-                                    if (x1 > x0) {
-                                        if (x > x0 && y == y0) {
-                                            throw new StatsPecaException("INVALID");
-                                        }
-                                    } else if (x1 < x0) {
-                                        if (x < x0 && y == y0) {
-                                            System.out.println("a");
-                                            throw new StatsPecaException("INVALID");
-                                        }
-                                    }
-                                }
-
-                                //Parte da Torre Horizontal
-                                if (pecaBranca.getX().equals(partes[0]) && pecaBranca.getY().equals(partes[1])) {
-                                    if (y1 > y0) {
-                                        if (y > y0 && x == x0) {
-                                            throw new StatsPecaException("INVALID");
-                                        }
-                                    } else if (y1 < y0) {
-                                        if (y < y0 && x == x0) {
-                                            throw new StatsPecaException("INVALID");
-                                        }
-                                    }
-                                }
-                            }
-                        }
-
-                        if (partes[0].equals(x1 + "") && partes[1].equals(y1 + "")) {
-                            throw new StatsPecaException("VALID");
-                        }
-                    }
-                }
-            }
-
-            case 2 -> {
-                for (String s : movimentosParaPeca) {
-                    partes = s.split("/");
-
-                    for (Peca pecaPreta : blackTeam) {
-                        if (x1 > x0 && y1 > y0) {
-                            if (pecaPreta.getX().equals(x0 + 1 + "") || pecaPreta.getX().equals(x0 + 2 + "")) {
-                                if (pecaPreta.getY().equals(y0 + "")) {
-                                    for (Peca pretaPeca : blackTeam) {
-                                        if (pretaPeca.getY().equals(y0 + 1 + "") || pretaPeca.getY().equals(y0 + 2 + "")) {
-                                            if (pretaPeca.getX().equals(x0 + "")) {
-                                                throw new StatsPecaException("INVALID");
-                                            } else if (pretaPeca.getX().equals(x0 + 1 + "") && pretaPeca.getY().equals(y0 + 2 + "")) {
-                                                throw new StatsPecaException("INVALID");
-                                            }
-                                        }
-                                    }
-
-                                    throw new StatsPecaException("VALID");
-
-                                } else if (pecaPreta.getY().equals(y0 + 1 + "") && pecaPreta.getX().equals(x0 + 2 + "")) {
-                                    for (Peca pretaPeca : blackTeam) {
-                                        if (pretaPeca.getY().equals(y0 + 1 + "") || pretaPeca.getY().equals(y0 + 2 + "")) {
-                                            if (pretaPeca.getX().equals(x0 + "")) {
-                                                throw new StatsPecaException("INVALID");
-                                            } else if (pretaPeca.getX().equals(x0 + 1 + "") && pretaPeca.getY().equals(y0 + 2 + "")) {
-                                                throw new StatsPecaException("INVALID");
-                                            }
-                                        }
-                                    }
-
-                                    throw new StatsPecaException("VALID");
-                                }
-                            }
-
-                            if (partes[0].equals(x1 + "") && partes[1].equals(y1 + "")) {
-                                throw new StatsPecaException("VALID");
-                            }
-                        } else if (x1 < x0 && y1 > y0) {
-                            if (pecaPreta.getX().equals(x0 - 1 + "") || pecaPreta.getX().equals(x0 - 2 + "")) {
-                                if (pecaPreta.getY().equals(y0 + "")) {
-                                    for (Peca pretaPeca : blackTeam) {
-                                        if (pretaPeca.getY().equals(y0 + 1 + "") || pretaPeca.getY().equals(y0 + 2 + "")) {
-                                            if (pretaPeca.getX().equals(x0 + "")) {
-                                                throw new StatsPecaException("INVALID");
-                                            } else if (pretaPeca.getX().equals(x0 - 1 + "") && pretaPeca.getY().equals(y0 + 2 + "")) {
-                                                throw new StatsPecaException("INVALID");
-                                            }
-                                        }
-                                    }
-
-                                    throw new StatsPecaException("VALID");
-
-                                } else if (pecaPreta.getY().equals(y0 + 1 + "") && pecaPreta.getX().equals(x0 - 2 + "")) {
-                                    for (Peca pretaPeca : blackTeam) {
-                                        if (pretaPeca.getY().equals(y0 + 1 + "") || pretaPeca.getY().equals(y0 + 2 + "")) {
-                                            if (pretaPeca.getX().equals(x0 + "")) {
-                                                throw new StatsPecaException("INVALID");
-                                            } else if (pretaPeca.getX().equals(x0 - 1 + "") && pretaPeca.getY().equals(y0 + 2 + "")) {
-                                                throw new StatsPecaException("INVALID");
-                                            }
-                                        }
-                                    }
-
-                                    throw new StatsPecaException("VALID");
-                                }
-                            }
-
-                            if (partes[0].equals(x1 + "") && partes[1].equals(y1 + "")) {
-                                throw new StatsPecaException("VALID");
-                            }
-                        } else if (x1 > x0 && y1 < y0) {
-                            if (pecaPreta.getX().equals(x0 + 1 + "") || pecaPreta.getX().equals(x0 + 2 + "")) {
-                                if (pecaPreta.getY().equals(y0 + "")) {
-                                    for (Peca pretaPeca : blackTeam) {
-                                        if (pretaPeca.getY().equals(y0 - 1 + "") || pretaPeca.getY().equals(y0 - 2 + "")) {
-                                            if (pretaPeca.getX().equals(x0 + "")) {
-                                                throw new StatsPecaException("INVALID");
-                                            } else if (pretaPeca.getX().equals(x0 + 1 + "") && pretaPeca.getY().equals(y0 - 2 + "")) {
-                                                throw new StatsPecaException("INVALID");
-                                            }
-                                        }
-                                    }
-
-                                    throw new StatsPecaException("VALID");
-
-                                } else if (pecaPreta.getY().equals(y0 - 1 + "") && pecaPreta.getX().equals(x0 + 2 + "")) {
-                                    for (Peca pretaPeca : blackTeam) {
-                                        if (pretaPeca.getY().equals(y0 - 1 + "") || pretaPeca.getY().equals(y0 - 2 + "")) {
-                                            if (pretaPeca.getX().equals(x0 + "")) {
-                                                throw new StatsPecaException("INVALID");
-                                            } else if (pretaPeca.getX().equals(x0 + 1 + "") && pretaPeca.getY().equals(y0 - 2 + "")) {
-                                                throw new StatsPecaException("INVALID");
-                                            }
-                                        }
-                                    }
-
-                                    throw new StatsPecaException("VALID");
-                                }
-                            }
-
-                            if (partes[0].equals(x1 + "") && partes[1].equals(y1 + "")) {
-                                throw new StatsPecaException("VALID");
-                            }
-                        } else if (x1 < x0 && y1 < y0) {
-                            if (pecaPreta.getX().equals(x0 - 1 + "") || pecaPreta.getX().equals(x0 - 2 + "")) {
-                                if (pecaPreta.getY().equals(y0 + "")) {
-                                    for (Peca pretaPeca : blackTeam) {
-                                        if (pretaPeca.getY().equals(y0 - 1 + "") || pretaPeca.getY().equals(y0 - 2 + "")) {
-                                            if (pretaPeca.getX().equals(x0 + "")) {
-                                                throw new StatsPecaException("INVALID");
-                                            } else if (pretaPeca.getX().equals(x0 - 1 + "") && pretaPeca.getY().equals(y0 - 2 + "")) {
-                                                throw new StatsPecaException("INVALID");
-                                            }
-                                        }
-                                    }
-
-                                    throw new StatsPecaException("VALID");
-
-                                } else if (pecaPreta.getY().equals(y0 - 1 + "") && pecaPreta.getX().equals(x0 - 2 + "")) {
-                                    for (Peca pretaPeca : blackTeam) {
-                                        if (pretaPeca.getY().equals(y0 - 1 + "") || pretaPeca.getY().equals(y0 - 2 + "")) {
-                                            if (pretaPeca.getX().equals(x0 + "")) {
-                                                throw new StatsPecaException("INVALID");
-                                            } else if (pretaPeca.getX().equals(x0 - 1 + "") && pretaPeca.getY().equals(y0 - 2 + "")) {
-                                                throw new StatsPecaException("INVALID");
-                                            }
-                                        }
-                                    }
-
-                                    throw new StatsPecaException("VALID");
-                                }
-                            }
-
-                            if (partes[0].equals(x1 + "") && partes[1].equals(y1 + "")) {
-                                throw new StatsPecaException("VALID");
-                            }
-                        }
-                    }
-                }
-            }
-
-            case 3 -> {
-                int x;
-                int y;
-
-                for (String s : movimentosParaPeca) {
-                    partes = s.split("/");
-                    x = Integer.parseInt(partes[0].trim());
-                    y = Integer.parseInt(partes[1].trim());
-
-                    for (Peca pecaPreta : blackTeam) {
-                        if (pecaPreta.getX().equals(partes[0]) && pecaPreta.getY().equals(partes[1])) { //Tem uma outra peca do mesmo time na possível casa que esta peça pode estar
-                            if (x1 > x0 && y1 > y0) {
-                                if (x > x0 && y > y0) {
-                                    throw new StatsPecaException("INVALID");
-                                }
-                            } else if (x1 > x0 && y1 < y0) {
-                                if (x > x0 && y < y0) {
-                                    throw new StatsPecaException("INVALID");
-                                }
-                            } else if (x1 < x0 && y1 > y0) {
-                                if (x < x0 && y > y0) {
-                                    throw new StatsPecaException("INVALID");
-                                }
-                            } else if (x1 < x0 && y1 < y0) {
-                                if (x < x0 && y < y0) {
-                                    throw new StatsPecaException("INVALID");
-                                }
-                            }
-                        }
-                    }
-                    for (Peca pecaBranca : whiteTeam) {
-                        if (pecaBranca.getX().equals(partes[0]) && pecaBranca.getY().equals(partes[1])) {
-                            if (x1 > x0 && y1 > y0) {
-                                if (x > x0 && y > y0) {
-                                    throw new StatsPecaException("INVALID");
-                                }
-                            } else if (x1 > x0 && y1 < y0) {
-                                if (x > x0 && y < y0) {
-                                    throw new StatsPecaException("INVALID");
-                                }
-                            } else if (x1 < x0 && y1 > y0) {
-                                if (x < x0 && y > y0) {
-                                    throw new StatsPecaException("INVALID");
-                                }
-                            } else if (x1 < x0 && y1 < y0) {
-                                if (x < x0 && y < y0) {
-                                    throw new StatsPecaException("INVALID");
-                                }
-                            }
-                        }
-                    }
-
-                    if (partes[0].equals(x1 + "") && partes[1].equals(y1 + "")) {
-                        throw new StatsPecaException("VALID");
-                    }
-                }
-            }
-
-            case 4 -> {
-                int x;
-
-                for (String s : movimentosParaPeca) {
-                    partes = s.split("/");
-                    x = Integer.parseInt(partes[0].trim());
-
-                    for (Peca pecaPreta : blackTeam) {
-                        if (pecaPreta.getX().equals(partes[0]) && pecaPreta.getY().equals(partes[1])) {
-                            if (x1 > x0) {
-                                if (x > x0) {
-                                    throw new StatsPecaException("INVALID");
-                                }
-                            } else if (x1 < x0) {
-                                if (x < x0) {
-                                    throw new StatsPecaException("INVALID");
-                                }
-                            }
-                        }
-                    }
-                    for (Peca pecaBranca : whiteTeam) {
-                        if (pecaBranca.getX().equals(partes[0]) && pecaBranca.getY().equals(partes[1])) {
-                            if (x1 > x0) {
-                                if (x > x0) {
-                                    throw new StatsPecaException("INVALID");
-                                }
-                            } else if (x1 < x0) {
-                                if (x < x0) {
-                                    throw new StatsPecaException("INVALID");
-                                }
-                            }
-                        }
-                    }
-
-                    if (partes[0].equals(x1 + "") && partes[1].equals(y1 + "")) {
-                        throw new StatsPecaException("VALID");
-                    }
-                }
-            }
-
-            case 5 -> {
-                int y;
-
-                for (String s : movimentosParaPeca) {
-                    partes = s.split("/");
-                    y = Integer.parseInt(partes[1].trim());
-
-                    for (Peca pecaPreta : blackTeam) {
-                        if (pecaPreta.getX().equals(partes[0]) && pecaPreta.getY().equals(partes[1])) {
-                            if (y1 > y0) {
-                                if (y > y0) {
-                                    throw new StatsPecaException("INVALID");
-                                }
-                            } else if (y1 < y0) {
-                                if (y < y0) {
-                                    throw new StatsPecaException("INVALID");
-                                }
-                            }
-                        }
-                    }
-                    for (Peca pecaBranca : whiteTeam) {
-                        if (pecaBranca.getX().equals(partes[0]) && pecaBranca.getY().equals(partes[1])) {
-                            if (y1 > y0) {
-                                if (y > y0) {
-                                    throw new StatsPecaException("INVALID");
-                                }
-                            } else if (y1 < y0) {
-                                if (y < y0) {
-                                    throw new StatsPecaException("INVALID");
-                                }
-                            }
-                        }
-                    }
-
-                    if (partes[0].equals(x1 + "") && partes[1].equals(y1 + "")) {
-                        throw new StatsPecaException("VALID");
-                    }
-                }
-            }
-
-            case 6-> {
-                for (String s : movimentosParaPeca) {
-                    partes = s.split("/");
-                    System.out.println();
-
-                    if (partes[0].equals(x1 + "") && partes[1].equals(y1 + "")) {
-                        throw new StatsPecaException("VALID");
-                    }
-                }
-            }
-        }
-
-        throw new StatsPecaException("INVALID"); //A peça não se pode movimentar para a casa x1 e y1
     }
 
     public boolean move(int x0, int y0, int x1, int y1) {
-        try {
-            veSePodeSeMovimentar(x0, y0, x1, y1);
-        } catch (StatsPecaException e) {
-            if (e.isInvalidMove()) {
-                if(tabuleiro.isBlackTurn()) {
-                    statusPreta.incInvalidMoves();
-                    return false;
+
+        boolean wasMoveValid = false;
+        Peca pecaParaMover = null;
+
+        if (tabuleiro.getIsWhiteTurn()) {
+            for (Peca peca : whiteTeam) {
+                if (peca.getIdentificador().equals(cordenadasPecasArray[y0][x0])) {
+                    pecaParaMover = peca;
+                    break;
                 }
-                statusBranca.incInvalidMoves();
-                return false;
             }
         }
 
-        return true;
+        if (tabuleiro.getIsBlackTurn()) {
+            for (Peca peca : blackTeam) {
+                if (peca.getIdentificador().equals(cordenadasPecasArray[y0][x0])) {
+                    pecaParaMover = peca;
+                    break;
+                }
+            }
+        }
 
+        if (pecaParaMover!=null){
+            if(isMoveValid(pecaParaMover, x0, y0, x1, y1)){
+                wasMoveValid=true;
+            }
+        }
 
-
-        /*
-        //movimento do rei
-        if (x1 > x0 + 1 || y1 > y0 + 1) {
-            if(tabuleiro.isBlackTurn()){
+        if (!wasMoveValid){
+            if(tabuleiro.getIsBlackTurn()){
                 statusPreta.incInvalidMoves();
                 return false;
             }
@@ -930,9 +291,9 @@ public class GameManager {
             return false;
         }
 
-        //movimento invalido (para qualquer peca)
+
         if (x1 < 0 || y1 < 0) {
-            if(tabuleiro.isBlackTurn()){
+            if(tabuleiro.getIsBlackTurn()){
                 statusPreta.incInvalidMoves();
                 return false;
             }
@@ -940,9 +301,8 @@ public class GameManager {
             return false;
         }
 
-        //movimento invalido (para qualquer peca)
         if (x1 > tabuleiro.getTamanhoTabuleiro() - 1 || y1 > tabuleiro.getTamanhoTabuleiro() - 1) {
-            if(tabuleiro.isBlackTurn()){
+            if(tabuleiro.getIsBlackTurn()){
                 statusPreta.incInvalidMoves();
                 return false;
             }
@@ -950,9 +310,8 @@ public class GameManager {
             return false;
         }
 
-        //movimento invalido (para qualquer peca)
         if (x0 == x1 && y0 == y1) {
-            if(tabuleiro.isBlackTurn()){
+            if(tabuleiro.getIsBlackTurn()){
                 statusPreta.incInvalidMoves();
                 return false;
             }
@@ -961,7 +320,7 @@ public class GameManager {
         }
 
         if (cordenadasPecasArray[y0][x0].equals("0")) {
-            if(tabuleiro.isBlackTurn()){
+            if(tabuleiro.getIsBlackTurn()){
                 statusPreta.incInvalidMoves();
                 return false;
             }
@@ -969,12 +328,19 @@ public class GameManager {
             return false;
         }
 
+
         String pecaAtual = cordenadasPecasArray[y0][x0];
         String movimentoParaPeca = cordenadasPecasArray[y1][x1];
+
         boolean pecaCapturada = false;
 
-        if (tabuleiro.isBlackTurn()) {
-            //movimento invalido (para qualquer peca)
+        if (tabuleiro.getIsBlackTurn()) {
+            for(Peca peca: blackTeam){
+                if (peca.getIdentificador().equals(movimentoParaPeca)){
+                    statusPreta.incInvalidMoves();
+                    return false;
+                }
+            }
             for (Peca pecaBranca : whiteTeam) {
                 if (pecaBranca.getIdentificador().equals(pecaAtual)) {
                     statusPreta.incInvalidMoves();
@@ -982,7 +348,6 @@ public class GameManager {
                 }
             }
 
-            //captura peca
             for (Peca pecaBranca : whiteTeam) {
                 if (pecaBranca.getIdentificador().equals(movimentoParaPeca)) {
                     pecaBranca.estadoPecaCapturado();
@@ -995,16 +360,19 @@ public class GameManager {
                 }
             }
             statusPreta.incValidMoves();
-        } else if (tabuleiro.isWhiteTurn()) {
-            //movimento invalido (para qualquer peca)
+        } else if (tabuleiro.getIsWhiteTurn()) {
+            for(Peca peca:whiteTeam){
+                if(peca.getIdentificador().equals(movimentoParaPeca)){
+                    statusBranca.incInvalidMoves();
+                    return false;
+                }
+            }
             for (Peca pecaPreta : blackTeam) {
                 if (pecaPreta.getIdentificador().equals(pecaAtual)) {
                     statusBranca.incInvalidMoves();
                     return false;
                 }
             }
-
-            //captura peca
             for (Peca pecaPreta : blackTeam) {
                 if (pecaPreta.getIdentificador().equals(movimentoParaPeca)) {
                     pecaPreta.estadoPecaCapturado();
@@ -1040,13 +408,11 @@ public class GameManager {
         tabuleiro.changeTurnInGame();
 
         return true;
-
-         */
     }
 
 
     public int getCurrentTeamID() {
-        return tabuleiro.isBlackTurn() ? 10 : 20;
+        return tabuleiro.getIsBlackTurn() ? 10 : 20;
     }
 
 
@@ -1087,60 +453,6 @@ public class GameManager {
     }
 
     void saveGame(File file) throws IOException {
-        int x = 0;
-        int y = 0;
-        boolean achou;
-
-        try(BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
-            writer.write(tabuleiro.getTamanhoTabuleiro() + "\n");
-            writer.write(tabuleiro.getNumPecaTotal() + "");
-
-            for (int i = 0; i < tabuleiro.getNumPecaTotal(); i++) {
-                writer.newLine();
-                writer.write(pecas.get(i).getIdentificador() + ":");
-                writer.write( pecas.get(i).getTipoDePeca() + ":");
-                writer.write( pecas.get(i).getEquipa() + ":");
-                writer.write(pecas.get(i).getAlcunha());
-            }
-
-            while (y < tabuleiro.getTamanhoTabuleiro()) {
-                writer.newLine();
-
-                while (x < tabuleiro.getTamanhoTabuleiro()) {
-                    achou = false;
-
-                    for (int idPeca = 0; idPeca < tabuleiro.getNumPecaTotal(); idPeca++) {
-                        if (!pecas.get(idPeca).getEstado().equals("em jogo")) {
-                            continue;
-                        }
-
-                        if (pecas.get(idPeca).getY().equals(y + "")) {
-                            if (pecas.get(idPeca).getX().equals(x + "")) {
-                                writer.write(pecas.get(idPeca).getIdentificador());
-                                x++;
-
-                                if (x < tabuleiro.getTamanhoTabuleiro()) {
-                                    writer.write(":");
-                                }
-                                achou = true;
-                                break;
-                            }
-                        }
-                    }
-
-                    if (!achou) {
-                        writer.write("0");
-                        x++;
-
-                        if (x < tabuleiro.getTamanhoTabuleiro()) {
-                            writer.write(":");
-                        }
-                    }
-                }
-                y++;
-                x = 0;
-            }
-        }
     }
 
     void undo() {

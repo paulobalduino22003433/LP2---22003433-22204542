@@ -4,7 +4,6 @@ public class PecaPadreVila extends Peca {
 
     public PecaPadreVila(String identificador, String tipoDePeca, String equipa, String alcunha) {
         super(identificador, tipoDePeca, equipa, alcunha);
-        this.pontoDeCadaPeca = 3;
     }
 
     @Override

@@ -9,8 +9,6 @@ public class Peca {
     protected String estado;
     protected String x = "";
     protected String y = "";
-    protected int pontoDeCadaPeca;
-    //int capturasFeita = 0;
 
     public Peca(String identificador, String tipoDePeca, String equipa, String alcunha) {
         this.identificador = identificador;

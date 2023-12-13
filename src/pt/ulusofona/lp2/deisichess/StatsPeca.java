@@ -1,15 +1,9 @@
 package pt.ulusofona.lp2.deisichess;
 
 public class StatsPeca {
-    private int captures;
-    private int validMoves;
-    private int invalidMoves;
+    int captures, validMoves, invalidMoves;
 
-    public StatsPeca() {
-        this.captures = 0;
-        this.validMoves = 0;
-        this.invalidMoves = 0;
-    }
+    public StatsPeca() {}
 
     public void incCaptures() {
         captures++;
