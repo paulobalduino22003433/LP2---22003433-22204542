@@ -1,7 +1,5 @@
 package pt.ulusofona.lp2.deisichess;
 
-import java.util.ArrayList;
-
 public class Peca {
     protected String identificador;
     protected String tipoDePeca;
@@ -11,7 +9,6 @@ public class Peca {
     protected String estado;
     protected String x = "";
     protected String y = "";
-    protected int turnoAtual;
 
     public Peca(String identificador, String tipoDePeca, String equipa, String alcunha) {
         this.identificador = identificador;
@@ -19,7 +16,6 @@ public class Peca {
         this.equipa = equipa;
         this.alcunha = alcunha;
         this.estado = "em jogo";
-        this.turnoAtual = 0;
         setPng();
     }
 
@@ -63,21 +59,16 @@ public class Peca {
         this.y = y;
     }
 
-    public void setPng() {}
+    public void setPng() {
+        if (equipa.equals("10")) {
+            png = "king_black.png";
+        } else {
+            png = "king_white.png";
+        }
+    }
 
     public void estadoPecaCapturado() {
         estado = "capturado";
-    }
-
-    public void atualizaTurno() {
-        turnoAtual++;
-    }
-
-    public StatsPecaException moveOfPiece(int pecaAtualJoker, String equipe, int x0, int y0, int x1, int y1, ArrayList<String> movimentosParaPeca, ArrayList<Peca> blackTeam, ArrayList<Peca> whiteTeam) throws StatsPecaException {
-        return null;
-    }
-    public StatsPecaException moveOfPiece(String equipe, int x0, int y0, int x1, int y1, ArrayList<String> movimentosParaPeca, ArrayList<Peca> blackTeam, ArrayList<Peca> whiteTeam) throws StatsPecaException {
-        return null;
     }
 
     @Override
