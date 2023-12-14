@@ -11,6 +11,7 @@ public class Peca {
     protected String estado;
     protected String x = "";
     protected String y = "";
+    protected int turnoAtual;
 
     public Peca(String identificador, String tipoDePeca, String equipa, String alcunha) {
         this.identificador = identificador;
@@ -18,6 +19,7 @@ public class Peca {
         this.equipa = equipa;
         this.alcunha = alcunha;
         this.estado = "em jogo";
+        this.turnoAtual = 0;
         setPng();
     }
 
@@ -65,6 +67,10 @@ public class Peca {
 
     public void estadoPecaCapturado() {
         estado = "capturado";
+    }
+
+    public void atualizaTurno() {
+        turnoAtual++;
     }
 
     public StatsPecaException moveOfPiece(int pecaAtualJoker, String equipe, int x0, int y0, int x1, int y1, ArrayList<String> movimentosParaPeca, ArrayList<Peca> blackTeam, ArrayList<Peca> whiteTeam) throws StatsPecaException {

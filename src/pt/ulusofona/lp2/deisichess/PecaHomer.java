@@ -50,6 +50,10 @@ public class PecaHomer extends Peca {
 
     @Override
     public String toString() {
+        if (turnoAtual % 3 == 0) {
+            return "Doh! zzzzzz";
+        }
+
         if(estado.equals("capturado")) {
             return identificador + " | Homer Simpson | 2 | " + equipa + " | " + alcunha + " @ (n/a)";
         }

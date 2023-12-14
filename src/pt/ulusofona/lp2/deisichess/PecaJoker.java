@@ -3,7 +3,6 @@ package pt.ulusofona.lp2.deisichess;
 import java.util.ArrayList;
 
 public class PecaJoker extends Peca {
-
     public PecaJoker(String identificador, String tipoDePeca, String equipa, String alcunha) {
         super(identificador, tipoDePeca, equipa, alcunha);
     }
@@ -49,5 +48,24 @@ public class PecaJoker extends Peca {
         }
 
         throw new StatsPecaException("INVALID"); //A peça não se pode movimentar para a casa x1 e y1
+    }
+
+    @Override
+    public String toString() {
+        int pecaAtualJoker = turnoAtual + 1;
+
+        while (pecaAtualJoker > 6) {
+            pecaAtualJoker -= 6;
+        }
+
+        String[] opcoesJoker = {"Rainha", "Ponei Mágico", "Padre da Vila", "TorreHor", "TorreVert", "Homer Simpson"};
+
+        String output = opcoesJoker[pecaAtualJoker];
+
+        if(estado.equals("capturado")) {
+            return identificador + " | Joker/" + output + " | 4 | " + equipa + " | " + alcunha + " @ (n/a)";
+        }
+
+        return identificador + " | Joker/" + output + "4 | " + equipa + " | " + alcunha + " @ (" + x + ", " + y + ")";
     }
 }

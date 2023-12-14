@@ -188,60 +188,6 @@ public class GameManager {
         return pecas.get(ID - 1).toString();
     }
 
-
-  /*/public boolean isMoveValid(Peca peca,int x0,int y0, int x1, int y1) {
-        boolean isItvalid = false;
-
-        switch (peca.tipoDePeca) {
-            case "0":
-                if (x1 > x0 + 1 || y1 > y0 + 1) {
-                    if(tabuleiro.getIsBlackTurn()){
-                        statusPreta.incInvalidMoves();
-                        isItvalid= false;
-                    }
-                    statusBranca.incInvalidMoves();
-                    isItvalid= false;
-                }else{
-                    isItvalid= true;
-                }
-            case "1":
-                if(x1>x0+5 || y1>y0+5){
-                    if(tabuleiro.getIsBlackTurn()){
-                        statusPreta.incInvalidMoves();
-                        isItvalid= false;
-                    }
-                    statusBranca.incInvalidMoves();
-                    isItvalid= false;
-                }else{
-                    isItvalid = true;
-                }
-
-            case "4":
-                if(y1!=y0){
-                    if(tabuleiro.getIsBlackTurn()){
-                        statusPreta.incInvalidMoves();
-                        isItvalid= false;
-                    }
-                    statusBranca.incInvalidMoves();
-                    isItvalid= false;
-                }else{
-                    isItvalid=true;
-                }
-            case "5":
-                if(x1!=x0){
-                    if(tabuleiro.getIsBlackTurn()){
-                        statusPreta.incInvalidMoves();
-                        isItvalid = false;
-                    }
-                    statusBranca.incInvalidMoves();
-                    isItvalid = false;
-                }else{
-                    isItvalid = true;
-                }
-        }
-        return isItvalid;
-    }/*/
-
     public ArrayList<String> possibilidadesDeMovimentos(int tipoPeca, int tamanhoTabuleiro, int turnoAtual, int x0, int y0) {
         ArrayList<String> output = new ArrayList<>();
         int limiteDoTabuleiro = (tamanhoTabuleiro - 1);
@@ -416,8 +362,6 @@ public class GameManager {
                 }
             }
         }
-
-        System.out.println("->" + output);
         return output;
     }
 
@@ -444,8 +388,6 @@ public class GameManager {
                 }
             }
         }
-
-
 
         movimentosParaPeca = possibilidadesDeMovimentos(tipoPeca, tabuleiro.getTamanhoTabuleiro(), turnoAtual, x0, y0);
 
@@ -503,7 +445,6 @@ public class GameManager {
         try {
             veSePodeSeMovimentar(x0, y0, x1, y1);
         } catch (StatsPecaException e) {
-            System.out.println(e.nameException);
 
             if (e.isInvalidMove()) {
                 if (tabuleiro.getIsBlackTurn()) {
@@ -524,7 +465,6 @@ public class GameManager {
                 } else {
                     statusBranca.incValidMoves();
                 }
-                tabuleiro.changeTurnInGame();
 
                 if (tabuleiro.getPecaMorta()) {
                     gameResults.incJogadasSemCaptura();
@@ -556,13 +496,6 @@ public class GameManager {
                     }
                 }
 
-                for (Peca peca : pecas) {
-                    if (peca.getX().equals(x1 + "") && peca.getY().equals(y1 + "")) {
-                        peca.setX(x1 + "");
-                        peca.setY(y1 + "");
-                    }
-                }
-
                 tabuleiro.algumaPecaMorreu();
             }
         }
@@ -573,6 +506,24 @@ public class GameManager {
                 peca.setY(y1 + "");
             }
         }
+
+        for (Peca pecaJoker : blackTeam) {
+            if (pecaJoker.getTipoDePeca().equals("7")) {
+                pecaJoker.atualizaTurno();
+            } else if (pecaJoker.getTipoDePeca().equals("6")) {
+                pecaJoker.atualizaTurno();
+            }
+        }
+
+        for (Peca pecaJoker : whiteTeam) {
+            if (pecaJoker.getTipoDePeca().equals("7")) {
+                pecaJoker.atualizaTurno();
+            } else if (pecaJoker.getTipoDePeca().equals("6")) {
+                pecaJoker.atualizaTurno();
+            }
+        }
+
+        tabuleiro.changeTurnInGame();
 
         return true;
     }
