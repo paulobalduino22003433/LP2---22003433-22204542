@@ -455,9 +455,9 @@ public class GameManager {
         if (pecaAtual == null || movimentosParaPeca == null) { //A coordenas x0 e y0 indicam um quadrado sem peças
             throw new StatsPecaException("INVALID");
         }
-        if (tabuleiro.isBlackTurn() && pecaAtual.getEquipa().equals("20")) { //Quando está jogando com uma peça que não é da sua equipe
+        if (tabuleiro.getIsBlackTurn() && pecaAtual.getEquipa().equals("20")) { //Quando está jogando com uma peça que não é da sua equipe
             throw new StatsPecaException("INVALID");
-        } else if (tabuleiro.isWhiteTurn() && pecaAtual.getEquipa().equals("10")) {
+        } else if (tabuleiro.getIsBlackTurn() && pecaAtual.getEquipa().equals("10")) {
             throw new StatsPecaException("INVALID");
         }
         if (pecaAtual.getEquipa().equals("10")) { //Quando a casa que você quer avançar com a peça já está ocupada por uma outra peça da sua equipe
@@ -506,7 +506,7 @@ public class GameManager {
             System.out.println(e.nameException);
 
             if (e.isInvalidMove()) {
-                if (tabuleiro.isBlackTurn()) {
+                if (tabuleiro.getIsBlackTurn()) {
                     statusPreta.incInvalidMoves();
                 } else {
                     statusBranca.incInvalidMoves();
@@ -517,8 +517,9 @@ public class GameManager {
                 }
                 return false;
             }
+
             if (e.isValidMove()) {
-                if (tabuleiro.isBlackTurn()) {
+                if (tabuleiro.getIsBlackTurn()) {
                     statusPreta.incValidMoves();
                 } else {
                     statusBranca.incValidMoves();
@@ -529,8 +530,9 @@ public class GameManager {
                     gameResults.incJogadasSemCaptura();
                 }
             }
+
             if (e.isCapture()) {
-                if (tabuleiro.isBlackTurn()) {
+                if (tabuleiro.getIsBlackTurn()) {
                     for (Peca pecaBranca : whiteTeam) {
                         if (pecaBranca.getX().equals(x1 + "") && pecaBranca.getY().equals(y1 + "")) {
                             pecaBranca.estadoPecaCapturado();
@@ -554,6 +556,13 @@ public class GameManager {
                     }
                 }
 
+                for (Peca peca : pecas) {
+                    if (peca.getX().equals(x1 + "") && peca.getY().equals(y1 + "")) {
+                        peca.setX(x1 + "");
+                        peca.setY(y1 + "");
+                    }
+                }
+
                 tabuleiro.algumaPecaMorreu();
             }
         }
@@ -570,7 +579,7 @@ public class GameManager {
 
 
     public int getCurrentTeamID() {
-        return tabuleiro.isBlackTurn() ? 10 : 20;
+        return tabuleiro.getIsBlackTurn() ? 10 : 20;
     }
 
 
