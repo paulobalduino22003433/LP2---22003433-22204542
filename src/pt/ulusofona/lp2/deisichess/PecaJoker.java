@@ -52,7 +52,7 @@ public class PecaJoker extends Peca {
 
     @Override
     public String toString() {
-        int pecaAtualJoker = turnoAtual + 1;
+        int pecaAtualJoker = turnoAtual;
 
         while (pecaAtualJoker > 6) {
             pecaAtualJoker -= 6;
@@ -66,6 +66,6 @@ public class PecaJoker extends Peca {
             return identificador + " | Joker/" + output + " | 4 | " + equipa + " | " + alcunha + " @ (n/a)";
         }
 
-        return identificador + " | Joker/" + output + "4 | " + equipa + " | " + alcunha + " @ (" + x + ", " + y + ")";
+        return identificador + " | Joker/" + output + "| 4 | " + equipa + " | " + alcunha + " @ (" + x + ", " + y + ")";
     }
 }
