@@ -189,6 +189,19 @@ public class GameManager {
       int deltaX = x1 - x0;
       int deltaY = y1 - y0;
 
+
+
+      if (peca.tipoDePeca.equals("3")) {
+          // Checka se o movimento é diagonal
+          if (deltaX == deltaY || deltaX == -deltaY) {
+              // Checka se o movimento não passa de 3 casas
+              if (deltaX <= 3 && deltaX >= -3) {
+                  return true;
+              }
+          }
+          return false;
+      }
+
       if (deltaX == 0) {
           // Movimento Vertical
           int minY = Math.min(y0, y1);
@@ -235,19 +248,6 @@ public class GameManager {
                 }
                 break;
 
-            case "3":
-                    // Checka se o movimento é diagonal
-                if (!(deltaX == deltaY || deltaX == -deltaY)) {
-                    isItvalid = false;
-                } else {
-                    // Checka se o movimento não passa de 3 casas
-                    if (Math.abs(deltaX) > 3) {
-                        isItvalid = false;
-                    } else {
-                        isItvalid = true;
-                    }
-                }
-                break;
 
             case "4":
                 if(y1!=y0){
