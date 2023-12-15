@@ -27,7 +27,6 @@ public class Main {
         System.out.println("Move result: " + moveResult);
 
         // Additional prints for case "5"
-        System.out.println("Checking vertical move for piece type 5");
         System.out.println("x0: " + x0 + ", y0: " + y0 + ", x1: " + x1 + ", y1: " + y1);
         System.out.println("Math.abs(y1 - y0): " + Math.abs(y1 - y0));
     }
