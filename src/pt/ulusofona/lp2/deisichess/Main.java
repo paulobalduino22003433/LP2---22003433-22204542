@@ -4,7 +4,7 @@ import java.io.File;
 import java.io.IOException;
 
 public class Main {
-
+/*/
     public static void main(String[] args) throws IOException, InvalidGameInputException {
         GameManager gameManager = new GameManager();
         gameManager.loadGame(new File("test-files/8x8.txt"));
@@ -30,4 +30,5 @@ public class Main {
         System.out.println("x0: " + x0 + ", y0: " + y0 + ", x1: " + x1 + ", y1: " + y1);
         System.out.println("Math.abs(y1 - y0): " + Math.abs(y1 - y0));
     }
+    /*/
 }

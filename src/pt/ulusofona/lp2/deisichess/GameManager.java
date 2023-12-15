@@ -189,7 +189,20 @@ public class GameManager {
       int deltaX = x1 - x0;
       int deltaY = y1 - y0;
 
-
+      if (peca.tipoDePeca.equals("5")) {
+          if (x1 == x0) {
+              int minY = Math.min(y0, y1);
+              int maxY = Math.max(y0, y1);
+              for (int y = minY + 1; y < maxY; y++) {
+                  if (cordenadasPecasArray[y][x0] != null) {
+                      return false;
+                  }
+              }
+              return true;
+          } else {
+              return false;
+          }
+      }
 
       if (peca.tipoDePeca.equals("3")) {
           // Checka se o movimento é diagonal
@@ -201,25 +214,6 @@ public class GameManager {
           }
           return false;
       }
-      if (peca.tipoDePeca.equals("5")) {
-          if (x1 == x0) { // Check if it's a vertical move
-              int minY = Math.min(y0, y1);
-              int maxY = Math.max(y0, y1);
-              for (int y = minY + 1; y < maxY; y++) {
-                  if (cordenadasPecasArray[y][x0] != null) {
-                      return false; // There is an obstruction in the vertical path
-                  }
-              }
-
-              return true; // Vertical move is valid, and the path is clear
-          } else {
-              return false; // Not a vertical move
-          }
-      }
-
-
-
-
 
       if (deltaX == 0) {
           // Movimento Vertical
@@ -251,7 +245,6 @@ public class GameManager {
               }
           }
       }
-
         switch (peca.tipoDePeca){
             case "0":
                 if (x1 > x0 + 1 || y1 > y0 + 1) {
