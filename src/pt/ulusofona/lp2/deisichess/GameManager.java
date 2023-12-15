@@ -191,6 +191,13 @@ public class GameManager {
 
 
 
+      if (peca.tipoDePeca.equals("5")){
+          if (x1 == x0) { // Check if it's a vertical move
+            return true;
+          } else {
+              return false;
+          }
+      }
       if (peca.tipoDePeca.equals("3")) {
           // Checka se o movimento é diagonal
           if (deltaX == deltaY || deltaX == -deltaY) {
@@ -254,13 +261,6 @@ public class GameManager {
                     isItvalid= false;
                 }else{
                     isItvalid=true;
-                }
-                break;
-            case "5":
-                if(x1!=x0){
-                    isItvalid = false;
-                }else{
-                    isItvalid = true;
                 }
                 break;
         }
