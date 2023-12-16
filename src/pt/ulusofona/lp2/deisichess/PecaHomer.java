@@ -38,14 +38,14 @@ public class PecaHomer extends Peca {
         status = "a dormir";
     }
 
-    public boolean isHomerSleeping(){
+    public boolean isSleeping(){
         if (status.equals("a dormir")){
             return true;
         }
         return false;
     }
 
-    public boolean isHomerAwake(){
+    public boolean isAwake(){
         if (status.equals("acordado")){
             return true;
         }

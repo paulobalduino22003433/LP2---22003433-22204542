@@ -281,15 +281,16 @@ public class GameManager {
                 break;
 
             case "6":
+                PecaHomer homer = new PecaHomer(peca.identificador,peca.tipoDePeca,peca.equipa,peca.alcunha);
                 if (homerCounter%3==0){
-                    ((PecaHomer)peca).acorda();
+                    homer.acorda();
                 }else{
-                    ((PecaHomer)peca).dorme();
+                    homer.dorme();
                 }
-                if(((PecaHomer) peca).isHomerSleeping()){
+                if(homer.isSleeping()){
                     return false;
                 }
-                if(((PecaHomer) peca).isHomerAwake()){
+                if(homer.isAwake()){
                     // Checka se o movimento é diagonal
                     if (deltaX == deltaY || deltaX == -deltaY) {
                         // Checka se o movimento não passa de 1 casa
