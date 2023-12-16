@@ -30,12 +30,17 @@ public class PecaHomer extends Peca {
         return identificador + " | Homer Simpson | " + "2 | " + equipa + " | " + alcunha + " @ (" + x + ", " + y + ")";
     }
 
-    public void acorda(){
-        status = "acordado";
+    public void acorda() {
+        if (GameManager.homerCounter % 3 == 0) {
+            status = "acordado";
+        }
     }
 
+
     public void dorme(){
-        status = "a dormir";
+        if (GameManager.homerCounter%3 !=0){
+            status = "a dormir";
+        }
     }
 
     public boolean isSleeping(){

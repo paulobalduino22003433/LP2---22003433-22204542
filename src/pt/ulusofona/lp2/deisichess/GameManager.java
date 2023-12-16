@@ -17,7 +17,10 @@ public class GameManager {
     StatsPeca statusBranca = new StatsPeca();
     GameResults gameResults = new GameResults();
 
-    int homerCounter=0;
+   public static int homerCounter=0;
+    /*/public void setHomerCounter(int newValue) {
+        homerCounter = newValue;
+    }/*/
 
 
     void loadGame(File file) throws IOException, InvalidGameInputException {
@@ -188,29 +191,29 @@ public class GameManager {
         boolean isItvalid = false;
       int deltaX = x1 - x0;
       int deltaY = y1 - y0;
-
-      if (peca.tipoDePeca.equals("6")){
-          PecaHomer homer = new PecaHomer(peca.identificador,peca.tipoDePeca,peca.equipa,peca.alcunha);
-          if (homerCounter%3==0){
+      if (peca.tipoDePeca.equals("6")) {
+          PecaHomer homer = new PecaHomer(peca.identificador, peca.tipoDePeca, peca.equipa, peca.alcunha);
+          if (homerCounter % 3 == 0) {
               homer.acorda();
-          }else{
+          } else {
               homer.dorme();
           }
-          if(homer.isSleeping()){
-              return false;
-          }
-          if(homer.isAwake()){
-              // Checka se o movimento é diagonal
-              if (deltaX == deltaY || deltaX == -deltaY) {
-                  // Checka se o movimento não passa de 1 casa
-                  if (deltaX <= 1 && deltaX >= -1) {
-                      return true;
-                  }
-              }
+
+          if (homer.isSleeping()) {
               return false;
           }
 
+          if (homer.isAwake()) {
+              // Checa se o movimento é diagonal
+              if ((deltaX == 1 || deltaX == -1) && (deltaY == 1 || deltaY == -1)) {
+                  return true;
+              }
+              return false;
+
+          }
+          return false;
       }
+
 
       if (peca.tipoDePeca.equals("5")) {
           if (x1 == x0) { // Checka se o movimento é vertical
@@ -520,7 +523,8 @@ public class GameManager {
     }
 
     public Map<String,String> customizeBoard(){
-        return null;
+       HashMap<String,String> map = new HashMap<>();
+       return map;
     }
 
 }
