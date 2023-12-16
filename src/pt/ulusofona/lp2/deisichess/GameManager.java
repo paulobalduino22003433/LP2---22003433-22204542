@@ -17,10 +17,10 @@ public class GameManager {
     StatsPeca statusBranca = new StatsPeca();
     GameResults gameResults = new GameResults();
 
-   public static int homerCounter=0;
-    /*/public void setHomerCounter(int newValue) {
-        homerCounter = newValue;
-    }/*/
+   public static int nrTurno=0;
+    public void setNrTurno(int newValue) {
+        nrTurno = newValue;
+    }
 
 
     void loadGame(File file) throws IOException, InvalidGameInputException {
@@ -189,29 +189,11 @@ public class GameManager {
 
   public boolean isMoveValid(Peca peca,int x0,int y0, int x1, int y1){
         boolean isItvalid = false;
-      int deltaX = x1 - x0;
-      int deltaY = y1 - y0;
+      int percursoHorizontal = x1 - x0;
+      int percursoVertical = y1 - y0;
       if (peca.tipoDePeca.equals("6")) {
           PecaHomer homer = new PecaHomer(peca.identificador, peca.tipoDePeca, peca.equipa, peca.alcunha);
-          if (homerCounter % 3 == 0) {
-              homer.acorda();
-          } else {
-              homer.dorme();
-          }
-
-          if (homer.isSleeping()) {
-              return false;
-          }
-
-          if (homer.isAwake()) {
-              // Checa se o movimento é diagonal
-              if ((deltaX == 1 || deltaX == -1) && (deltaY == 1 || deltaY == -1)) {
-                  return true;
-              }
-              return false;
-
-          }
-          return false;
+          return homer.doesHomerMove(homer,percursoHorizontal,percursoVertical);
       }
 
 
@@ -220,13 +202,13 @@ public class GameManager {
               int minY = Math.min(y0, y1);
               int maxY = Math.max(y0, y1);
 
-              if (deltaY > 0) {
+              if (percursoVertical > 0) {
                   for (int y = minY + 1; y < maxY; y++) {
                       if (!Objects.equals(cordenadasPecasArray[y][x0], "0")) {
                           return false;
                       }
                   }
-              } else if (deltaY < 0) {
+              } else if (percursoVertical < 0) {
                   for (int y = maxY - 1; y > minY; y--) {
                       if (!Objects.equals(cordenadasPecasArray[y][x0], "0")) {
                           return false;
@@ -242,16 +224,16 @@ public class GameManager {
 
       if (peca.tipoDePeca.equals("3")) {
           // Checka se o movimento é diagonal
-          if (deltaX == deltaY || deltaX == -deltaY) {
+          if (percursoHorizontal == percursoVertical || percursoHorizontal == -percursoVertical) {
               // Checka se o movimento não passa de 3 casas
-              if (deltaX <= 3 && deltaX >= -3) {
+              if (percursoHorizontal <= 3 && percursoHorizontal >= -3) {
                   return true;
               }
           }
           return false;
       }
 
-      if (deltaX == 0) {
+      if (percursoHorizontal == 0) {
           // Movimento Vertical
           int minY = Math.min(y0, y1);
           int maxY = Math.max(y0, y1);
@@ -260,7 +242,7 @@ public class GameManager {
                   return false;
               }
           }
-      } else if (deltaY == 0) {
+      } else if (percursoVertical == 0) {
           // Movimento Horizontal
           int minX = Math.min(x0, x1);
           int maxX = Math.max(x0, x1);
@@ -269,13 +251,13 @@ public class GameManager {
                   return false;
               }
           }
-      } else if (Math.abs(deltaX) == Math.abs(deltaY)) {
+      } else if (Math.abs(percursoHorizontal) == Math.abs(percursoVertical)) {
           // Movimento Diagonal
           int minX = Math.min(x0, x1);
           int minY = Math.min(y0, y1);
           int maxX = Math.max(x0, x1);
           int maxY = Math.max(y0, y1);
-          for (int i = 1; i < Math.abs(deltaX); i++) {
+          for (int i = 1; i < Math.abs(percursoHorizontal); i++) {
               if (cordenadasPecasArray[minY + i][minX + i] != null) {
                   return false;
               }
@@ -462,7 +444,7 @@ public class GameManager {
         }
 
         tabuleiro.changeTurnInGame();
-        homerCounter++;
+        nrTurno++;
         return true;
     }
 

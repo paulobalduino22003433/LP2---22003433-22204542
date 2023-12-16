@@ -5,6 +5,8 @@ import org.junit.jupiter.api.Test;
 import java.io.File;
 import java.io.IOException;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 public class TestGameManager {
 
     @Test
@@ -19,17 +21,19 @@ public class TestGameManager {
         }
     }
 
-/*/
-        @Test
-        void testGetSquareInfo() {
-            GameManager gameManager = new GameManager();
-            gameManager.loadGame(new File("test-files/4x4.txt"));
 
-            String[] squareInfo = gameManager.getSquareInfo(1, 2);
-            assertEquals("3", squareInfo[0]);
-            String[] squareInfo2 = gameManager.getSquareInfo(2, 3);
-            assertNull(squareInfo2);
+        @Test
+        void testHomer() throws IOException, InvalidGameInputException {
+            GameManager gameManager = new GameManager();
+            gameManager.loadGame(new File("test-files/8x8.txt"));
+            int x0 = 6, y0 = 0, x1 = 5, y1 =1;
+            int x2 = 6, y2 = 7, x3 = 5, y3 =6;
+            int x4 = 3, y4 = 4, x5 = 2, y5 =3;
+            Peca pecaParaMover = new Peca("7", "6", "10", "Hommie");
+            assertEquals(true,gameManager.isMoveValid(pecaParaMover,x0,y0,x1,y1));
+            assertEquals(true,gameManager.isMoveValid(pecaParaMover,x2,y2,x3,y3));
+            assertEquals(true,gameManager.isMoveValid(pecaParaMover,x4,y4,x5,y5));
         }
 
- */
+
 }
