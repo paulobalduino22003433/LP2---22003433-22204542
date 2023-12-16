@@ -5,10 +5,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 public class GameManager {
     ArrayList<Peca> pecas = new ArrayList<>();
@@ -19,6 +16,8 @@ public class GameManager {
     StatsPeca statusPreta = new StatsPeca();
     StatsPeca statusBranca = new StatsPeca();
     GameResults gameResults = new GameResults();
+
+    int homerCounter=0;
 
 
     void loadGame(File file) throws IOException, InvalidGameInputException {
@@ -280,6 +279,29 @@ public class GameManager {
                     isItvalid=true;
                 }
                 break;
+
+            case "6":
+                if (homerCounter%3==0){
+                    ((PecaHomer)peca).acorda();
+                }else{
+                    ((PecaHomer)peca).dorme();
+                }
+                if(((PecaHomer) peca).isHomerSleeping()){
+                    return false;
+                }
+                if(((PecaHomer) peca).isHomerAwake()){
+                    // Checka se o movimento é diagonal
+                    if (deltaX == deltaY || deltaX == -deltaY) {
+                        // Checka se o movimento não passa de 1 casa
+                        if (deltaX <= 1 && deltaX >= -1) {
+                            return true;
+                        }
+                    }
+                    return false;
+                }
+
+                break;
+
         }
         return isItvalid;
     }
@@ -437,7 +459,7 @@ public class GameManager {
         }
 
         tabuleiro.changeTurnInGame();
-
+        homerCounter++;
         return true;
     }
 
@@ -496,4 +518,9 @@ public class GameManager {
     public JPanel getAuthorsPanel() {
         return null;
     }
+
+    public Map<String,String> customizeBoard(){
+        return null;
+    }
+
 }
