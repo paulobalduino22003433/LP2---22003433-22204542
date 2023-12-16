@@ -189,30 +189,91 @@ public class GameManager {
       int deltaX = x1 - x0;
       int deltaY = y1 - y0;
 
+      if (peca.tipoDePeca.equals("6")){
+          PecaHomer homer = new PecaHomer(peca.identificador,peca.tipoDePeca,peca.equipa,peca.alcunha);
+          if (homerCounter%3==0){
+              homer.acorda();
+          }else{
+              homer.dorme();
+          }
+          if(homer.isSleeping()){
+              return false;
+          }
+          if(homer.isAwake()){
+              // Checka se o movimento é diagonal
+              if (deltaX == deltaY || deltaX == -deltaY) {
+                  // Checka se o movimento não passa de 1 casa
+                  if (deltaX <= 1 && deltaX >= -1) {
+                      return true;
+                  }
+              }
+              return false;
+          }
+
+      }
+
+      if (peca.tipoDePeca.equals("5")) {
+          if (x1 == x0) { // Checka se o movimento é vertical
+              int minY = Math.min(y0, y1);
+              int maxY = Math.max(y0, y1);
+
+              if (deltaY > 0) {
+                  for (int y = minY + 1; y < maxY; y++) {
+                      if (!Objects.equals(cordenadasPecasArray[y][x0], "0")) {
+                          return false;
+                      }
+                  }
+              } else if (deltaY < 0) {
+                  for (int y = maxY - 1; y > minY; y--) {
+                      if (!Objects.equals(cordenadasPecasArray[y][x0], "0")) {
+                          return false;
+                      }
+                  }
+              }
+
+              return true;
+          } else {
+              return false;
+          }
+      }
+
+      if (peca.tipoDePeca.equals("3")) {
+          // Checka se o movimento é diagonal
+          if (deltaX == deltaY || deltaX == -deltaY) {
+              // Checka se o movimento não passa de 3 casas
+              if (deltaX <= 3 && deltaX >= -3) {
+                  return true;
+              }
+          }
+          return false;
+      }
+
       if (deltaX == 0) {
-          // Checa se movimento Vertical encontra pecas
+          // Movimento Vertical
           int minY = Math.min(y0, y1);
           int maxY = Math.max(y0, y1);
           for (int y = minY + 1; y < maxY; y++) {
-              if (!Objects.equals(cordenadasPecasArray[y][x0], "0")) {
+              if (cordenadasPecasArray[y][x0] != null) {
                   return false;
               }
           }
       } else if (deltaY == 0) {
-          // Checa se movimento Horizontal encontra pecas
+          // Movimento Horizontal
           int minX = Math.min(x0, x1);
           int maxX = Math.max(x0, x1);
           for (int x = minX + 1; x < maxX; x++) {
-              if (!Objects.equals(cordenadasPecasArray[y0][x], "0")) {
+              if (cordenadasPecasArray[y0][x] != null) {
                   return false;
               }
           }
       } else if (Math.abs(deltaX) == Math.abs(deltaY)) {
-          // Checa se Movimento Diagonal encontra pecas
+          // Movimento Diagonal
           int minX = Math.min(x0, x1);
           int minY = Math.min(y0, y1);
+          int maxX = Math.max(x0, x1);
+          int maxY = Math.max(y0, y1);
           for (int i = 1; i < Math.abs(deltaX); i++) {
-              if (!Objects.equals(cordenadasPecasArray[minY + i][minX + i], "0")) {
+              if (cordenadasPecasArray[minY + i][minX + i] != null) {
                   return false;
               }
           }
@@ -232,69 +293,13 @@ public class GameManager {
                     isItvalid = true;
                 }
                 break;
-            case "3":
-                // Checka se o movimento é diagonal
-                if (deltaX == deltaY || deltaX == -deltaY) {
-                    // Checka se o movimento não passa de 3 casas
-                    if (deltaX <= 3 && deltaX >= -3) {
-                        isItvalid = true;
-                    }
-                }
-                isItvalid = false;
-                break;
+
 
             case "4":
                 if(y1!=y0){
                     isItvalid= false;
                 }else{
                     isItvalid=true;
-                }
-                break;
-
-            case "5":
-                if (x1 == x0) { // Checka se o movimento é vertical
-                    int minY = Math.min(y0, y1);
-                    int maxY = Math.max(y0, y1);
-
-                    if (deltaY > 0) {
-                        for (int y = minY + 1; y < maxY; y++) {
-                            if (!Objects.equals(cordenadasPecasArray[y][x0], "0")) {
-                                isItvalid = false;
-                            }
-                        }
-                    } else if (deltaY < 0) {
-                        for (int y = maxY - 1; y > minY; y--) {
-                            if (!Objects.equals(cordenadasPecasArray[y][x0], "0")) {
-                                isItvalid = false;
-                            }
-                        }
-                    }
-
-                    isItvalid = true;
-                } else {
-                    isItvalid = false;
-                }
-                break;
-
-            case "6":
-                PecaHomer homer = new PecaHomer(peca.identificador,peca.tipoDePeca,peca.equipa,peca.alcunha);
-                if (homerCounter%3==0){
-                    homer.acorda();
-                }else{
-                    homer.dorme();
-                }
-                if(homer.isSleeping()){
-                    isItvalid = false;
-                }
-                if(homer.isAwake()){
-                    // Checka se o movimento é diagonal
-                    if (deltaX == deltaY || deltaX == -deltaY) {
-                        // Checka se o movimento não passa de 1 casa
-                        if (deltaX <= 1 && deltaX >= -1) {
-                            isItvalid = true;
-                        }
-                    }
-                    isItvalid = false;
                 }
                 break;
         }
