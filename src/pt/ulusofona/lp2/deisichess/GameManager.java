@@ -8,10 +8,11 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Objects;
 
 public class GameManager {
     ArrayList<Peca> pecas = new ArrayList<>();
-    String[][] cordenadasPecasArray;
+    static String[][] cordenadasPecasArray;
     ArrayList<Peca> blackTeam = new ArrayList<>();
     ArrayList<Peca> whiteTeam = new ArrayList<>();
     Tabuleiro tabuleiro = new Tabuleiro(whiteTeam, blackTeam);
@@ -190,14 +191,24 @@ public class GameManager {
       int deltaY = y1 - y0;
 
       if (peca.tipoDePeca.equals("5")) {
-          if (x1 == x0) {
+          if (x1 == x0) { // Checka se o movimento é vertical
               int minY = Math.min(y0, y1);
               int maxY = Math.max(y0, y1);
-              for (int y = minY + 1; y < maxY; y++) {
-                  if (cordenadasPecasArray[y][x0] != null) {
-                      return false;
+
+              if (deltaY > 0) {
+                  for (int y = minY + 1; y < maxY; y++) {
+                      if (!Objects.equals(cordenadasPecasArray[y][x0], "0")) {
+                          return false;
+                      }
+                  }
+              } else if (deltaY < 0) {
+                  for (int y = maxY - 1; y > minY; y--) {
+                      if (!Objects.equals(cordenadasPecasArray[y][x0], "0")) {
+                          return false;
+                      }
                   }
               }
+
               return true;
           } else {
               return false;
