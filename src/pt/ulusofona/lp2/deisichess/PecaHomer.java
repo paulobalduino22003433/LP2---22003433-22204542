@@ -16,9 +16,22 @@ public class PecaHomer extends Peca {
             png = "homer_white.png";
         }
     }
+    public void acorda() {
+        if (GameManager.nrTurno%3==0){
+            status = "acordado";
+        }
+    }
 
+
+    public void dorme(){
+        if (GameManager.nrTurno%3!=0){
+            status = "a dormir";
+        }
+    }
     @Override
     public String toString() {
+        acorda();
+        dorme();
         if (estado.equals("em jogo")){
             if (status.equals("a dormir")){
                 return "Doh! zzzzzz";
@@ -30,14 +43,6 @@ public class PecaHomer extends Peca {
         return identificador + " | Homer Simpson | " + "2 | " + equipa + " | " + alcunha + " @ (" + x + ", " + y + ")";
     }
 
-    public void acorda() {
-        status = "acordado";
-    }
-
-
-    public void dorme(){
-        status = "a dormir";
-    }
 
     public boolean isSleeping(){
         if (status.equals("a dormir")){
