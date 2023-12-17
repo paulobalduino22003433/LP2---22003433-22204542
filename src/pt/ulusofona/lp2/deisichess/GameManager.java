@@ -318,26 +318,10 @@ public class GameManager {
                 }
             }
         }
-        if (pecaParaMover!=null){
-            if(pecaParaMover.tipoDePeca.equals("6")){
-                PecaHomer homer = new PecaHomer(pecaParaMover.identificador,pecaParaMover.tipoDePeca,pecaParaMover.equipa,pecaParaMover.alcunha);
-                if (nrTurno%3==0){
-                    homer.acorda();
-                }else{
-                    homer.dorme();
-                }
-                if(homer.isAwake()){
-                    wasMoveValid = homer.doesHomerMove(homer,x1-x0,y1-y0);
-                }
-            }
-        }
-
 
         if (pecaParaMover!=null){
-            if (!pecaParaMover.tipoDePeca.equals("6")){
-                if(isMoveValid(pecaParaMover, x0, y0, x1, y1)){
-                    wasMoveValid=true;
-                }
+            if(isMoveValid(pecaParaMover, x0, y0, x1, y1)){
+                wasMoveValid=true;
             }
         }
 
