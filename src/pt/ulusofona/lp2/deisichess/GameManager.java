@@ -23,7 +23,7 @@ public class GameManager {
     }
 
 
-    void loadGame(File file) throws IOException, InvalidGameInputException {
+    public void loadGame(File file) throws IOException, InvalidGameInputException {
         try {
             ArrayList<String> cordenadasPecas = new ArrayList<>();
             BufferedReader fileReader = new BufferedReader(new FileReader(file));
@@ -446,8 +446,8 @@ public class GameManager {
             }
         }
 
-        tabuleiro.changeTurnInGame();
         nrTurno++;
+        tabuleiro.changeTurnInGame();
         return true;
     }
 
