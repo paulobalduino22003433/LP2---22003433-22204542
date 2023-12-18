@@ -17,13 +17,15 @@ public class PecaHomer extends Peca {
         }
     }
     public String acordaOuDorme() {
-        if (GameManager.nrTurno % 2 != 0){
-            status = "acordado";
-        } else{
+        if (GameManager.nrTurno % 3 == 0) {
             status = "a dormir";
+        } else {
+            status = "acordado";
         }
         return status;
     }
+
+
 
     @Override
     public String toString() {
