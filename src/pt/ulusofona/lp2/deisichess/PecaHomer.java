@@ -63,14 +63,11 @@ public class PecaHomer extends Peca {
         if (homer.isSleeping()) {
             return false;
         }
-
-        if (homer.isAwake()) {
             // Checa se o movimento é diagonal
-            if ((percursoHorizontal == 1 || percursoHorizontal == -1) && (percursoVertical == 1 || percursoVertical == -1)) {
+            if (Math.abs(percursoHorizontal) == 1 && Math.abs(percursoVertical) == 1) {
                 return true;
+            } else {
+                return false;
             }
-            return false;
-        }
-        return false;
     }
 }
