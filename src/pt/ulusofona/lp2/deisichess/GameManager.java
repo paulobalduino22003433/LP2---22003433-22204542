@@ -9,10 +9,10 @@ import java.util.*;
 
 public class GameManager {
     ArrayList<Peca> pecas = new ArrayList<>();
-    static String[][] cordenadasPecasArray;
+    public String[][] cordenadasPecasArray;
     ArrayList<Peca> blackTeam = new ArrayList<>();
     ArrayList<Peca> whiteTeam = new ArrayList<>();
-    Tabuleiro tabuleiro = new Tabuleiro(whiteTeam, blackTeam);
+    public Tabuleiro tabuleiro = new Tabuleiro(whiteTeam, blackTeam);
     StatsPeca statusPreta = new StatsPeca();
     StatsPeca statusBranca = new StatsPeca();
     GameResults gameResults = new GameResults();
@@ -193,6 +193,8 @@ public class GameManager {
       int percursoVertical = y1 - y0;
       if (peca.tipoDePeca.equals("6")) {
           PecaHomer homer = new PecaHomer(peca.identificador, peca.tipoDePeca, peca.equipa, peca.alcunha);
+          homer.x=peca.x.trim();
+          homer.y=peca.y.trim();
           homer.acordaOuDorme();
           return homer.doesHomerMove(homer,percursoHorizontal,percursoVertical);
       }

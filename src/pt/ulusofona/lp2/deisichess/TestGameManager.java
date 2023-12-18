@@ -50,6 +50,21 @@ public class TestGameManager {
             Peca pecaParaMover = new Peca("7", "6", "10", "Hommie");
             PecaHomer homer = new PecaHomer(pecaParaMover.identificador,pecaParaMover.tipoDePeca,pecaParaMover.equipa,pecaParaMover.alcunha);
         assertEquals("Doh! zzzzzz",homer.toString());
+        GameManager.nrTurno=9;
+        gameManager.setCoordinatesPieces();
+            if (gameManager.tabuleiro.getIsBlackTurn()) {
+                for (Peca peca : gameManager.blackTeam) {
+                    if (peca.getIdentificador().equals(pecaParaMover.identificador)) {
+                        pecaParaMover=peca;
+                        pecaParaMover.x=peca.x;
+                        pecaParaMover.y=peca.y;
+                        homer = new PecaHomer(pecaParaMover.identificador,pecaParaMover.tipoDePeca,pecaParaMover.equipa,pecaParaMover.alcunha);
+                        homer.x=pecaParaMover.x;
+                        homer.y=pecaParaMover.y;
+                    }
+                }
+            }
+            assertEquals("7 | Homer Simpson | 2 | 10 | Hommie @ (6, 0)",homer.toString());
         }
 
 

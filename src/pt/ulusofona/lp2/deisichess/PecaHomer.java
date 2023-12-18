@@ -31,6 +31,9 @@ public class PecaHomer extends Peca {
         if (estado.equals("em jogo")){
             if (status.equals("a dormir")){
                 return "Doh! zzzzzz";
+            } else{
+                status="acordado";
+                return identificador + " | Homer Simpson | " + "2 | " + equipa + " | " + alcunha + " @ (" + x + ", " + y + ")";
             }
         }
         if(estado.equals("capturado")) {

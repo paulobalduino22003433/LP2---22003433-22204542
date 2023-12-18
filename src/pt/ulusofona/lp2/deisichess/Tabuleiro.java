@@ -3,10 +3,10 @@ package pt.ulusofona.lp2.deisichess;
 import java.util.ArrayList;
 
 public class Tabuleiro {
-    private int tamanhoTabuleiro = -1, numPecaTotal = -1;
-    private boolean isBlackTurn = true, isWhiteTurn = false, pecaMorta = false;
-    private ArrayList<Peca> whiteTeam;
-    private ArrayList<Peca> blackTeam;
+    public int tamanhoTabuleiro = -1, numPecaTotal = -1;
+    public boolean isBlackTurn = true, isWhiteTurn = false, pecaMorta = false;
+    public ArrayList<Peca> whiteTeam;
+    public ArrayList<Peca> blackTeam;
 
     public Tabuleiro(ArrayList<Peca> whiteTeam, ArrayList<Peca> blackTeam) {
         this.whiteTeam = whiteTeam;
