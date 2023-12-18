@@ -17,7 +17,7 @@ public class PecaHomer extends Peca {
         }
     }
     public String acordaOuDorme() {
-        if (1==1){
+        if (GameManager.nrTurno % 2 != 0){
             status = "acordado";
         } else{
             status = "a dormir";
@@ -29,7 +29,7 @@ public class PecaHomer extends Peca {
     public String toString() {
         acordaOuDorme();
         if (estado.equals("em jogo")){
-            if (status.equals("a dormir")){
+            if (status.equals("a dormir") || GameManager.nrTurno==0){
                 return "Doh! zzzzzz";
             } else{
                 status="acordado";
@@ -59,6 +59,9 @@ public class PecaHomer extends Peca {
 
     public boolean doesHomerMove(PecaHomer homer,int percursoHorizontal,int percursoVertical){
         homer.acordaOuDorme();
+        if(GameManager.nrTurno==0){
+            homer.status="a dormir";
+        }
 
         if (homer.isSleeping()) {
             return false;
