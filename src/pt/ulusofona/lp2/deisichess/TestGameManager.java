@@ -40,7 +40,16 @@ public class TestGameManager {
             assertEquals(false,gameManager.isMoveValid(pecaParaMover,x4,y4,x5,y5));
             PecaHomer homer = new PecaHomer(pecaParaMover.identificador,pecaParaMover.tipoDePeca,pecaParaMover.equipa,pecaParaMover.alcunha);
             assertEquals(true,homer.isSleeping());
+        }
 
+        @Test
+        void testToStringHomer() throws IOException, InvalidGameInputException {
+        GameManager gameManager = new GameManager();
+        gameManager.loadGame(new File("test-files/8x8.txt"));
+        GameManager.nrTurno=4;
+            Peca pecaParaMover = new Peca("7", "6", "10", "Hommie");
+            PecaHomer homer = new PecaHomer(pecaParaMover.identificador,pecaParaMover.tipoDePeca,pecaParaMover.equipa,pecaParaMover.alcunha);
+        assertEquals("Doh! zzzzzz",homer.toString());
         }
 
 

@@ -193,11 +193,7 @@ public class GameManager {
       int percursoVertical = y1 - y0;
       if (peca.tipoDePeca.equals("6")) {
           PecaHomer homer = new PecaHomer(peca.identificador, peca.tipoDePeca, peca.equipa, peca.alcunha);
-          if (GameManager.nrTurno%3==0){
-              homer.acorda();
-          }else{
-              homer.dorme();
-          }
+          homer.acordaOuDorme();
           return homer.doesHomerMove(homer,percursoHorizontal,percursoVertical);
       }
 
