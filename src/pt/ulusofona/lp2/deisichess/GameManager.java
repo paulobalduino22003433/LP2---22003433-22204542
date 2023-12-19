@@ -236,36 +236,6 @@ public class GameManager {
           return false;
       }
 
-      if (percursoHorizontal == 0) {
-          // Movimento Vertical
-          int minY = Math.min(y0, y1);
-          int maxY = Math.max(y0, y1);
-          for (int y = minY + 1; y < maxY; y++) {
-              if (cordenadasPecasArray[y][x0] != null) {
-                  return false;
-              }
-          }
-      } else if (percursoVertical == 0) {
-          // Movimento Horizontal
-          int minX = Math.min(x0, x1);
-          int maxX = Math.max(x0, x1);
-          for (int x = minX + 1; x < maxX; x++) {
-              if (cordenadasPecasArray[y0][x] != null) {
-                  return false;
-              }
-          }
-      } else if (Math.abs(percursoHorizontal) == Math.abs(percursoVertical)) {
-          // Movimento Diagonal
-          int minX = Math.min(x0, x1);
-          int minY = Math.min(y0, y1);
-          int maxX = Math.max(x0, x1);
-          int maxY = Math.max(y0, y1);
-          for (int i = 1; i < Math.abs(percursoHorizontal); i++) {
-              if (cordenadasPecasArray[minY + i][minX + i] != null) {
-                  return false;
-              }
-          }
-      }
         switch (peca.tipoDePeca){
             case "0":
                 if (x1 > x0 + 1 || y1 > y0 + 1) {
@@ -284,12 +254,21 @@ public class GameManager {
 
 
             case "4":
-                if(y1!=y0){
-                    isItvalid= false;
-                }else{
-                    isItvalid=true;
+                if (y1 != y0 || percursoVertical != 0) {
+                    isItvalid = false; // Not a valid horizontal movement
+                } else {
+                    // Valid horizontal movement, check for obstacles
+                    int minX = Math.min(x0, x1);
+                    int maxX = Math.max(x0, x1);
+                    for (int x = minX + 1; x < maxX; x++) {
+                        if (!Objects.equals(cordenadasPecasArray[y0][x], "0")) {
+                            return false; // Obstacle in the path
+                        }
+                    }
+                    isItvalid = true;
                 }
                 break;
+
         }
         return isItvalid;
     }

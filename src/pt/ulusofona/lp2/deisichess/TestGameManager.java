@@ -30,11 +30,11 @@ public class TestGameManager {
             int x2 = 6, y2 = 7, x3 = 5, y3 =6;
             int x4 = 3, y4 = 4, x5 = 2, y5 =3;
             Peca pecaParaMover = new Peca("7", "6", "10", "Hommie");
-            GameManager.nrTurno = 3;
+            GameManager.nrTurno = 2;
             assertEquals(true,gameManager.isMoveValid(pecaParaMover,x0,y0,x1,y1));
             assertEquals(true,gameManager.isMoveValid(pecaParaMover,x2,y2,x3,y3));
             assertEquals(true,gameManager.isMoveValid(pecaParaMover,x4,y4,x5,y5));
-            GameManager.nrTurno = 2;
+            GameManager.nrTurno = 3;
             assertEquals(false,gameManager.isMoveValid(pecaParaMover,x0,y0,x1,y1));
             assertEquals(false,gameManager.isMoveValid(pecaParaMover,x2,y2,x3,y3));
             assertEquals(false,gameManager.isMoveValid(pecaParaMover,x4,y4,x5,y5));
@@ -46,11 +46,11 @@ public class TestGameManager {
         void testToStringHomer() throws IOException, InvalidGameInputException {
         GameManager gameManager = new GameManager();
         gameManager.loadGame(new File("test-files/8x8.txt"));
-        GameManager.nrTurno=4;
+        GameManager.nrTurno=6;
             Peca pecaParaMover = new Peca("7", "6", "10", "Hommie");
             PecaHomer homer = new PecaHomer(pecaParaMover.identificador,pecaParaMover.tipoDePeca,pecaParaMover.equipa,pecaParaMover.alcunha);
         assertEquals("Doh! zzzzzz",homer.toString());
-        GameManager.nrTurno=9;
+        GameManager.nrTurno=8;
         gameManager.setCoordinatesPieces();
             if (gameManager.tabuleiro.getIsBlackTurn()) {
                 for (Peca peca : gameManager.blackTeam) {
