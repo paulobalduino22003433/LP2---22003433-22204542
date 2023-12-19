@@ -8,14 +8,14 @@ import java.io.IOException;
 import java.util.*;
 
 public class GameManager {
-    ArrayList<Peca> pecas = new ArrayList<>();
+    public ArrayList<Peca> pecas = new ArrayList<>();
     public String[][] cordenadasPecasArray;
-    ArrayList<Peca> blackTeam = new ArrayList<>();
-    ArrayList<Peca> whiteTeam = new ArrayList<>();
+    public ArrayList<Peca> blackTeam = new ArrayList<>();
+    public ArrayList<Peca> whiteTeam = new ArrayList<>();
     public Tabuleiro tabuleiro = new Tabuleiro(whiteTeam, blackTeam);
-    StatsPeca statusPreta = new StatsPeca();
-    StatsPeca statusBranca = new StatsPeca();
-    GameResults gameResults = new GameResults();
+    public StatsPeca statusPreta = new StatsPeca();
+    public StatsPeca statusBranca = new StatsPeca();
+    public GameResults gameResults = new GameResults();
 
    public static int nrTurno=0;
     public void setNrTurno(int newValue) {
@@ -207,28 +207,32 @@ public class GameManager {
 
               if (percursoVertical > 0) {
                   for (int y = minY + 1; y <= maxY; y++) {
-                      if (!Objects.equals(cordenadasPecasArray[y][x0], "0")) {
-                          if (!Objects.equals(cordenadasPecasArray[y1][x1], "0")) {
-                              if(y==maxY){
-                                  return true;
-                              }else {
-                                  return false;
+                      if(y>=0 && y< cordenadasPecasArray.length){
+                          if (!Objects.equals(cordenadasPecasArray[y][x0], "0")) {
+                              if (!Objects.equals(cordenadasPecasArray[y1][x1], "0")) {
+                                  if(y==maxY){
+                                      return true;
+                                  }else {
+                                      return false;
+                                  }
                               }
+                              return false;
                           }
-                          return false;
                       }
                   }
               } else if (percursoVertical < 0) {
                   for (int y = maxY - 1; y >= minY; y--) {
-                      if (!Objects.equals(cordenadasPecasArray[y][x0], "0")) {
-                          if (!Objects.equals(cordenadasPecasArray[y1][x1], "0")) {
-                              if(y==minY){
-                                  return true;
-                              }else{
-                                  return false;
+                      if(y>=0 && y<cordenadasPecasArray.length){
+                          if (!Objects.equals(cordenadasPecasArray[y][x0], "0")) {
+                              if (!Objects.equals(cordenadasPecasArray[y1][x1], "0")) {
+                                  if(y==minY){
+                                      return true;
+                                  }else{
+                                      return false;
+                                  }
                               }
+                              return false;
                           }
-                          return false;
                       }
                   }
               }
@@ -275,29 +279,33 @@ public class GameManager {
 
                     if (percursoHorizontal > 0) {
                         for (int x = minX + 1; x <= maxX; x++) {
-                            if (!Objects.equals(cordenadasPecasArray[y0][x], "0")) {
-                                if (!Objects.equals(cordenadasPecasArray[y1][x1], "0")) {
-                                    if(x==maxX){
-                                        return true;
-                                    }else{
-                                        return false;
+                            if(x>=0 && x<cordenadasPecasArray.length){
+                                if (!Objects.equals(cordenadasPecasArray[y0][x], "0")) {
+                                    if (!Objects.equals(cordenadasPecasArray[y1][x1], "0")) {
+                                        if(x==maxX){
+                                            return true;
+                                        }else{
+                                            return false;
+                                        }
+                                    }else {
+                                        return false; // Obstacle in the path
                                     }
-                                }else {
-                                    return false; // Obstacle in the path
                                 }
                             }
                         }
                     } else if (percursoHorizontal < 0) {
                         for (int x = maxX - 1; x >= minX; x--) {
-                            if (!Objects.equals(cordenadasPecasArray[y0][x], "0")) {
-                                if (!Objects.equals(cordenadasPecasArray[y1][x1], "0")) {
-                                    if(x==minX){
-                                        return true;
-                                    }else {
-                                        return false;
+                            if(x>=0 && x<cordenadasPecasArray.length){
+                                if (!Objects.equals(cordenadasPecasArray[y0][x], "0")) {
+                                    if (!Objects.equals(cordenadasPecasArray[y1][x1], "0")) {
+                                        if(x==minX){
+                                            return true;
+                                        }else {
+                                            return false;
+                                        }
                                     }
+                                    return false; // Obstacle in the path
                                 }
-                                return false; // Obstacle in the path
                             }
                         }
                     }
@@ -514,13 +522,13 @@ public class GameManager {
         return placar;
     }
 
-    void saveGame(File file) throws IOException {
+    public void saveGame(File file) throws IOException {
     }
 
-    void undo() {
+    public void undo() {
     }
 
-    List<Comparable> getHints(int x, int y) {
+    public List<Comparable> getHints(int x, int y) {
         return null;
     }
 
