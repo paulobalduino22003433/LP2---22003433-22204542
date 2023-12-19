@@ -257,17 +257,27 @@ public class GameManager {
                 if (y1 != y0 || percursoVertical != 0) {
                     isItvalid = false; // Not a valid horizontal movement
                 } else {
-                    // Valid horizontal movement, check for obstacles
                     int minX = Math.min(x0, x1);
                     int maxX = Math.max(x0, x1);
-                    for (int x = minX + 1; x < maxX; x++) {
-                        if (!Objects.equals(cordenadasPecasArray[y0][x], "0")) {
-                            return false; // Obstacle in the path
+
+                    if (percursoHorizontal > 0) {
+                        for (int x = minX + 1; x < maxX; x++) {
+                            if (!Objects.equals(cordenadasPecasArray[y0][x], "0")) {
+                                return false; // Obstacle in the path
+                            }
+                        }
+                    } else if (percursoHorizontal < 0) {
+                        for (int x = maxX - 1; x > minX; x--) {
+                            if (!Objects.equals(cordenadasPecasArray[y0][x], "0")) {
+                                return false; // Obstacle in the path
+                            }
                         }
                     }
+
                     isItvalid = true;
                 }
                 break;
+
 
         }
         return isItvalid;
