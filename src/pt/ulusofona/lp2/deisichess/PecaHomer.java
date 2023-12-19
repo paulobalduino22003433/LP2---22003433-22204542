@@ -17,7 +17,7 @@ public class PecaHomer extends Peca {
         }
     }
     public String acordaOuDorme() {
-        if (GameManager.nrTurno % 3 == 0) {
+        if (GameManager.nrTurno==0||GameManager.nrTurno % 3 == 0) {
             status = "a dormir";
         } else {
             status = "acordado";
