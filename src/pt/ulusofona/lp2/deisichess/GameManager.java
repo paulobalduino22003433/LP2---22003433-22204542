@@ -191,6 +191,38 @@ public class GameManager {
         boolean isItvalid = false;
       int percursoHorizontal = x1 - x0;
       int percursoVertical = y1 - y0;
+
+      if (percursoHorizontal == 0) {
+          // Movimento Vertical
+          int minY = Math.min(y0, y1);
+          int maxY = Math.max(y0, y1);
+          for (int y = minY + 1; y < maxY; y++) {
+              if (!Objects.equals(cordenadasPecasArray[y][x0], "0")) {
+                  return false;
+              }
+          }
+      } else if (percursoVertical == 0) {
+          // Movimento Horizontal
+          int minX = Math.min(x0, x1);
+          int maxX = Math.max(x0, x1);
+          for (int x = minX + 1; x < maxX; x++) {
+              if (!Objects.equals(cordenadasPecasArray[y0][x], "0")) {
+                  return false;
+              }
+          }
+      } else if (Math.abs(percursoHorizontal) == Math.abs(percursoVertical)) {
+          // Movimento Diagonal
+          int minX = Math.min(x0, x1);
+          int minY = Math.min(y0, y1);
+          int maxX = Math.max(x0, x1);
+          int maxY = Math.max(y0, y1);
+          for (int i = 1; i < Math.abs(percursoHorizontal); i++) {
+              if (!Objects.equals(cordenadasPecasArray[minY + i][minX + i], "0")) {
+                  return false;
+              }
+          }
+      }
+
       if (peca.tipoDePeca.equals("6")) {
           PecaHomer homer = new PecaHomer(peca.identificador, peca.tipoDePeca, peca.equipa, peca.alcunha);
           homer.x=peca.x.trim();
@@ -235,7 +267,6 @@ public class GameManager {
           }
           return false;
       }
-
         switch (peca.tipoDePeca){
             case "0":
                 if (x1 > x0 + 1 || y1 > y0 + 1) {
@@ -258,11 +289,9 @@ public class GameManager {
                     isItvalid = false; // Not a valid horizontal movement
                 } else {
                     // Valid horizontal movement, check for obstacles
-                    int minX = Math.min(x0, x1);
-                    int maxX = Math.max(x0, x1);
-                    for (int x = minX + 1; x < maxX; x++) {
+                    for (int x = x0 + 1; x < x1; x++) {
                         if (!Objects.equals(cordenadasPecasArray[y0][x], "0")) {
-                            if (x == maxX - 1 && Objects.equals(cordenadasPecasArray[y0][x], "0")) {
+                            if (x == x1 - 1 && Objects.equals(cordenadasPecasArray[y0][x], "0")) {
                                 isItvalid = true; // Destination square is empty, valid move
                             } else {
                                 return false; // Obstacle in the path
@@ -271,7 +300,6 @@ public class GameManager {
                     }
                 }
                 break;
-
 
         }
         return isItvalid;
