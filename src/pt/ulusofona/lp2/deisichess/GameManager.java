@@ -260,13 +260,14 @@ public class GameManager {
                     int maxX = Math.max(x0, x1);
 
                     if (percursoHorizontal > 0) {
-                        for (int x = minX + 1; x <= maxX; x++) {
+                        for (int x = minX + 1; x < maxX; x++) {
                             if (!Objects.equals(cordenadasPecasArray[y0][x], "0")) {
-                                return false; // Obstacle in the path
+                                    return false; // Obstacle in the path
+
                             }
                         }
                     } else if (percursoHorizontal < 0) {
-                        for (int x = maxX - 1; x >= minX; x--) {
+                        for (int x = maxX - 1; x > minX; x--) {
                             if (!Objects.equals(cordenadasPecasArray[y0][x], "0")) {
                                 return false; // Obstacle in the path
                             }
