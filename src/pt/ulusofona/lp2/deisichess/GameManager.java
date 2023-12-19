@@ -252,7 +252,6 @@ public class GameManager {
                 }
                 break;
 
-
             case "4":
                 if (y1 != y0 || percursoVertical != 0) {
                     isItvalid = false; // Not a valid horizontal movement
@@ -261,13 +260,13 @@ public class GameManager {
                     int maxX = Math.max(x0, x1);
 
                     if (percursoHorizontal > 0) {
-                        for (int x = minX + 1; x < maxX; x++) {
+                        for (int x = minX + 1; x <= maxX; x++) {
                             if (!Objects.equals(cordenadasPecasArray[y0][x], "0")) {
                                 return false; // Obstacle in the path
                             }
                         }
                     } else if (percursoHorizontal < 0) {
-                        for (int x = maxX - 1; x > minX; x--) {
+                        for (int x = maxX - 1; x >= minX; x--) {
                             if (!Objects.equals(cordenadasPecasArray[y0][x], "0")) {
                                 return false; // Obstacle in the path
                             }
@@ -277,6 +276,10 @@ public class GameManager {
                     isItvalid = true;
                 }
                 break;
+
+
+
+
 
 
         }
@@ -425,7 +428,7 @@ public class GameManager {
             gameResults.incJogadasSemCaptura();
         }
 
-        cordenadasPecasArray[y0][x0] = null;
+        cordenadasPecasArray[y0][x0] = "0";
         cordenadasPecasArray[y1][x1] = pecaAtual;
 
         for (Peca pecaTemporaria : pecas) {
