@@ -262,12 +262,16 @@ public class GameManager {
                     int maxX = Math.max(x0, x1);
                     for (int x = minX + 1; x < maxX; x++) {
                         if (!Objects.equals(cordenadasPecasArray[y0][x], "0")) {
-                            return false; // Obstacle in the path
+                            if (x == maxX - 1 && Objects.equals(cordenadasPecasArray[y0][x], "0")) {
+                                isItvalid = true; // Destination square is empty, valid move
+                            } else {
+                                return false; // Obstacle in the path
+                            }
                         }
                     }
-                    isItvalid = true;
                 }
                 break;
+
 
         }
         return isItvalid;
