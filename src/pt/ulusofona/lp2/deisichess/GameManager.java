@@ -206,14 +206,28 @@ public class GameManager {
               int maxY = Math.max(y0, y1);
 
               if (percursoVertical > 0) {
-                  for (int y = minY + 1; y < maxY; y++) {
+                  for (int y = minY + 1; y <= maxY; y++) {
                       if (!Objects.equals(cordenadasPecasArray[y][x0], "0")) {
+                          if (!Objects.equals(cordenadasPecasArray[y1][x1], "0")) {
+                              if(y==maxY){
+                                  return true;
+                              }else {
+                                  return false;
+                              }
+                          }
                           return false;
                       }
                   }
               } else if (percursoVertical < 0) {
-                  for (int y = maxY - 1; y > minY; y--) {
+                  for (int y = maxY - 1; y >= minY; y--) {
                       if (!Objects.equals(cordenadasPecasArray[y][x0], "0")) {
+                          if (!Objects.equals(cordenadasPecasArray[y1][x1], "0")) {
+                              if(y==minY){
+                                  return true;
+                              }else{
+                                  return false;
+                              }
+                          }
                           return false;
                       }
                   }
@@ -260,15 +274,29 @@ public class GameManager {
                     int maxX = Math.max(x0, x1);
 
                     if (percursoHorizontal > 0) {
-                        for (int x = minX + 1; x < maxX; x++) {
+                        for (int x = minX + 1; x <= maxX; x++) {
                             if (!Objects.equals(cordenadasPecasArray[y0][x], "0")) {
+                                if (!Objects.equals(cordenadasPecasArray[y1][x1], "0")) {
+                                    if(x==maxX){
+                                        return true;
+                                    }else{
+                                        return false;
+                                    }
+                                }else {
                                     return false; // Obstacle in the path
-
+                                }
                             }
                         }
                     } else if (percursoHorizontal < 0) {
-                        for (int x = maxX - 1; x > minX; x--) {
+                        for (int x = maxX - 1; x >= minX; x--) {
                             if (!Objects.equals(cordenadasPecasArray[y0][x], "0")) {
+                                if (!Objects.equals(cordenadasPecasArray[y1][x1], "0")) {
+                                    if(x==minX){
+                                        return true;
+                                    }else {
+                                        return false;
+                                    }
+                                }
                                 return false; // Obstacle in the path
                             }
                         }
