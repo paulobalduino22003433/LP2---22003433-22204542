@@ -18,6 +18,8 @@ public class GameManager {
     public GameResults gameResults = new GameResults();
 
    public static int nrTurno=0;
+
+   public static int turnoJoker=1;
     public void setNrTurno(int newValue) {
         nrTurno = newValue;
     }
@@ -492,6 +494,10 @@ public class GameManager {
             }
         }
 
+        if (turnoJoker==6){
+            turnoJoker=0;
+        }
+        turnoJoker++;
         nrTurno++;
         tabuleiro.changeTurnInGame();
         return true;
