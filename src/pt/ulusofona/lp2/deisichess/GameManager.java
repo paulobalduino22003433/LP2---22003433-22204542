@@ -292,20 +292,30 @@ public class GameManager {
               isItvalid= false;
           }else{
               Peca pecaParaMover = null;
-              if (tabuleiro.getIsBlackTurn()) {
-                  for (Peca pecaWhite : whiteTeam) {
-                      if (peca.getIdentificador().equals(cordenadasPecasArray[y1][x1])) {
-                          pecaParaMover = pecaWhite;
-                          break;
+              if (y1 >= 0 && y1 < cordenadasPecasArray.length && x1 >= 0 && x1 < cordenadasPecasArray[y1].length) {
+                  if (tabuleiro.getIsBlackTurn()) {
+                      for (Peca pecaWhite : whiteTeam) {
+                          if (peca.getIdentificador().equals(cordenadasPecasArray[y1][x1])) {
+                              if(pecaWhite!=null){
+                                  pecaParaMover = pecaWhite;
+                                  break;
+                              }
+                          }
                       }
                   }
               }
 
               if (tabuleiro.getIsWhiteTurn()) {
-                  for (Peca pecaBlack : blackTeam) {
-                      if (peca.getIdentificador().equals(cordenadasPecasArray[y1][x1])) {
-                          pecaParaMover = pecaBlack;
-                          break;
+                  if (y1 >= 0 && y1 < cordenadasPecasArray.length) {
+                      if (x1 >= 0 && x1 < cordenadasPecasArray[y1].length) {
+                          for (Peca pecaBlack : blackTeam) {
+                              if (peca.getIdentificador().equals(cordenadasPecasArray[y1][x1])) {
+                                  if (pecaBlack!=null){
+                                      pecaParaMover = pecaBlack;
+                                      break;
+                                  }
+                              }
+                          }
                       }
                   }
               }
