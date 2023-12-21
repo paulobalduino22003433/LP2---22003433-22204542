@@ -273,6 +273,23 @@ public class GameManager {
         boolean isItvalid = false;
       int percursoHorizontal = x1 - x0;
       int percursoVertical = y1 - y0;
+      if (peca.tipoDePeca.equals("7")){
+          switch (turnoJoker){
+              case 1:peca.tipoDePeca="1";
+              break;
+              case 2:peca.tipoDePeca="2";
+              break;
+              case 3:peca.tipoDePeca="3";
+              break;
+              case 4:peca.tipoDePeca="4";
+              break;
+              case 5:peca.tipoDePeca="5";
+              break;
+              case 6:peca.tipoDePeca="6";
+              break;
+          }
+      }
+
       if (peca.tipoDePeca.equals("6")) {
           PecaHomer homer = new PecaHomer(peca.identificador, peca.tipoDePeca, peca.equipa, peca.alcunha);
           homer.x=peca.x.trim();
@@ -321,6 +338,29 @@ public class GameManager {
                 if(x1>x0+5 || y1>y0+5){
                     isItvalid= false;
                 }else{
+                    Peca pecaParaMover = null;
+                    if (tabuleiro.getIsBlackTurn()) {
+                        for (Peca pecaWhite : whiteTeam) {
+                            if (peca.getIdentificador().equals(cordenadasPecasArray[y1][x1])) {
+                                pecaParaMover = peca;
+                                break;
+                            }
+                        }
+                    }
+
+                    if (tabuleiro.getIsWhiteTurn()) {
+                        for (Peca pecaBlack : blackTeam) {
+                            if (peca.getIdentificador().equals(cordenadasPecasArray[y1][x1])) {
+                                pecaParaMover = peca;
+                                break;
+                            }
+                        }
+                    }
+                    if (pecaParaMover!=null){
+                        if (pecaParaMover.tipoDePeca.equals("1")){
+                            return false;
+                        }
+                    }
                     isItvalid = true;
                 }
                 break;
@@ -332,12 +372,6 @@ public class GameManager {
                     return isHorizontalMoveValid(x0,y0,x1,y1);
                 }
                 break;
-
-
-
-
-
-
         }
         return isItvalid;
     }
