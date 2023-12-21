@@ -187,6 +187,86 @@ public class GameManager {
     }
 
 
+    public boolean isHorizontalMoveValid(int x0,int y0,int x1,int y1){
+        int minX = Math.min(x0, x1);
+        int maxX = Math.max(x0, x1);
+        int percursoHorizontal = x1 - x0;
+        int percursoVertical = y1 - y0;
+        if (percursoHorizontal > 0) {
+            for (int x = minX + 1; x <= maxX; x++) {
+                if(x>=0 && x<cordenadasPecasArray.length){
+                    if (!Objects.equals(cordenadasPecasArray[y0][x], "0")) {
+                        if (!Objects.equals(cordenadasPecasArray[y1][x1], "0")) {
+                            if(x==maxX){
+                                return true;
+                            }else{
+                                return false;
+                            }
+                        }else {
+                            return false; // Obstacle in the path
+                        }
+                    }
+                }
+            }
+        } else if (percursoHorizontal < 0) {
+            for (int x = maxX - 1; x >= minX; x--) {
+                if(x>=0 && x<cordenadasPecasArray.length){
+                    if (!Objects.equals(cordenadasPecasArray[y0][x], "0")) {
+                        if (!Objects.equals(cordenadasPecasArray[y1][x1], "0")) {
+                            if(x==minX){
+                                return true;
+                            }else {
+                                return false;
+                            }
+                        }
+                        return false; // Obstacle in the path
+                    }
+                }
+            }
+        }
+        return true;
+    }
+
+    public boolean isVerticalMoveValid(int x0,int y0,int x1,int y1){
+        int minY = Math.min(y0, y1);
+        int maxY = Math.max(y0, y1);
+        int percursoHorizontal = x1 - x0;
+        int percursoVertical = y1 - y0;
+
+        if (percursoVertical > 0) {
+            for (int y = minY + 1; y <= maxY; y++) {
+                if(y>=0 && y< cordenadasPecasArray.length){
+                    if (!Objects.equals(cordenadasPecasArray[y][x0], "0")) {
+                        if (!Objects.equals(cordenadasPecasArray[y1][x1], "0")) {
+                            if(y==maxY){
+                                return true;
+                            }else {
+                                return false;
+                            }
+                        }
+                        return false;
+                    }
+                }
+            }
+        } else if (percursoVertical < 0) {
+            for (int y = maxY - 1; y >= minY; y--) {
+                if(y>=0 && y<cordenadasPecasArray.length){
+                    if (!Objects.equals(cordenadasPecasArray[y][x0], "0")) {
+                        if (!Objects.equals(cordenadasPecasArray[y1][x1], "0")) {
+                            if(y==minY){
+                                return true;
+                            }else{
+                                return false;
+                            }
+                        }
+                        return false;
+                    }
+                }
+            }
+        }
+
+        return true;
+    }
   public boolean isMoveValid(Peca peca,int x0,int y0, int x1, int y1){
         boolean isItvalid = false;
       int percursoHorizontal = x1 - x0;
@@ -199,45 +279,18 @@ public class GameManager {
           return homer.doesHomerMove(homer,percursoHorizontal,percursoVertical);
       }
 
+      if (peca.tipoDePeca.equals("2")) {
+          if (Math.abs(percursoHorizontal) == 2 && Math.abs(percursoVertical) == 2) {
+              return true;
+          } else {
+              return false;
+          }
+      }
+
 
       if (peca.tipoDePeca.equals("5")) {
           if (x1 == x0) { // Checka se o movimento é vertical
-              int minY = Math.min(y0, y1);
-              int maxY = Math.max(y0, y1);
-
-              if (percursoVertical > 0) {
-                  for (int y = minY + 1; y <= maxY; y++) {
-                      if(y>=0 && y< cordenadasPecasArray.length){
-                          if (!Objects.equals(cordenadasPecasArray[y][x0], "0")) {
-                              if (!Objects.equals(cordenadasPecasArray[y1][x1], "0")) {
-                                  if(y==maxY){
-                                      return true;
-                                  }else {
-                                      return false;
-                                  }
-                              }
-                              return false;
-                          }
-                      }
-                  }
-              } else if (percursoVertical < 0) {
-                  for (int y = maxY - 1; y >= minY; y--) {
-                      if(y>=0 && y<cordenadasPecasArray.length){
-                          if (!Objects.equals(cordenadasPecasArray[y][x0], "0")) {
-                              if (!Objects.equals(cordenadasPecasArray[y1][x1], "0")) {
-                                  if(y==minY){
-                                      return true;
-                                  }else{
-                                      return false;
-                                  }
-                              }
-                              return false;
-                          }
-                      }
-                  }
-              }
-
-              return true;
+              return isVerticalMoveValid(x0,y0,x1,y1);
           } else {
               return false;
           }
@@ -274,43 +327,7 @@ public class GameManager {
                 if (y1 != y0 || percursoVertical != 0) {
                     isItvalid = false; // Not a valid horizontal movement
                 } else {
-                    int minX = Math.min(x0, x1);
-                    int maxX = Math.max(x0, x1);
-
-                    if (percursoHorizontal > 0) {
-                        for (int x = minX + 1; x <= maxX; x++) {
-                            if(x>=0 && x<cordenadasPecasArray.length){
-                                if (!Objects.equals(cordenadasPecasArray[y0][x], "0")) {
-                                    if (!Objects.equals(cordenadasPecasArray[y1][x1], "0")) {
-                                        if(x==maxX){
-                                            return true;
-                                        }else{
-                                            return false;
-                                        }
-                                    }else {
-                                        return false; // Obstacle in the path
-                                    }
-                                }
-                            }
-                        }
-                    } else if (percursoHorizontal < 0) {
-                        for (int x = maxX - 1; x >= minX; x--) {
-                            if(x>=0 && x<cordenadasPecasArray.length){
-                                if (!Objects.equals(cordenadasPecasArray[y0][x], "0")) {
-                                    if (!Objects.equals(cordenadasPecasArray[y1][x1], "0")) {
-                                        if(x==minX){
-                                            return true;
-                                        }else {
-                                            return false;
-                                        }
-                                    }
-                                    return false; // Obstacle in the path
-                                }
-                            }
-                        }
-                    }
-
-                    isItvalid = true;
+                    return isHorizontalMoveValid(x0,y0,x1,y1);
                 }
                 break;
 
@@ -458,10 +475,10 @@ public class GameManager {
         }
 
         if (pecaCapturada) {
-            tabuleiro.algumaPecaMorreu();
+            tabuleiro.umaPecaMorreu();
         }
 
-        if (tabuleiro.getPecaMorta() && !pecaCapturada) {
+        if (tabuleiro.algumaPecaMorreu() && !pecaCapturada) {
             gameResults.incJogadasSemCaptura();
         }
 
@@ -487,7 +504,7 @@ public class GameManager {
 
 
     public boolean gameOver() {
-        if ((whiteTeam.size()==1 && blackTeam.size()==1) || (gameResults.getJogadasSemCaptura()>=10 && tabuleiro.getPecaMorta())) {
+        if ((whiteTeam.size()==1 && blackTeam.size()==1) || (gameResults.getJogadasSemCaptura()>=10 && tabuleiro.algumaPecaMorreu())) {
             gameResults.jogoEmpatado();
             return true;
         }

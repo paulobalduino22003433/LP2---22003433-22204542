@@ -47,11 +47,11 @@ public class Tabuleiro {
         return isWhiteTurn;
     }
 
-    public boolean getPecaMorta() {
+    public boolean algumaPecaMorreu() {
         return pecaMorta;
     }
 
-    public void algumaPecaMorreu() {
+    public void umaPecaMorreu() {
         pecaMorta = true;
     }
 }
