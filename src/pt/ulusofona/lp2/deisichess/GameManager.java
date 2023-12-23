@@ -52,7 +52,18 @@ public class GameManager {
                     }
                 }
 
-                cordenadasPecas.add(linha);
+                if (cordenadasPecas.size()<tabuleiro.getTamanhoTabuleiro()){
+                    cordenadasPecas.add(linha);
+                    continue;
+                }
+
+                if (linha.equals("BlackTurn")){
+                    tabuleiro.isBlackTurn=true;
+                    tabuleiro.isWhiteTurn=false;
+                }else {
+                    tabuleiro.isWhiteTurn=true;
+                    tabuleiro.isBlackTurn=false;
+                }
             }
 
             int linhas = tabuleiro.getTamanhoTabuleiro();
@@ -74,7 +85,6 @@ public class GameManager {
             setCoordinatesPieces();
             organizePiece();
             removeCapturedPieces();
-
             fileReader.close();
         } catch (IOException e) {
             e.printStackTrace();
@@ -621,6 +631,12 @@ public class GameManager {
                     }
                 }
                 writer.write(linha + "\n");
+            }
+
+            if (tabuleiro.getIsBlackTurn()){
+                writer.write("BlackTurn");
+            }else{
+                writer.write("WhiteTurn");
             }
         } catch (IOException e) {
             e.printStackTrace();
