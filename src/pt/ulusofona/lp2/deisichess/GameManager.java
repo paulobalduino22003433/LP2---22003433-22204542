@@ -44,13 +44,12 @@ public class GameManager {
 
                 if (pecasRestantes < tabuleiro.getNumPecaTotal()) {
                     String[] partes = linha.split(":");
-
-                    Peca peca = colocarTipoDePeca(partes[0].trim(), partes[1].trim(), partes[2].trim(), partes[3].trim());
-
-                    pecas.add(peca);
-
-                    pecasRestantes++;
-                    continue;
+                    if (partes.length==4){
+                        Peca peca = colocarTipoDePeca(partes[0].trim(), partes[1].trim(), partes[2].trim(), partes[3].trim());
+                        pecas.add(peca);
+                        pecasRestantes++;
+                        continue;
+                    }
                 }
 
                 cordenadasPecas.add(linha);
@@ -65,9 +64,12 @@ public class GameManager {
                 String[] parts = cordenadasPecas.get(i).split(":");
 
                 for (int j = 0; j < colunas; j++) {
-                    cordenadasPecasArray[i][j] = parts[j];
+                    if (j >= 0 && j < parts.length && i >= 0 && i < cordenadasPecasArray.length) {
+                        cordenadasPecasArray[i][j] = parts[j];
+                    }
                 }
             }
+
 
             setCoordinatesPieces();
             organizePiece();
