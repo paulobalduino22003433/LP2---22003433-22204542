@@ -282,20 +282,20 @@ public class GameManager {
       }
       if(peca.tipoDePeca.equals("0")){
           if (x1 > x0 + 1 || y1 > y0 + 1) {
-              isItvalid= false;
+              return false;
           }else{
-              isItvalid= true;
+              return true;
           }
       }
       if(peca.tipoDePeca.equals("1") || jokerMove==1){
           if(x1>x0+5 || y1>y0+5){
-              isItvalid= false;
+              return false;
           }else{
               Peca pecaParaMover = null;
               if (y1 >= 0 && y1 < cordenadasPecasArray.length && x1 >= 0 && x1 < cordenadasPecasArray[y1].length) {
                   if (tabuleiro.getIsBlackTurn()) {
                       for (Peca pecaWhite : whiteTeam) {
-                          if (peca.getIdentificador().equals(cordenadasPecasArray[y1][x1])) {
+                          if (pecaWhite.getIdentificador().equals(cordenadasPecasArray[y1][x1])) {
                               if(pecaWhite!=null){
                                   pecaParaMover = pecaWhite;
                                   break;
@@ -309,7 +309,7 @@ public class GameManager {
                   if (y1 >= 0 && y1 < cordenadasPecasArray.length) {
                       if (x1 >= 0 && x1 < cordenadasPecasArray[y1].length) {
                           for (Peca pecaBlack : blackTeam) {
-                              if (peca.getIdentificador().equals(cordenadasPecasArray[y1][x1])) {
+                              if (pecaBlack.getIdentificador().equals(cordenadasPecasArray[y1][x1])) {
                                   if (pecaBlack!=null){
                                       pecaParaMover = pecaBlack;
                                       break;
@@ -452,7 +452,7 @@ public class GameManager {
         String pecaAtual = cordenadasPecasArray[y0][x0];
         String movimentoParaPeca = cordenadasPecasArray[y1][x1];
 
-        boolean pecaCapturada = false;
+        boolean pecaCapturadaAgora = false;
 
         if (tabuleiro.getIsBlackTurn()) {
             for(Peca peca: blackTeam){
@@ -474,8 +474,9 @@ public class GameManager {
                     pecaBranca.x = "";
                     pecaBranca.y = "";
                     whiteTeam.remove(pecaBranca);
-                    pecaCapturada = true;
+                    pecaCapturadaAgora = true;
                     statusPreta.incCaptures();
+                    gameResults.jogadasSemCaptura=0;
                     break;
                 }
             }
@@ -499,19 +500,20 @@ public class GameManager {
                     pecaPreta.x = "";
                     pecaPreta.y = "";
                     blackTeam.remove(pecaPreta);
-                    pecaCapturada = true;
+                    pecaCapturadaAgora = true;
                     statusBranca.incCaptures();
+                    gameResults.jogadasSemCaptura=0;
                     break;
                 }
             }
             statusBranca.incValidMoves();
         }
 
-        if (pecaCapturada) {
+        if (pecaCapturadaAgora) {
             tabuleiro.umaPecaMorreu();
         }
 
-        if (tabuleiro.algumaPecaMorreu() && !pecaCapturada) {
+        if (tabuleiro.algumaPecaMorreu() && !pecaCapturadaAgora) {
             gameResults.incJogadasSemCaptura();
         }
 
@@ -541,21 +543,35 @@ public class GameManager {
 
 
     public boolean gameOver() {
-        if ((whiteTeam.size()==1 && blackTeam.size()==1) || (gameResults.getJogadasSemCaptura()>=10 && tabuleiro.algumaPecaMorreu())) {
+        boolean isThereWhiteKing=false;
+        boolean isThereBlackKing=false;
+
+            for (Peca pecaBlack:blackTeam){
+                if (pecaBlack.tipoDePeca.equals("0")){
+                    isThereBlackKing=true;
+                }
+            }
+
+            for (Peca pecaWhite:whiteTeam){
+                if (pecaWhite.tipoDePeca.equals("0")){
+                    isThereWhiteKing=true;
+                }
+            }
+
+            if (isThereBlackKing && !isThereWhiteKing){
+                gameResults.pretasGanham();
+                return true;
+            }
+
+            if (isThereWhiteKing && !isThereBlackKing){
+                gameResults.brancasGanham();
+                return true;
+            }
+
+        if ((isThereBlackKing && isThereWhiteKing && blackTeam.size()==1 && whiteTeam.size()==1) || (gameResults.getJogadasSemCaptura()>=10 && tabuleiro.algumaPecaMorreu())) {
             gameResults.jogoEmpatado();
             return true;
         }
-
-        if (whiteTeam.isEmpty()) {
-            gameResults.pretasGanham();
-            return true;
-        }
-
-        if (blackTeam.isEmpty()) {
-            gameResults.brancasGanham();
-            return true;
-        }
-
         return false;
     }
 
