@@ -609,9 +609,13 @@ public class GameManager {
             for (int i = 0; i < cordenadasPecasArray.length; i++) {
                 String linha = "";
                 for (int j = 0; j < cordenadasPecasArray[i].length; j++) {
-                    linha += cordenadasPecasArray[i][j];
-                    if (j < cordenadasPecasArray[i].length - 1) {
-                        linha += ":";
+                    if (i >= 0 && i < cordenadasPecasArray.length && j >= 0 && j < cordenadasPecasArray[i].length) {
+                        linha += cordenadasPecasArray[i][j];
+                        if (j < cordenadasPecasArray[i].length - 1) {
+                            linha += ":";
+                        }
+                    } else {
+                        linha += "";
                     }
                 }
                 writer.write(linha + "\n");
@@ -620,6 +624,7 @@ public class GameManager {
             e.printStackTrace();
         }
     }
+
 
     public void undo() {
     }
