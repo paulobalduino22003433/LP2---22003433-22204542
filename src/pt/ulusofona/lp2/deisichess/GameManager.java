@@ -24,6 +24,13 @@ public class GameManager {
 
     public void loadGame(File file) throws IOException, InvalidGameInputException {
         try {
+            pecas = new ArrayList<>();
+            blackTeam = new ArrayList<>();
+            whiteTeam = new ArrayList<>();
+            cordenadasPecasArray = null;
+            tabuleiro = new Tabuleiro(whiteTeam,blackTeam);
+
+
             ArrayList<String> cordenadasPecas = new ArrayList<>();
             BufferedReader fileReader = new BufferedReader(new FileReader(file));
             String linha;
@@ -51,6 +58,7 @@ public class GameManager {
                         continue;
                     }
                 }
+
 
                 if (cordenadasPecas.size()<tabuleiro.getTamanhoTabuleiro()){
                     cordenadasPecas.add(linha);
@@ -600,6 +608,7 @@ public class GameManager {
         placar.add(Integer.toString(statusBranca.getInvalidMoves()));
         return placar;
     }
+
 
 
     public void saveGame(File file) throws IOException {
