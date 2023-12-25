@@ -656,9 +656,30 @@ public class GameManager {
     public void undo() {
     }
 
+
     public List<Comparable> getHints(int x, int y) {
-        return null;
+        List<Comparable> hints = new ArrayList<>();
+
+        Peca currentPiece = Peca.getPecaByCoordinates(x, y, pecas);
+
+        if (currentPiece != null) {
+            for (int i = 0; i < cordenadasPecasArray.length; i++) {
+                for (int j = 0; j < cordenadasPecasArray[i].length; j++) {
+                    if (isMoveValid(currentPiece, x, y, i, j)) {
+                        Peca targetPiece = Peca.getPecaByCoordinates(i, j, pecas);
+                        int points = (targetPiece != null) ? targetPiece.getPontos() : 0;
+                        hints.add(new Hint(i, j, points));
+                    }
+                }
+            }
+        }
+
+        //Sort hints em ordem descendente
+        Collections.sort(hints, Collections.reverseOrder());
+
+        return hints;
     }
+
 
     public JPanel getAuthorsPanel() {
         return null;

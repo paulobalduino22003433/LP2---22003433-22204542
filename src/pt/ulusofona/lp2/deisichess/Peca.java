@@ -1,14 +1,16 @@
 package pt.ulusofona.lp2.deisichess;
 
+import java.util.List;
+
 public class Peca {
-    protected String identificador;
-    protected String tipoDePeca;
-    protected String equipa;
-    protected String alcunha;
-    protected String png;
-    protected String estado;
-    protected String x = "";
-    protected String y = "";
+    public String identificador;
+    public String tipoDePeca;
+    public String equipa;
+    public String alcunha;
+    public String png;
+    public String estado;
+    public String x = "";
+    public String y = "";
 
     public Peca(String identificador, String tipoDePeca, String equipa, String alcunha) {
         this.identificador = identificador;
@@ -71,6 +73,20 @@ public class Peca {
         estado = "capturado";
     }
 
+    public static Peca getPecaByCoordinates(int x, int y, List<Peca> pecas) {
+        for (Peca peca : pecas) {
+            if (peca.getX().equals(Integer.toString(x)) && peca.getY().equals(Integer.toString(y))) {
+                return peca;
+            }
+        }
+        return null;
+    }
+
+
+    public int getPontos() {
+        //Implementação default retorna 0, override nas subclasses
+        return 0;
+    }
     @Override
     public String toString() {
         return "";

@@ -1,7 +1,7 @@
 package pt.ulusofona.lp2.deisichess;
 
 public class PecaPadreVila extends Peca {
-
+    public int pontos = 3;
     public PecaPadreVila(String identificador, String tipoDePeca, String equipa, String alcunha) {
         super(identificador, tipoDePeca, equipa, alcunha);
     }
@@ -22,5 +22,11 @@ public class PecaPadreVila extends Peca {
         }
 
         return identificador + " | Padre da Vila | 3 | " + equipa + " | " + alcunha + " @ (" + x + ", " + y + ")";
+    }
+
+
+    @Override
+    public int getPontos() {
+        return pontos;
     }
 }

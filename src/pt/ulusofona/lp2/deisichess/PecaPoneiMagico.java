@@ -1,7 +1,7 @@
 package pt.ulusofona.lp2.deisichess;
 
 public class PecaPoneiMagico extends Peca {
-
+    public int pontos = 5;
     public PecaPoneiMagico(String identificador, String tipoDePeca, String equipa, String alcunha) {
         super(identificador, tipoDePeca, equipa, alcunha);
     }
@@ -22,5 +22,10 @@ public class PecaPoneiMagico extends Peca {
         }
 
         return identificador + " | Ponei Mágico | 5 | " + equipa + " | " + alcunha + " @ (" + x + ", " + y + ")";
+    }
+
+    @Override
+    public int getPontos() {
+        return pontos;
     }
 }

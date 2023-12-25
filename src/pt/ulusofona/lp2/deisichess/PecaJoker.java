@@ -1,7 +1,7 @@
 package pt.ulusofona.lp2.deisichess;
 
 public class PecaJoker extends Peca {
-
+    public int pontos = 4;
     public PecaJoker(String identificador, String tipoDePeca, String equipa, String alcunha) {
         super(identificador, tipoDePeca, equipa, alcunha);
     }
@@ -42,4 +42,8 @@ public class PecaJoker extends Peca {
         return identificador + " | Joker | 4 | " + equipa + " | " + alcunha + " @ (" + x + ", " + y + ")";
     }
 
+    @Override
+    public int getPontos() {
+        return pontos;
+    }
 }
