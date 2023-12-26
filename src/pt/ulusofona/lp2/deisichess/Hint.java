@@ -13,8 +13,10 @@ public class Hint implements Comparable<Hint> {
 
     @Override
     public int compareTo(Hint other) {
-        return Integer.compare(this.points, other.points);
+        // Reverte a ordem do sort dos pontos no toString para tar de maior pontos para menores pontos
+        return Integer.compare(other.points, this.points);
     }
+
 
     @Override
     public String toString() {
