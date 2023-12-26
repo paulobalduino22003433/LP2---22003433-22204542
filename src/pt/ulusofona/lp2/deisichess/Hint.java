@@ -20,6 +20,6 @@ public class Hint implements Comparable<Hint> {
 
     @Override
     public String toString() {
-        return "(" + x + "," + y + ")->" + points;
+        return "(" + x + "," + y + ") -> " + points;
     }
 }
