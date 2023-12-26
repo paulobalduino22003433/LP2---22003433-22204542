@@ -665,6 +665,11 @@ public class GameManager {
         if (currentPiece != null) {
             for (int i = 0; i < cordenadasPecasArray.length; i++) {
                 for (int j = 0; j < cordenadasPecasArray[i].length; j++) {
+                    if (i == x && j == y) {
+                        // Skip the iteration if it's the current position
+                        continue;
+                    }
+
                     if (isMoveValid(currentPiece, x, y, i, j)) {
                         Peca targetPiece = Peca.getPecaByCoordinates(i, j, pecas);
                         int points = (targetPiece != null) ? targetPiece.getPontos() : 0;
@@ -674,11 +679,12 @@ public class GameManager {
             }
         }
 
-        //Sort hints em ordem descendente
+        // Sort hints in descending order
         Collections.sort(hints, Collections.reverseOrder());
 
         return hints;
     }
+
 
 
     public JPanel getAuthorsPanel() {
