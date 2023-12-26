@@ -364,43 +364,43 @@ public class GameManager {
 
         if (peca.tipoDePeca.equals("4") || jokerMove == 4) {
             if (y1 == y0) { // Check if the movement is horizontal
+                boolean obstacleInPath = false;
+
                 if (percursoHorizontal > 0) {
-                    for (int x = x0 + 1; x <= x1; x++) { // Adjusted loop condition
+                    for (int x = x0 + 1; x < x1; x++) {
                         if (x >= 0 && x < cordenadasPecasArray.length) {
-                            if (!Objects.equals(cordenadasPecasArray[x][y0], "0")) {
-                                if (!Objects.equals(cordenadasPecasArray[y1][x1], "0")) {
-                                    if (x == x1) {
-                                        return true;
-                                    } else {
-                                        return false;
-                                    }
-                                }
-                                return false;
+                            if (!Objects.equals(cordenadasPecasArray[y0][x], "0")) {
+                                obstacleInPath = true;
+                                break;
                             }
                         }
                     }
-                } else if (percursoHorizontal < 0) {
-                    for (int x = x1 - 1; x >= x0; x--) {
+                }
+                if (percursoHorizontal < 0) {
+                    for (int x = x1 + 1; x < x0; x++) {
                         if (x >= 0 && x < cordenadasPecasArray.length) {
-                            if (!Objects.equals(cordenadasPecasArray[x][y0], "0")) {
-                                if (!Objects.equals(cordenadasPecasArray[y1][x1], "0")) {
-                                    if (x == x0) {
-                                        return true;
-                                    } else {
-                                        return false;
-                                    }
-                                }
-                                return false;
+                            if (!Objects.equals(cordenadasPecasArray[y0][x], "0")) {
+                                obstacleInPath = true;
+                                break;
                             }
                         }
                     }
                 }
 
-                return true;
+                if (obstacleInPath) {
+                    return false;
+                }
+
+                return true; // If no obstacles, the movement is valid
             } else {
                 return false;
             }
         }
+
+
+
+
+
 
 
 
