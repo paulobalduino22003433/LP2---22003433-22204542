@@ -17,6 +17,9 @@ public class GameManager {
    public static int nrTurno=0;
 
    public static int turnoJoker=1;
+   public boolean savedTurnoEquipa;
+
+   public static int savedNumeroTurno;
     public void setNrTurno(int newValue) {
         nrTurno = newValue;
     }
@@ -29,6 +32,8 @@ public class GameManager {
             whiteTeam = new ArrayList<>();
             cordenadasPecasArray = null;
             tabuleiro = new Tabuleiro(whiteTeam,blackTeam);
+            savedTurnoEquipa = false;
+            savedNumeroTurno= -1;
 
 
             ArrayList<String> cordenadasPecas = new ArrayList<>();
@@ -65,13 +70,23 @@ public class GameManager {
                     continue;
                 }
 
-                if (linha.equals("BlackTurn")){
-                    tabuleiro.isBlackTurn=true;
-                    tabuleiro.isWhiteTurn=false;
-                }else {
-                    tabuleiro.isWhiteTurn=true;
-                    tabuleiro.isBlackTurn=false;
+                if (!savedTurnoEquipa){
+                    if (linha.equals("BlackTurn")){
+                        tabuleiro.isBlackTurn=true;
+                        tabuleiro.isWhiteTurn=false;
+                    }else {
+                        tabuleiro.isWhiteTurn=true;
+                        tabuleiro.isBlackTurn=false;
+                    }
+                    savedTurnoEquipa =true;
+                    continue;
                 }
+                if (savedNumeroTurno==-1){
+                    nrTurno=Integer.parseInt(linha.trim());
+                    savedNumeroTurno=0;
+                    continue;
+                }
+                turnoJoker=Integer.parseInt(linha.trim());
             }
 
             int linhas = tabuleiro.getTamanhoTabuleiro();
@@ -663,10 +678,13 @@ public class GameManager {
             }
 
             if (tabuleiro.getIsBlackTurn()){
-                writer.write("BlackTurn");
+                writer.write("BlackTurn" + "\n" );
             }else{
-                writer.write("WhiteTurn");
+                writer.write("WhiteTurn"+ "\n");
             }
+
+            writer.write(nrTurno + "\n");
+            writer.write(turnoJoker + "\n");
         } catch (IOException e) {
             e.printStackTrace();
         }
