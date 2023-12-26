@@ -322,22 +322,23 @@ public class GameManager {
           return false;
       }
       if (peca.tipoDePeca.equals("1") || jokerMove == 1) {
+          boolean valid = false;
           // Checka se o movimento e horizontal
           if (percursoVertical == 0 && (percursoHorizontal >= -5 && percursoHorizontal <= 5)) {
-              isItvalid= true;
+              valid= true;
           }
 
           // Checka se o movimento e vertical
           if (percursoHorizontal == 0 && (percursoVertical >= -5 && percursoVertical <= 5)) {
-              isItvalid= true;
+              valid= true;
           }
 
           // Checka se o movimento e diagonal
           if ((percursoHorizontal == percursoVertical || percursoHorizontal == -percursoVertical) &&
                   (percursoHorizontal >= -5 && percursoHorizontal <= 5)) {
-              isItvalid= true;
+              valid= true;
           }
-          if (isItvalid){
+          if (valid){
               if (tabuleiro.isBlackTurn){
                   for (Peca pecaWhite:whiteTeam){
                       if (pecaWhite.getIdentificador().equals(cordenadasPecasArray[y1][x1])){
@@ -357,55 +358,55 @@ public class GameManager {
                       }
                   }
               }
-              return true;
-          }
-          isItvalid = false;
-  }
-
-      if(peca.tipoDePeca.equals("4") || jokerMove==4){
-          if (y1 != y0 || percursoVertical != 0) {
-              isItvalid = false; // Not a valid horizontal movement
-          } else {
-              int minX = Math.min(x0, x1);
-              int maxX = Math.max(x0, x1);
-
-              if (percursoHorizontal > 0) {
-                  for (int x = minX + 1; x <= maxX; x++) {
-                      if(x>=0 && x<cordenadasPecasArray.length){
-                          if (!Objects.equals(cordenadasPecasArray[y0][x], "0")) {
-                              if (!Objects.equals(cordenadasPecasArray[y1][x1], "0")) {
-                                  if(x==maxX){
-                                      return true;
-                                  }else{
-                                      return false;
-                                  }
-                              }else {
-                                  return false; // Obstacle in the path
-                              }
-                          }
-                      }
-                  }
-              } else if (percursoHorizontal < 0) {
-                  for (int x = maxX - 1; x >= minX; x--) {
-                      if(x>=0 && x<cordenadasPecasArray.length){
-                          if (!Objects.equals(cordenadasPecasArray[y0][x], "0")) {
-                              if (!Objects.equals(cordenadasPecasArray[y1][x1], "0")) {
-                                  if(x==minX){
-                                      return true;
-                                  }else {
-                                      return false;
-                                  }
-                              }
-                              return false; // Obstacle in the path
-                          }
-                      }
-                  }
-              }
-
-              isItvalid = true;
+              isItvalid= true;
           }
       }
+
+        if (peca.tipoDePeca.equals("4") || jokerMove == 4) {
+            if (y1 == y0) { // Check if the movement is horizontal
+                if (percursoHorizontal > 0) {
+                    for (int x = x0 + 1; x <= x1; x++) { // Adjusted loop condition
+                        if (x >= 0 && x < cordenadasPecasArray.length) {
+                            if (!Objects.equals(cordenadasPecasArray[x][y0], "0")) {
+                                if (!Objects.equals(cordenadasPecasArray[y1][x1], "0")) {
+                                    if (x == x1) {
+                                        return true;
+                                    } else {
+                                        return false;
+                                    }
+                                }
+                                return false;
+                            }
+                        }
+                    }
+                } else if (percursoHorizontal < 0) {
+                    for (int x = x1 - 1; x >= x0; x--) {
+                        if (x >= 0 && x < cordenadasPecasArray.length) {
+                            if (!Objects.equals(cordenadasPecasArray[x][y0], "0")) {
+                                if (!Objects.equals(cordenadasPecasArray[y1][x1], "0")) {
+                                    if (x == x0) {
+                                        return true;
+                                    } else {
+                                        return false;
+                                    }
+                                }
+                                return false;
+                            }
+                        }
+                    }
+                }
+
+                return true;
+            } else {
+                return false;
+            }
+        }
+
+
+
+
         return isItvalid;
+
     }
 
     public boolean move(int x0, int y0, int x1, int y1) {
@@ -703,6 +704,9 @@ public class GameManager {
                         }
                     }
                     if (skip){
+                        continue;
+                    }
+                      if (skip){
                         continue;
                     }
                     if (isMoveValid(currentPiece, x, y, i, j)) {
