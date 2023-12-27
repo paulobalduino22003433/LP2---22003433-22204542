@@ -15,13 +15,13 @@ public class GameManager {
     public StatsPeca statusBranca = new StatsPeca();
     public GameResults gameResults = new GameResults();
 
-   public static int nrTurno=0;
+    public static int nrTurno=0;
 
-   public static int turnoJoker=1;
-   public static int jokerMove = 1;
-   public static boolean savedTurnoEquipa;
+    public static int turnoJoker=1;
+    public static int jokerMove = 1;
+    public static boolean savedTurnoEquipa;
 
-   public static int savedNumeroTurno;
+    public static int savedNumeroTurno;
     public static void setNrTurno(int newValue) {
         nrTurno = newValue;
     }
@@ -117,6 +117,7 @@ public class GameManager {
             e.printStackTrace();
         }
     }
+
 
     public Peca colocarTipoDePeca(String identificador, String tipoDePeca, String equipa, String alcunha) {
         Peca pecaDeRetorno = switch (tipoDePeca) {
@@ -228,26 +229,92 @@ public class GameManager {
       boolean isItvalid = false;
       int percursoHorizontal = x1 - x0;
       int percursoVertical = y1 - y0;
+      int jokerMove = 1;
       if (peca.tipoDePeca.equals("7")) {
-          PecaJoker.setJokerTurn(turnoJoker);
+          switch (turnoJoker) {
+              case 1:
+                  jokerMove = 1;
+                  break;
+              case 2:
+                  jokerMove = 2;
+                  break;
+              case 3:
+                  jokerMove = 3;
+                  break;
+              case 4:
+                  jokerMove = 4;
+                  break;
+              case 5:
+                  jokerMove = 5;
+                  break;
+              case 6:
+                  jokerMove = 6;
+                  break;
+          }
       }
+
       if (peca.tipoDePeca.equals("6") || jokerMove == 6) {
           PecaHomer homer = new PecaHomer(peca.identificador, peca.tipoDePeca, peca.equipa, peca.alcunha);
           homer.x = peca.x.trim();
           homer.y = peca.y.trim();
-          homer.acordaOuDorme();
-          return homer.doesHomerMove(homer, percursoHorizontal, percursoVertical);
+
+          if (nrTurno % 3 == 0) {
+              homer.status = "a dormir";
+          } else {
+              homer.status ="acordado";
+          }
+
+          if (homer.isSleeping()) {
+              return false;
+          }
+
+          // Checa se o movimento é diagonal e só anda uma casa
+          if ((percursoHorizontal == 1 || percursoHorizontal == -1) && (percursoVertical == 1 || percursoVertical == -1)) {
+              return true;
+          } else {
+              return false;
+          }
       }
 
       if (peca.tipoDePeca.equals("2") || jokerMove == 2) {
-          PecaPoneiMagico ponei = new PecaPoneiMagico(peca.identificador,peca.tipoDePeca,peca.equipa,peca.alcunha);
-          return ponei.doesPoneiMove(x0,y0,x1,y1);
+          if (Math.abs(percursoHorizontal) == 2 && Math.abs(percursoVertical) == 2) {
+              return true;
+          } else {
+              return false;
+          }
       }
 
 
       if (peca.tipoDePeca.equals("5") || jokerMove == 5) {
-          PecaTorreV torreVertical = new PecaTorreV(peca.identificador,peca.tipoDePeca,peca.equipa,peca.alcunha);
-          return torreVertical.doesTorreVerticalMove(x0,y0,x1,y1);
+          boolean obstacleInPath = false;
+          if (x1 == x0) { // Check if the movement is vertical
+              if (percursoVertical > 0) {
+                  for (int y = y0 + 1; y < y1; y++) {
+                      if (y >= 0 && y < GameManager.cordenadasPecasArray.length) {
+                          if (!Objects.equals(GameManager.cordenadasPecasArray[y][x0], "0")) {
+                              obstacleInPath=true;
+                              break;
+                          }
+                      }
+                  }
+              }
+              if (percursoVertical < 0) {
+                  for (int y = y1 + 1; y < y0; y++) {
+                      if (y >= 0 && y < GameManager.cordenadasPecasArray.length) {
+                          if (!Objects.equals(GameManager.cordenadasPecasArray[y][x0], "0")) {
+                              obstacleInPath=true;
+                              break;
+                          }
+                      }
+                  }
+              }
+              if (obstacleInPath) {
+                  return false;
+              }
+              return true;
+          } else {
+              return false;
+          }
       }
 
       if (peca.tipoDePeca.equals("3") || jokerMove == 3) {
@@ -353,7 +420,17 @@ public class GameManager {
                 return false;
             }
         }
+
+
+
+
+
+
+
+
+
         return isItvalid;
+
     }
 
     public boolean move(int x0, int y0, int x1, int y1) {

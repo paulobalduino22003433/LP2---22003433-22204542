@@ -31,7 +31,7 @@ public class PecaHomer extends Peca {
     public String toString() {
         acordaOuDorme();
         if (estado.equals("em jogo")){
-            if (status.equals("a dormir")){
+            if (status.equals("a dormir") || GameManager.nrTurno==0){
                 return "Doh! zzzzzz";
             } else{
                 status="acordado";
@@ -57,25 +57,6 @@ public class PecaHomer extends Peca {
             return true;
         }
         return false;
-    }
-
-    public boolean doesHomerMove(PecaHomer homer, int percursoHorizontal, int percursoVertical) {
-        homer.acordaOuDorme();
-
-        if (GameManager.nrTurno == 0) {
-            homer.status = "a dormir";
-        }
-
-        if (homer.isSleeping()) {
-            return false;
-        }
-
-        // Checa se o movimento é diagonal e só anda uma casa
-        if ((percursoHorizontal == 1 || percursoHorizontal == -1) && (percursoVertical == 1 || percursoVertical == -1)) {
-            return true;
-        } else {
-            return false;
-        }
     }
 
 

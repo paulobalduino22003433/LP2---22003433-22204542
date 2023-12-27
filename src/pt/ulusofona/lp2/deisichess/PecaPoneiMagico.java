@@ -28,16 +28,4 @@ public class PecaPoneiMagico extends Peca {
     public int getPontos() {
         return pontos;
     }
-
-    public boolean doesPoneiMove(int x0, int y0, int x1, int y1) {
-        int percursoHorizontal = x1 - x0;
-        int percursoVertical = y1 - y0;
-
-        if ((percursoHorizontal == 2 || percursoHorizontal == -2) && (percursoVertical == 2 || percursoVertical == -2)) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
 }
