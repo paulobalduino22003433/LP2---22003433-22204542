@@ -17,7 +17,7 @@ public class PecaHomer extends Peca {
         }
     }
     public String acordaOuDorme() {
-        if (GameManager.nrTurno==0||GameManager.nrTurno % 3 == 0) {
+        if (GameManager.nrTurno % 3 == 0) {
             status = "a dormir";
         } else {
             status = "acordado";
@@ -31,7 +31,7 @@ public class PecaHomer extends Peca {
     public String toString() {
         acordaOuDorme();
         if (estado.equals("em jogo")){
-            if (status.equals("a dormir") || GameManager.nrTurno==0){
+            if (status.equals("a dormir")){
                 return "Doh! zzzzzz";
             } else{
                 status="acordado";
@@ -59,22 +59,25 @@ public class PecaHomer extends Peca {
         return false;
     }
 
-    public boolean doesHomerMove(PecaHomer homer,int percursoHorizontal,int percursoVertical){
+    public boolean doesHomerMove(PecaHomer homer, int percursoHorizontal, int percursoVertical) {
         homer.acordaOuDorme();
-        if(GameManager.nrTurno==0){
-            homer.status="a dormir";
+
+        if (GameManager.nrTurno == 0) {
+            homer.status = "a dormir";
         }
 
         if (homer.isSleeping()) {
             return false;
         }
-            // Checa se o movimento é diagonal
-            if (Math.abs(percursoHorizontal) == 1 && Math.abs(percursoVertical) == 1) {
-                return true;
-            } else {
-                return false;
-            }
+
+        // Checa se o movimento é diagonal e só anda uma casa
+        if ((percursoHorizontal == 1 || percursoHorizontal == -1) && (percursoVertical == 1 || percursoVertical == -1)) {
+            return true;
+        } else {
+            return false;
+        }
     }
+
 
     @Override
     public int getPontos() {

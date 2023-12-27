@@ -3,10 +3,11 @@ package pt.ulusofona.lp2.deisichess;
 import javax.swing.*;
 import java.io.*;
 import java.util.*;
+import pt.ulusofona.lp2.deisichess.PecaJoker;
 
 public class GameManager {
     public ArrayList<Peca> pecas = new ArrayList<>();
-    public String[][] cordenadasPecasArray;
+    public static String[][] cordenadasPecasArray;
     public ArrayList<Peca> blackTeam = new ArrayList<>();
     public ArrayList<Peca> whiteTeam = new ArrayList<>();
     public Tabuleiro tabuleiro = new Tabuleiro(whiteTeam, blackTeam);
@@ -17,10 +18,11 @@ public class GameManager {
    public static int nrTurno=0;
 
    public static int turnoJoker=1;
-   public boolean savedTurnoEquipa;
+   public static int jokerMove = 1;
+   public static boolean savedTurnoEquipa;
 
    public static int savedNumeroTurno;
-    public void setNrTurno(int newValue) {
+    public static void setNrTurno(int newValue) {
         nrTurno = newValue;
     }
 
@@ -34,6 +36,8 @@ public class GameManager {
             tabuleiro = new Tabuleiro(whiteTeam,blackTeam);
             savedTurnoEquipa = false;
             savedNumeroTurno= -1;
+            nrTurno=0;
+            turnoJoker=1;
 
 
             ArrayList<String> cordenadasPecas = new ArrayList<>();
@@ -224,30 +228,9 @@ public class GameManager {
       boolean isItvalid = false;
       int percursoHorizontal = x1 - x0;
       int percursoVertical = y1 - y0;
-      int jokerMove = 1;
       if (peca.tipoDePeca.equals("7")) {
-          switch (turnoJoker) {
-              case 1:
-                  jokerMove = 1;
-                  break;
-              case 2:
-                  jokerMove = 2;
-                  break;
-              case 3:
-                  jokerMove = 3;
-                  break;
-              case 4:
-                  jokerMove = 4;
-                  break;
-              case 5:
-                  jokerMove = 5;
-                  break;
-              case 6:
-                  jokerMove = 6;
-                  break;
-          }
+          PecaJoker.setJokerTurn(turnoJoker);
       }
-
       if (peca.tipoDePeca.equals("6") || jokerMove == 6) {
           PecaHomer homer = new PecaHomer(peca.identificador, peca.tipoDePeca, peca.equipa, peca.alcunha);
           homer.x = peca.x.trim();
@@ -257,55 +240,14 @@ public class GameManager {
       }
 
       if (peca.tipoDePeca.equals("2") || jokerMove == 2) {
-          if (Math.abs(percursoHorizontal) == 2 && Math.abs(percursoVertical) == 2) {
-              return true;
-          } else {
-              return false;
-          }
+          PecaPoneiMagico ponei = new PecaPoneiMagico(peca.identificador,peca.tipoDePeca,peca.equipa,peca.alcunha);
+          return ponei.doesPoneiMove(x0,y0,x1,y1);
       }
 
 
       if (peca.tipoDePeca.equals("5") || jokerMove == 5) {
-          if (x1 == x0) { // Checka se o movimento é vertical
-              int minY = Math.min(y0, y1);
-              int maxY = Math.max(y0, y1);
-
-              if (percursoVertical > 0) {
-                  for (int y = minY + 1; y <= maxY; y++) {
-                      if (y >= 0 && y < cordenadasPecasArray.length) {
-                          if (!Objects.equals(cordenadasPecasArray[y][x0], "0")) {
-                              if (!Objects.equals(cordenadasPecasArray[y1][x1], "0")) {
-                                  if (y == maxY) {
-                                      return true;
-                                  } else {
-                                      return false;
-                                  }
-                              }
-                              return false;
-                          }
-                      }
-                  }
-              } else if (percursoVertical < 0) {
-                  for (int y = maxY - 1; y >= minY; y--) {
-                      if (y >= 0 && y < cordenadasPecasArray.length) {
-                          if (!Objects.equals(cordenadasPecasArray[y][x0], "0")) {
-                              if (!Objects.equals(cordenadasPecasArray[y1][x1], "0")) {
-                                  if (y == minY) {
-                                      return true;
-                                  } else {
-                                      return false;
-                                  }
-                              }
-                              return false;
-                          }
-                      }
-                  }
-              }
-
-              return true;
-          } else {
-              return false;
-          }
+          PecaTorreV torreVertical = new PecaTorreV(peca.identificador,peca.tipoDePeca,peca.equipa,peca.alcunha);
+          return torreVertical.doesTorreVerticalMove(x0,y0,x1,y1);
       }
 
       if (peca.tipoDePeca.equals("3") || jokerMove == 3) {
@@ -411,17 +353,7 @@ public class GameManager {
                 return false;
             }
         }
-
-
-
-
-
-
-
-
-
         return isItvalid;
-
     }
 
     public boolean move(int x0, int y0, int x1, int y1) {
