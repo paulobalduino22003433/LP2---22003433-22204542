@@ -38,8 +38,8 @@ public class PecaJoker extends Peca {
                     return identificador + " | Joker/Homer Simpson | 4 | " + equipa + " | " + alcunha + " @ (" + x + ", " + y + ")";
                 }
 
+            default: return identificador + " | Joker | 4 | " + equipa + " | " + alcunha + " @ (" + x + ", " + y + ")";
         }
-        return identificador + " | Joker | 4 | " + equipa + " | " + alcunha + " @ (" + x + ", " + y + ")";
     }
 
     @Override

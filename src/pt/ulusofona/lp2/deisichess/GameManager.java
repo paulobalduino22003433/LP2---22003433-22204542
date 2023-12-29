@@ -370,7 +370,7 @@ public class GameManager {
                   if (tabuleiro.isBlackTurn){
                       for (Peca pecaWhite:whiteTeam){
                           if (pecaWhite.getIdentificador().equals(cordenadasPecasArray[y1][x1])){
-                              if (pecaWhite.tipoDePeca.equals("1")){
+                              if (pecaWhite.tipoDePeca.equals("1") || pecaWhite.toString().contains("Joker/Rainha")){
                                   return false;
                               }
                           }
@@ -383,7 +383,7 @@ public class GameManager {
                   if (tabuleiro.isWhiteTurn){
                       for (Peca pecaBlack:blackTeam){
                           if (pecaBlack.getIdentificador().equals(cordenadasPecasArray[y1][x1])){
-                              if (pecaBlack.tipoDePeca.equals("1")){
+                              if (pecaBlack.tipoDePeca.equals("1") || pecaBlack.toString().contains("Joker/Rainha")){
                                   return false;
                               }
                           }
