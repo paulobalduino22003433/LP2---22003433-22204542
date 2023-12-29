@@ -27,7 +27,7 @@ public class GameManager {
     }
 
 
-    public void loadGame(File file) throws IOException, InvalidGameInputException,FileNotFoundException {
+    public void loadGame(File file) throws IOException, InvalidGameInputException {
         try {
             pecas = new ArrayList<>();
             blackTeam = new ArrayList<>();
@@ -113,7 +113,14 @@ public class GameManager {
             organizePiece();
             removeCapturedPieces();
             fileReader.close();
-        } catch (IOException e) {
+        }catch (FileNotFoundException e){
+            String errorMessage = "File not found";
+            System.err.println(errorMessage);
+            e.printStackTrace();
+            throw new FileNotFoundException(errorMessage);
+        }
+
+        catch (IOException e) {
             e.printStackTrace();
         }
     }
