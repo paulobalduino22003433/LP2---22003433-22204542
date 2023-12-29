@@ -27,11 +27,8 @@ public class GameManager {
     }
 
 
-    public void loadGame(File file) throws IOException, InvalidGameInputException {
+    public void loadGame(File file) throws IOException, InvalidGameInputException,FileNotFoundException {
         try {
-            if (!file.exists()) {
-                throw new FileNotFoundException("Ficheiro não existe: " + file.getPath());
-            }
             pecas = new ArrayList<>();
             blackTeam = new ArrayList<>();
             whiteTeam = new ArrayList<>();
