@@ -222,7 +222,10 @@ public class GameManager {
 
 
     public String getPieceInfoAsString(int ID) {
-        return pecas.get(ID - 1).toString();
+        if (ID>=0 && ID<=pecas.size()){
+            return pecas.get(ID - 1).toString();
+        }
+        return "";
     }
 
     public boolean isMoveValid(Peca peca,int x0,int y0, int x1, int y1) {
@@ -363,24 +366,31 @@ public class GameManager {
               valid= true;
           }
           if (valid){
-              if (tabuleiro.isBlackTurn){
-                  for (Peca pecaWhite:whiteTeam){
-                      if (pecaWhite.getIdentificador().equals(cordenadasPecasArray[y1][x1])){
-                          if (pecaWhite.tipoDePeca.equals("1")){
-                              return false;
+              if (x1 >= 0 && x1 < cordenadasPecasArray[y0].length && y1 >= 0 && y1 < cordenadasPecasArray.length) {
+                  if (tabuleiro.isBlackTurn){
+                      for (Peca pecaWhite:whiteTeam){
+                          if (pecaWhite.getIdentificador().equals(cordenadasPecasArray[y1][x1])){
+                              if (pecaWhite.tipoDePeca.equals("1")){
+                                  return false;
+                              }
                           }
                       }
                   }
+              }else{
+                  return false;
               }
-
-              if (tabuleiro.isWhiteTurn){
-                  for (Peca pecaBlack:blackTeam){
-                      if (pecaBlack.getIdentificador().equals(cordenadasPecasArray[y1][x1])){
-                          if (pecaBlack.tipoDePeca.equals("1")){
-                              return false;
+              if (y1 >= 0 && y1 < cordenadasPecasArray.length && x1 >= 0 && x1 < cordenadasPecasArray[y1].length) {
+                  if (tabuleiro.isWhiteTurn){
+                      for (Peca pecaBlack:blackTeam){
+                          if (pecaBlack.getIdentificador().equals(cordenadasPecasArray[y1][x1])){
+                              if (pecaBlack.tipoDePeca.equals("1")){
+                                  return false;
+                              }
                           }
                       }
                   }
+              }else{
+                  return false;
               }
               isItvalid= true;
           }
