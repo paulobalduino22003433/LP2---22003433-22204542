@@ -72,22 +72,13 @@ public class GameManager {
                         tabuleiro.incLinhaDoFicheiro();
                         continue;
                     } else if (partes.length < 4) {
-                       int linhaDoFicheiro = tabuleiro.getLinhaDoFicheiro();
-                        String problemDescription = "Ocorreu um erro a ler o ficheiro,na linha "+linhaDoFicheiro+" com o seguinte problema: DADOS A MENOS (Esperava: 4 ; Obtive " + partes.length + ")";
-                        invalidGameInputException = new InvalidGameInputException(linhaDoFicheiro,problemDescription);
                         invalidGameInputException.dadosAMenos= partes.length;
-                        invalidGameInputException.lineWithError=tabuleiro.getLinhaDoFicheiro();
                         throw invalidGameInputException;
                     } else if (partes.length > 4) {
-                        int linhaDoFicheiro = tabuleiro.getLinhaDoFicheiro();
-                        String problemDescription = "Ocorreu um erro a ler o ficheiro,na linha "+linhaDoFicheiro+" com o seguinte problema: DADOS A MAIS (Esperava: 4 ; Obtive " + partes.length + ")";
-                        invalidGameInputException = new InvalidGameInputException(linhaDoFicheiro,problemDescription);
                         invalidGameInputException.dadosAMais = partes.length;
-                        invalidGameInputException.lineWithError=tabuleiro.getLinhaDoFicheiro();
                         throw invalidGameInputException;
                     }
                 }
-
 
                 if (cordenadasPecas.size()<tabuleiro.getTamanhoTabuleiro()){
                     cordenadasPecas.add(linha);
@@ -145,13 +136,13 @@ public class GameManager {
         catch (InvalidGameInputException e){
             if (invalidGameInputException.dadosAMenos!=0){
                 int linhaDoFicheiro = tabuleiro.getLinhaDoFicheiro();
-                String problemDescription = "Ocorreu um erro a ler o ficheiro,na linha "+linhaDoFicheiro+" com o seguinte problema: DADOS A MENOS (Esperava: 4 ; Obtive " + invalidGameInputException.dadosAMenos + ")";
+                String problemDescription = "DADOS A MENOS (Esperava: 4 ; Obtive: " + invalidGameInputException.dadosAMenos + ")";
                 InvalidGameInputException invalidGameInputException = new InvalidGameInputException(linhaDoFicheiro,problemDescription);
                 System.err.println(problemDescription);
                 throw invalidGameInputException;
             }
             int linhaDoFicheiro = tabuleiro.getLinhaDoFicheiro();
-            String problemDescription = "Ocorreu um erro a ler o ficheiro,na linha "+linhaDoFicheiro+" com o seguinte problema: DADOS A MAIS (Esperava: 4 ; Obtive " + invalidGameInputException.dadosAMais + ")";
+            String problemDescription = "DADOS A MAIS (Esperava: 4 ; Obtive: " + invalidGameInputException.dadosAMais + ")";
             InvalidGameInputException invalidGameInputException = new InvalidGameInputException(linhaDoFicheiro,problemDescription);
             System.err.println(problemDescription);
             throw invalidGameInputException;
