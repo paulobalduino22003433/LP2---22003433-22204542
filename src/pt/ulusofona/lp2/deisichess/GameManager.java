@@ -24,7 +24,7 @@ public class GameManager {
     public static int savedNumeroTurno;
 
 
-    InvalidGameInputException invalidGameInputException = new InvalidGameInputException("","");
+    InvalidGameInputException invalidGameInputException = new InvalidGameInputException(0,"");
     public static void setNrTurno(int newValue) {
         nrTurno = newValue;
     }
@@ -41,7 +41,7 @@ public class GameManager {
             savedNumeroTurno= -1;
             nrTurno=0;
             turnoJoker=1;
-            invalidGameInputException = new InvalidGameInputException("","");
+            invalidGameInputException = new InvalidGameInputException(0,"");
 
 
             ArrayList<String> cordenadasPecas = new ArrayList<>();
@@ -72,18 +72,18 @@ public class GameManager {
                         tabuleiro.incLinhaDoFicheiro();
                         continue;
                     } else if (partes.length < 4) {
-                        String linhaDoFicheiro = Integer.toString(tabuleiro.getLinhaDoFicheiro());
+                       int linhaDoFicheiro = tabuleiro.getLinhaDoFicheiro();
                         String problemDescription = "Ocorreu um erro a ler o ficheiro,na linha "+linhaDoFicheiro+" com o seguinte problema: DADOS A MENOS (Esperava: 4 ; Obtive " + partes.length + ")";
                         invalidGameInputException = new InvalidGameInputException(linhaDoFicheiro,problemDescription);
                         invalidGameInputException.dadosAMenos= partes.length;
-                        invalidGameInputException.lineWithError=Integer.toString(tabuleiro.getLinhaDoFicheiro());
+                        invalidGameInputException.lineWithError=tabuleiro.getLinhaDoFicheiro();
                         throw invalidGameInputException;
                     } else if (partes.length > 4) {
-                        String linhaDoFicheiro = Integer.toString(tabuleiro.getLinhaDoFicheiro());
+                        int linhaDoFicheiro = tabuleiro.getLinhaDoFicheiro();
                         String problemDescription = "Ocorreu um erro a ler o ficheiro,na linha "+linhaDoFicheiro+" com o seguinte problema: DADOS A MAIS (Esperava: 4 ; Obtive " + partes.length + ")";
                         invalidGameInputException = new InvalidGameInputException(linhaDoFicheiro,problemDescription);
                         invalidGameInputException.dadosAMais = partes.length;
-                        invalidGameInputException.lineWithError=Integer.toString(tabuleiro.getLinhaDoFicheiro());
+                        invalidGameInputException.lineWithError=tabuleiro.getLinhaDoFicheiro();
                         throw invalidGameInputException;
                     }
                 }
@@ -144,13 +144,13 @@ public class GameManager {
         }
         catch (InvalidGameInputException e){
             if (invalidGameInputException.dadosAMenos!=0){
-                String linhaDoFicheiro = Integer.toString(tabuleiro.getLinhaDoFicheiro());
+                int linhaDoFicheiro = tabuleiro.getLinhaDoFicheiro();
                 String problemDescription = "Ocorreu um erro a ler o ficheiro,na linha "+linhaDoFicheiro+" com o seguinte problema: DADOS A MENOS (Esperava: 4 ; Obtive " + invalidGameInputException.dadosAMenos + ")";
                 InvalidGameInputException invalidGameInputException = new InvalidGameInputException(linhaDoFicheiro,problemDescription);
                 System.err.println(problemDescription);
                 throw invalidGameInputException;
             }
-            String linhaDoFicheiro = Integer.toString(tabuleiro.getLinhaDoFicheiro());
+            int linhaDoFicheiro = tabuleiro.getLinhaDoFicheiro();
             String problemDescription = "Ocorreu um erro a ler o ficheiro,na linha "+linhaDoFicheiro+" com o seguinte problema: DADOS A MAIS (Esperava: 4 ; Obtive " + invalidGameInputException.dadosAMais + ")";
             InvalidGameInputException invalidGameInputException = new InvalidGameInputException(linhaDoFicheiro,problemDescription);
             System.err.println(problemDescription);

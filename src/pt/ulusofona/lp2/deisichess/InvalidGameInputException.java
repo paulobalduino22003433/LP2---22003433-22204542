@@ -2,17 +2,17 @@ package pt.ulusofona.lp2.deisichess;
 
 public class InvalidGameInputException extends Exception {
 
-    public String lineWithError;
+    public int lineWithError;
     public String problemDescription;
 
     public int dadosAMenos=0,dadosAMais=0;
 
-    public InvalidGameInputException(String lineWithError, String problemDescription) {
+    public InvalidGameInputException(int lineWithError, String problemDescription) {
         this.lineWithError = lineWithError;
         this.problemDescription = problemDescription;
     }
 
-    public String getLineWithError() {
+    public int getLineWithError() {
         return lineWithError;
     }
 
