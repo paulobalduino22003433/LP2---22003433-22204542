@@ -3,7 +3,7 @@ package pt.ulusofona.lp2.deisichess;
 import java.util.ArrayList;
 
 public class Tabuleiro {
-    public int tamanhoTabuleiro = -1, numPecaTotal = -1;
+    public int tamanhoTabuleiro = -1, numPecaTotal = -1, linhaDoFicheiro=1;
     public boolean isBlackTurn = true, isWhiteTurn = false, houvePecaMorta = false;
     public ArrayList<Peca> whiteTeam;
     public ArrayList<Peca> blackTeam;
@@ -13,6 +13,13 @@ public class Tabuleiro {
         this.blackTeam = blackTeam;
     }
 
+    public void incLinhaDoFicheiro(){
+        linhaDoFicheiro++;
+    }
+
+    public int getLinhaDoFicheiro(){
+        return linhaDoFicheiro;
+    }
     public void setTamanhoTabuleiro(int tamanhoTabuleiro) {
         this.tamanhoTabuleiro = tamanhoTabuleiro;
     }
