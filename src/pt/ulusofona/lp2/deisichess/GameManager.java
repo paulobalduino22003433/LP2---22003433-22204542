@@ -57,7 +57,6 @@ public class GameManager {
                     continue;
                 }
 
-
                 if (pecasRestantes < tabuleiro.getNumPecaTotal()) {
                     String[] partes = linha.split(":");
                     if (partes.length==4){
@@ -65,6 +64,10 @@ public class GameManager {
                         pecas.add(peca);
                         pecasRestantes++;
                         continue;
+                    } else if (partes.length < 4) {
+                        throw new InvalidGameInputException("Numero de dados insuficientes na linha.", linha, "Esperava 4 partes, mas encontrou " + partes.length);
+                    } else if (partes.length > 4) {
+                        throw new InvalidGameInputException("Demasiados dados na linha.", linha, "Esperava 4 partes, mas encontrou " + partes.length);
                     }
                 }
 
