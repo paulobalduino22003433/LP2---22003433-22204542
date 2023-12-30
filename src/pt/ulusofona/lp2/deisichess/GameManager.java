@@ -65,9 +65,9 @@ public class GameManager {
                         pecasRestantes++;
                         continue;
                     } else if (partes.length < 4) {
-                        throw new InvalidGameInputException("Numero de dados insuficientes na linha.", linha, "Esperava 4 partes, mas encontrou " + partes.length);
+                        throw new InvalidGameInputException(linha);
                     } else if (partes.length > 4) {
-                        throw new InvalidGameInputException("Demasiados dados na linha.", linha, "Esperava 4 partes, mas encontrou " + partes.length);
+                        throw new InvalidGameInputException(linha);
                     }
                 }
 
@@ -122,7 +122,9 @@ public class GameManager {
             e.printStackTrace();
             throw new FileNotFoundException(errorMessage);
         }
-
+        catch (InvalidGameInputException e){
+            throw  new InvalidGameInputException(e.getLineWithError());
+        }
         catch (IOException e) {
             e.printStackTrace();
         }
