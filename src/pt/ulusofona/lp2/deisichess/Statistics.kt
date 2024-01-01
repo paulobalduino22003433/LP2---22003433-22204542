@@ -21,8 +21,28 @@ package pt.ulusofona.lp2.deisichess
    }
 
     public fun calculateTop5Capturas(gameManager: GameManager): List<String> {
+        val capturedPiecesMap = mutableMapOf<String, Pair<Int, String>>()
 
-        return listOf("Result for TOP_5_CAPTURAS")
+        for (captura in gameManager.top5Capturas){
+            val alcunha = captura.getPecaQueCaptura().getAlcunha()
+            val nrCapturas= captura.getNrCapturas()
+            val teamColor = getTeamColor(captura.pecaQueCaptura)
+
+            if (capturedPiecesMap.containsKey(alcunha)){
+                val currentNrCapturas = capturedPiecesMap[alcunha]!!.first
+                capturedPiecesMap[alcunha]=Pair(currentNrCapturas+1,teamColor)
+            }else{
+                capturedPiecesMap[alcunha] =Pair(nrCapturas,teamColor)
+            }
+        }
+
+        val sortedEntries = capturedPiecesMap.entries.sortedByDescending { it.value.first }
+        val top5Strings = sortedEntries.take(5).map { entry ->
+            val alcunha = entry.key
+            val (nrCapturas, teamColor) = entry.value
+            "$alcunha ($teamColor) fez $nrCapturas capturas"
+        }
+        return top5Strings
     }
 
     fun calculateTop5Pontos(gameManager: GameManager): List<String> {

@@ -14,22 +14,15 @@ public class GameManager {
     public StatsPeca statusPreta = new StatsPeca();
     public StatsPeca statusBranca = new StatsPeca();
     public GameResults gameResults = new GameResults();
-
     public static int nrTurno=0;
 
     public static int turnoJoker=1;
     public static int jokerMove = 1;
     public static boolean savedTurnoEquipa;
-
     public static int savedNumeroTurno;
-
     public ArrayList<Capturas> capturas = new ArrayList<>();
-
-
+    public ArrayList<Capturas> top5Capturas = new ArrayList<>();
     InvalidGameInputException invalidGameInputException = new InvalidGameInputException(0,"");
-    public static void setNrTurno(int newValue) {
-        nrTurno = newValue;
-    }
 
 
     public void loadGame(File file) throws IOException, InvalidGameInputException {
@@ -45,6 +38,7 @@ public class GameManager {
             turnoJoker=1;
             invalidGameInputException = new InvalidGameInputException(0,"");
             capturas=new ArrayList<>();
+            top5Capturas=new ArrayList<>();
 
 
             ArrayList<String> cordenadasPecas = new ArrayList<>();
@@ -129,6 +123,7 @@ public class GameManager {
             setCoordinatesPieces();
             organizePiece();
             removeCapturedPieces();
+            fillTop5Capturas();
             fileReader.close();
         }catch (FileNotFoundException e){
             String errorMessage = "File not found";
@@ -182,6 +177,17 @@ public class GameManager {
                     }
                 }
             }
+        }
+    }
+
+    public void fillTop5Capturas(){
+        for (Peca pecaWhite:whiteTeam){
+            Capturas capturaWhite = new Capturas(pecaWhite,0);
+            top5Capturas.add(capturaWhite);
+        }
+        for (Peca pecaBlack:blackTeam){
+            Capturas capturaBlack = new Capturas(pecaBlack,0);
+            top5Capturas.add(capturaBlack);
         }
     }
 
@@ -597,11 +603,23 @@ public class GameManager {
                     break;
                 }
             }
+            boolean isInTop5=false;
             for (Peca pecaBranca : whiteTeam) {
                 if (pecaBranca.getIdentificador().equals(movimentoParaPeca)) {
                     if (pecaQueCaptura!=null && pecaCapturada != null){
                         Capturas captura = new Capturas(pecaQueCaptura,pecaCapturada);
                         capturas.add(captura);
+                        for (Capturas capturas1:top5Capturas){
+                            if (capturas1.pecaQueCaptura.getIdentificador().equals(pecaAtual)){
+                                capturas1.incNrCapturas();
+                                isInTop5=true;
+                                break;
+                            }
+                        }
+                        if (!isInTop5){
+                           Capturas captura1 = new Capturas(pecaQueCaptura,1);
+                           top5Capturas.add(captura1);
+                        }
                     }
                     pecaBranca.estadoPecaCapturado();
                     pecaBranca.x = "";
@@ -642,11 +660,24 @@ public class GameManager {
                     break;
                 }
             }
+
+            boolean isInTop5=false;
             for (Peca pecaPreta : blackTeam) {
                 if (pecaPreta.getIdentificador().equals(movimentoParaPeca)) {
                     if (pecaQueCaptura!=null && pecaCapturada != null){
                         Capturas captura = new Capturas(pecaQueCaptura,pecaCapturada);
                         capturas.add(captura);
+                        for (Capturas capturas1:top5Capturas){
+                            if (capturas1.pecaQueCaptura.getIdentificador().equals(pecaAtual)){
+                                capturas1.incNrCapturas();
+                                isInTop5=true;
+                                break;
+                            }
+                        }
+                        if (!isInTop5){
+                            Capturas captura1 = new Capturas(pecaQueCaptura,1);
+                            top5Capturas.add(captura1);
+                        }
                     }
                     pecaPreta.estadoPecaCapturado();
                     pecaPreta.x = "";
