@@ -84,7 +84,26 @@ package pt.ulusofona.lp2.deisichess
 
 
 public fun calculatePecasMais5Capturas(gameManager: GameManager): List<String> {
-        return listOf("Result for PECAS_MAIS_5_CAPTURAS")
+    val capturedPiecesMap = mutableMapOf<String, Pair<Int, String>>()
+
+    for (captura in gameManager.top5Capturas) {
+        val alcunha = captura.getPecaQueCaptura().getAlcunha()
+        val nrCapturas = captura.getNrCapturas()
+        val teamColor = getTeamColor(captura.pecaQueCaptura)
+
+        if (nrCapturas>5) {
+            capturedPiecesMap[alcunha] = Pair(nrCapturas, teamColor)
+        }
+    }
+
+
+    val sortedEntries = capturedPiecesMap.entries.sortedByDescending { it.value.first }
+    val top5Strings = sortedEntries.take(5).map { entry ->
+        val alcunha = entry.key
+        val (nrCapturas, teamColor) = entry.value
+        "$teamColor:$alcunha:$nrCapturas"
+    }
+    return top5Strings
     }
 
     public fun calculatePecasMaisBaralhadas(gameManager: GameManager): List<String> {
