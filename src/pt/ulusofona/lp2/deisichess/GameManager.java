@@ -17,9 +17,8 @@ public class GameManager {
     public static int nrTurno=0;
 
     public static int turnoJoker=1;
-    public static int jokerMove = 1;
-    public static boolean savedTurnoEquipa;
-    public static int savedNumeroTurno;
+    public static boolean savedTurnoEquipa;//loadGame only
+    public static int savedNumeroTurno;//loadGame only
     public ArrayList<Capturas> capturas = new ArrayList<>();
     public ArrayList<Capturas> top5Capturas = new ArrayList<>();
     InvalidGameInputException invalidGameInputException = new InvalidGameInputException(0,"");

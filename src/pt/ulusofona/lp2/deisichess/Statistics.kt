@@ -20,18 +20,6 @@ package pt.ulusofona.lp2.deisichess
     }
     }
 
-    public fun getJokerPieceName(jokerName: String): String {
-       return when (jokerName) {
-        "1" -> "Rainha"
-        "2" -> "Ponei Mágico"
-        "3" -> "Padre da Vila"
-        "4" -> "TorreHor"
-        "5" -> "TorreVert"
-        "6" -> "Homer Simpson"
-        else -> "Joker"
-       }
-    }
-
      public fun calculateTop5Capturas(gameManager: GameManager): List<String> {
         val capturedPiecesMap = mutableMapOf<String, Pair<Int, String>>()
 
@@ -103,7 +91,7 @@ public fun calculatePecasMais5Capturas(gameManager: GameManager): List<String> {
         val nrCapturas = captura.getNrCapturas()
         val teamColor = getTeamColor(captura.pecaQueCaptura)
 
-        if (nrCapturas>=5) {
+        if (nrCapturas>5) {
             capturedPiecesMap[alcunha] = Pair(nrCapturas, teamColor)
         }
     }
@@ -122,29 +110,37 @@ public fun calculatePecasMais5Capturas(gameManager: GameManager): List<String> {
         return listOf("Result for PECAS_MAIS_BARALHADAS")
     }
 
-    public fun calculateTiposCapturados(gameManager: GameManager): List<String> {
-        val capturedPiecesSet = mutableSetOf<String>()
+public fun calculateTiposCapturados(gameManager: GameManager): List<String> {
+    val capturedPiecesSet = mutableSetOf<String>()
 
-        for (captura in gameManager.capturas) {
-            val tipoDePeca = captura.getPecaCapturada().tipoDePeca
-            val tipoDePecaString = when (tipoDePeca) {
-                "0" -> "Rei"
-                "1" -> "Rainha"
-                "2" -> "Ponei Mágico"
-                "3" -> "Padre da Vila"
-                "4" -> "TorreHor"
-                "5" -> "TorreVert"
-                "6" -> "Homer Simpson"
-                "7" -> {
-                    val jokerName = captura.getPecaCapturada().toString().split("/")[1].trim()
-                    "Joker/${getJokerPieceName(jokerName)}"
+    for (captura in gameManager.capturas) {
+        val tipoDePeca = captura.getPecaCapturada().tipoDePeca
+        val tipoDePecaString = when (tipoDePeca) {
+            "0" -> "Rei"
+            "1" -> "Rainha"
+            "2" -> "Ponei Mágico"
+            "3" -> "Padre da Vila"
+            "4" -> "TorreHor"
+            "5" -> "TorreVert"
+            "6" -> "Homer Simpson"
+            "7" -> {
+                val jokerName = when (GameManager.turnoJoker) {
+                    2 -> "Rainha"
+                    3 -> "Ponei Mágico"
+                    4 -> "Padre da Vila"
+                    5 -> "TorreHor"
+                    6 -> "TorreVert"
+                    7 -> "Homer Simpson"
+                    else -> ""
                 }
-                else -> ""
+                "Joker/$jokerName"
             }
-            capturedPiecesSet.add(tipoDePecaString)
+            else -> ""
         }
-        return capturedPiecesSet.toList()
+        capturedPiecesSet.add(tipoDePecaString)
     }
+    return capturedPiecesSet.toList()
+}
 
 
 
