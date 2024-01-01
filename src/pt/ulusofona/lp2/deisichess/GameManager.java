@@ -23,6 +23,8 @@ public class GameManager {
 
     public static int savedNumeroTurno;
 
+    public ArrayList<Capturas> capturas = new ArrayList<>();
+
 
     InvalidGameInputException invalidGameInputException = new InvalidGameInputException(0,"");
     public static void setNrTurno(int newValue) {
@@ -42,6 +44,7 @@ public class GameManager {
             nrTurno=0;
             turnoJoker=1;
             invalidGameInputException = new InvalidGameInputException(0,"");
+            capturas=new ArrayList<>();
 
 
             ArrayList<String> cordenadasPecas = new ArrayList<>();
@@ -384,20 +387,26 @@ public class GameManager {
       }
       if (peca.tipoDePeca.equals("1") || jokerMove == 1) {
           boolean valid = false;
+          boolean isHorizontal=false;
+          boolean isVertical=false;
+          boolean isDiagonal=false;
           // Checka se o movimento e horizontal
           if (percursoVertical == 0 && (percursoHorizontal >= -5 && percursoHorizontal <= 5)) {
               valid= true;
+              isHorizontal=true;
           }
 
           // Checka se o movimento e vertical
           if (percursoHorizontal == 0 && (percursoVertical >= -5 && percursoVertical <= 5)) {
               valid= true;
+              isVertical=true;
           }
 
           // Checka se o movimento e diagonal
           if ((percursoHorizontal == percursoVertical || percursoHorizontal == -percursoVertical) &&
                   (percursoHorizontal >= -5 && percursoHorizontal <= 5)) {
               valid= true;
+              isDiagonal=true;
           }
           if (valid){
               if (x1 >= 0 && x1 < cordenadasPecasArray[y0].length && y1 >= 0 && y1 < cordenadasPecasArray.length) {
@@ -426,6 +435,7 @@ public class GameManager {
               }else{
                   return false;
               }
+
               isItvalid= true;
           }
       }
@@ -559,6 +569,8 @@ public class GameManager {
         boolean pecaCapturadaAgora = false;
 
         if (tabuleiro.getIsBlackTurn()) {
+            Peca pecaQueCaptura = null;
+            Peca pecaCapturada =  null;
             for(Peca peca: blackTeam){
                 if (peca.getIdentificador().equals(movimentoParaPeca)){
                     statusPreta.incInvalidMoves();
@@ -572,8 +584,25 @@ public class GameManager {
                 }
             }
 
+            for (Peca peca:blackTeam){
+                if (peca.getIdentificador().equals(pecaAtual)){
+                    pecaQueCaptura=peca;
+                    break;
+                }
+            }
+
+            for (Peca peca:whiteTeam){
+                if (peca.getIdentificador().equals(movimentoParaPeca)){
+                    pecaCapturada=peca;
+                    break;
+                }
+            }
             for (Peca pecaBranca : whiteTeam) {
                 if (pecaBranca.getIdentificador().equals(movimentoParaPeca)) {
+                    if (pecaQueCaptura!=null && pecaCapturada != null){
+                        Capturas captura = new Capturas(pecaQueCaptura,pecaCapturada);
+                        capturas.add(captura);
+                    }
                     pecaBranca.estadoPecaCapturado();
                     pecaBranca.x = "";
                     pecaBranca.y = "";
@@ -587,6 +616,8 @@ public class GameManager {
             statusPreta.incValidMoves();
         }
         if (tabuleiro.getIsWhiteTurn()) {
+            Peca pecaQueCaptura = null;
+            Peca pecaCapturada =  null;
             for(Peca peca:whiteTeam){
                 if(peca.getIdentificador().equals(movimentoParaPeca)){
                     statusBranca.incInvalidMoves();
@@ -599,8 +630,24 @@ public class GameManager {
                     return false;
                 }
             }
+            for (Peca peca:whiteTeam){
+                if (peca.getIdentificador().equals(pecaAtual)){
+                    pecaQueCaptura=peca;
+                    break;
+                }
+            }
+            for (Peca peca:blackTeam){
+                if (peca.getIdentificador().equals(movimentoParaPeca)){
+                    pecaCapturada=peca;
+                    break;
+                }
+            }
             for (Peca pecaPreta : blackTeam) {
                 if (pecaPreta.getIdentificador().equals(movimentoParaPeca)) {
+                    if (pecaQueCaptura!=null && pecaCapturada != null){
+                        Capturas captura = new Capturas(pecaQueCaptura,pecaCapturada);
+                        capturas.add(captura);
+                    }
                     pecaPreta.estadoPecaCapturado();
                     pecaPreta.x = "";
                     pecaPreta.y = "";

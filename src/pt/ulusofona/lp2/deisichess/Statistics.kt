@@ -11,23 +11,67 @@ package pt.ulusofona.lp2.deisichess
         }
     }
 
-    private fun calculateTop5Capturas(gameManager: GameManager): List<String> {
+
+   public fun getTeamColor(peca: Peca): String {
+    return when (peca.getEquipa()) {
+        "10" -> "PRETA"
+        "20" -> "BRANCA"
+        else -> "UNKNOWN"
+    }
+   }
+
+    public fun calculateTop5Capturas(gameManager: GameManager): List<String> {
+
         return listOf("Result for TOP_5_CAPTURAS")
     }
 
-    private fun calculateTop5Pontos(gameManager: GameManager): List<String> {
-        return listOf("Result for TOP_5_PONTOS")
+    fun calculateTop5Pontos(gameManager: GameManager): List<String> {
+        if (gameManager.capturas.isEmpty()) {
+            return emptyList()
+        }
+
+        // Map para armazenar informações sobre cada peça capturada
+        val capturedPiecesMap = mutableMapOf<String, Pair<Int, String>>() // Pair<Int, String> representa pontos e cores da equipa
+
+        for (captura in gameManager.capturas) {
+            val alcunha = captura.getPecaQueCaptura().getAlcunha()
+            val pontos = captura.getPecaCapturada().getPontos()
+            val teamColor = getTeamColor(captura.getPecaQueCaptura())
+
+            // Checka se a alcunha ja ta no map
+            if (capturedPiecesMap.containsKey(alcunha)) {
+                //  Update os pontos de uma peca que ja ta no map
+                val currentPoints = capturedPiecesMap[alcunha]!!.first
+                capturedPiecesMap[alcunha] = Pair(currentPoints + pontos, teamColor)
+            } else {
+                // Adiciona uma nova peca porque nao existe no map
+                capturedPiecesMap[alcunha] = Pair(pontos, teamColor)
+            }
+        }
+
+        // Sort no map em ordem decrescente com base nos pontos
+        val sortedEntries = capturedPiecesMap.entries.sortedByDescending { it.value.first }
+
+        // Tira o top 5 e mete numa string
+        val top5Strings = sortedEntries.take(5).map { entry ->
+            val alcunha = entry.key
+            val (pontos, teamColor) = entry.value
+            "$alcunha ($teamColor) tem $pontos pontos"
+        }
+
+        return top5Strings
     }
 
-    private fun calculatePecasMais5Capturas(gameManager: GameManager): List<String> {
+
+public fun calculatePecasMais5Capturas(gameManager: GameManager): List<String> {
         return listOf("Result for PECAS_MAIS_5_CAPTURAS")
     }
 
-    private fun calculatePecasMaisBaralhadas(gameManager: GameManager): List<String> {
+    public fun calculatePecasMaisBaralhadas(gameManager: GameManager): List<String> {
         return listOf("Result for PECAS_MAIS_BARALHADAS")
     }
 
-    private fun calculateTiposCapturados(gameManager: GameManager): List<String> {
+    public fun calculateTiposCapturados(gameManager: GameManager): List<String> {
         return listOf("Result for TIPOS_CAPTURADOS")
     }
 
