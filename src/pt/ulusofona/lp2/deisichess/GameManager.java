@@ -38,6 +38,7 @@ public class GameManager {
             invalidGameInputException = new InvalidGameInputException(0,"");
             capturas=new ArrayList<>();
             top5Capturas=new ArrayList<>();
+            gameResults= new GameResults();
 
 
             ArrayList<String> cordenadasPecas = new ArrayList<>();
