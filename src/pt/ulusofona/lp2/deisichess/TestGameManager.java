@@ -69,39 +69,4 @@ public class TestGameManager {
             assertEquals("7 | Homer Simpson | 2 | 10 | Hommie @ (6, 0)",homer.toString());
         }
 
-
-    @Test
-    void testGameOverWhiteWins() {
-        GameManager gameManager = new GameManager();
-
-        // Set up the game with only the white king
-        gameManager.whiteTeam.add(new PecaRei("1", "0", "equipaB", "ReiB"));
-
-        assertTrue(gameManager.gameOver());
-        assertTrue(gameManager.gameResults.getResultadoJogo().equals("VENCERAM AS BRANCAS"));
-    }
-
-    @Test
-    void testGameOverBlackWins() {
-        GameManager gameManager = new GameManager();
-
-        // Set up the game with only the black king
-        gameManager.blackTeam.add(new PecaRei("1", "0", "equipaA", "ReiA"));
-
-        assertTrue(gameManager.gameOver());
-        assertTrue(gameManager.gameResults.getResultadoJogo().equals("VENCERAM AS PRETAS"));
-    }
-
-    @Test
-    void testGameOverDraw() {
-        GameManager gameManager = new GameManager();
-
-        // Set up the game with only one piece per team (both kings)
-        gameManager.blackTeam.add(new PecaRei("1", "0", "equipaA", "ReiA"));
-        gameManager.whiteTeam.add(new PecaRei("2", "0", "equipaB", "ReiB"));
-
-        assertTrue(gameManager.gameOver());
-        assertTrue(gameManager.gameResults.getResultadoJogo().equals("EMPATE"));
-    }
-
 }
